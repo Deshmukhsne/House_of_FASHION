@@ -1,0 +1,311 @@
+ /* Hide logo text when sidebar is collapsed */
+.sidebar.collapsed .logo-text {
+  display: none;
+}
+
+/* Optional: center the logo icon when collapsed */
+.sidebar.collapsed .sidebar-logo {
+  text-align: center;
+}
+
+    .sidebar.collapsed {
+      width: 80px;
+    }
+
+   /* Sidebar with background image and gold theme */
+.sidebar {
+  height: 100vh;
+  width: 250px;
+  position: fixed;
+  padding: 30px 20px;
+  background: linear-gradient(rgba(0,0,0,0.85), rgba(0,0,0,0.9)), url('/images/sidebar_bg.jpg') no-repeat center center;
+  background-size: cover;
+  transition: width 0.3s ease;
+  z-index: 999;
+}
+
+/* Collapsed Sidebar */
+.sidebar.collapsed {
+  width: 80px;
+}
+
+.sidebar-logo {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.logo-full {
+  width: 160px;
+  transition: 0.3s ease;
+}
+
+.logo-circle {
+  width: 50px;
+  display: none;
+  transition: 0.3s ease;
+}
+
+/* When sidebar is collapsed */
+.sidebar.collapsed .logo-full {
+  display: none;
+}
+
+.sidebar.collapsed .logo-circle {
+  display: inline-block;
+}
+
+
+/* Sidebar Links */
+.sidebar .nav-link {
+  color: #f0d75d;
+  font-weight: 500;
+  margin-bottom: 15px;
+  border-radius: 10px;
+  padding: 12px 18px;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(255, 215, 0, 0.05);
+}
+
+.sidebar .nav-link:hover,
+.sidebar .nav-link.active {
+  background: linear-gradient(90deg, #FFD27F 0%, #B37B16 100%);
+  color: black !important;
+  transform: translateX(5px);
+}
+
+.dash{
+  color: #FFD27F;
+}
+
+/* Hide Text when collapsed */
+.sidebar.collapsed .nav-link span {
+  display: none;
+}
+
+.sidebar.collapsed .nav-link {
+  justify-content: center;
+}
+
+/* Dropdown Menu Styling */
+.sidebar .dropdown-menu {
+  background-color: rgba(28, 28, 28, 0.95);
+  border-radius: 8px;
+}
+
+.sidebar .dropdown-menu a:hover {
+  background: linear-gradient(90deg, #FFD27F 0%, #B37B16 100%);
+  color: black;
+}
+
+/* Toggle Button */
+.sidebar-toggle {
+  font-size: 24px;
+  cursor: pointer;
+  background: none;
+  border: none;
+  color: #FFD27F;
+  margin-right: 15px;
+}
+/* Submenu Styling */
+.submenu {
+  list-style: none;
+  padding-left: 10px;
+  margin-top: 5px;
+}
+
+.submenu li {
+  margin-bottom: 8px;
+}
+
+.submenu .nav-link {
+  font-size: 14px;
+  color: #ffdd57;
+  padding: 5px 10px;
+  background: rgba(255, 215, 0, 0.05);
+  border-radius: 6px;
+  display: block;
+  transition: all 0.2s ease;
+}
+
+.submenu .nav-link:hover {
+  color: #000;
+}
+
+    /* Topbar */
+    .topbar {
+  position: sticky;
+  top: 0;
+  z-index: 998;
+  height: 70px;
+  background-color: #000;
+  padding: 10px 30px;
+  margin-left: 250px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+background: linear-gradient(rgba(0,0,0,0.85), rgba(0,0,0,0.9)), 
+            url('<?php echo base_url("assets/images/sidebar_bg.jpg"); ?>') no-repeat center center;
+  background-size: cover;
+  border-bottom: 4px solid;
+  border-image: linear-gradient(to right, gold, orange) 1;
+  transition: margin-left 0.3s ease;
+}
+
+    .topbar.collapsed {
+      margin-left: 80px;
+    }
+
+    .topbar .form-control {
+      display: inline-block;
+      width: auto;
+    }
+
+    /* Content */
+    .content {
+      margin-left: 250px;
+      padding: 30px;
+      transition: 0.3s;
+    }
+
+    .content.collapsed {
+      margin-left: 80px;
+    }
+
+        /* Show dropdowns when .show is added via JS */
+    #notifDropdown.show,
+    #profileDropdown.show {
+      display: block !important;
+    }
+
+    
+    /* Toggle Button */
+    .sidebar-toggle {
+      font-size: 24px;
+      cursor: pointer;
+      background: none;
+      border: none;
+      color: linear-gradient(90deg, #FFD27F 0%, #B37B16 100%);
+      margin-right: 15px;
+    }
+
+    .profile-icon {
+      font-size: 24px;
+      color:  #FFD27F;
+      margin-left: 20px;
+    }
+
+/* Search Bar Hover */
+.topbar .form-control {
+  border: 2px solid transparent;
+  transition: border 0.3s ease;
+}
+
+.topbar .form-control:focus,
+.topbar .form-control:hover {
+  border: linear-gradient(90deg, #FFD27F 0%, #B37B16 100%);
+  box-shadow: none;
+}
+
+/* Default color: white */
+#notifToggle,
+#profileToggle {
+  color:  #FFD27F !important;
+  transition: all 0.3s ease;
+  padding: 6px;
+  border-radius: 50%;
+}
+/* add stock form css */
+.form-container {
+  max-width: 850px;
+  margin: 50px auto;
+  background: #ffffff;
+  padding: 40px;
+  border-radius: 16px;
+  box-shadow: 0 0 20px rgba(255, 215, 0, 0.2);
+  border: 2px solid gold;
+}
+
+.form-title {
+  background: linear-gradient(90deg, #FFD27F 0%, #B37B16 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 30px;
+  text-align: center;
+  font-size: 24px;
+  font-weight: bold;
+  border-bottom: 1px solid gold;
+  padding-bottom: 10px;
+}
+
+.form-label {
+  color: #000;
+  font-weight: 600;
+}
+
+.form-control,
+.form-select {
+  background-color: #fff;
+  color: #000;
+  border: 1px solid rgba(255, 215, 0, 0.8);
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.form-control:focus,
+.form-select:focus {
+  border-color: gold;
+  box-shadow: 0 0 10px gold;
+  color: #000;
+}
+
+.form-control::placeholder {
+  color: #aaa;
+}
+
+input[readonly] {
+  background-color: #f2f2f2;
+}
+
+/* 🔥 Updated Golden Gradient Button */
+.btn-gold {
+  background: linear-gradient(90deg, #E6C56C 0%, #B8860B 100%);
+  color: #000000;
+  font-weight: bold;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 20px;
+  transition: 0.3s ease;
+  box-shadow: 0 4px 12px rgba(184, 134, 11, 0.4);
+}
+
+.btn-gold:hover {
+  background: linear-gradient(90deg, #D4AF37 0%, #8B6914 100%);
+  box-shadow: 0 6px 16px rgba(184, 134, 11, 0.6);
+  color: black;
+}
+
+::-webkit-file-upload-button {
+  background-color: gold;
+  border: none;
+  color: black;
+  padding: 5px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+/* Wrap form in same responsive container as main content */
+.form-wrapper {
+  margin-left: 250px;
+  padding: 30px;
+  transition: 0.3s ease;
+}
+
+/* When sidebar is collapsed */
+.form-wrapper.collapsed {
+  margin-left: 80px;
+}
+
+
+
