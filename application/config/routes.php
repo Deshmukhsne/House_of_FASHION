@@ -64,5 +64,9 @@ $route['customers/export_pdf'] = 'AdminController/export_pdf';
 $route['customers/export_pdf'] = 'AdminController/export_pdf_view';
 $route['AdminController/view_invoice/(:num)'] = 'AdminController/view_invoice/$1';
 $route['AdminController/pay_due_amount'] = 'AdminController/pay_due_amount';
+$route['updateOrderStatus'] = 'AdminController/updateOrderStatus';
+
+
+
 
 

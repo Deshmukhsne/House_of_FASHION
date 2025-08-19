@@ -189,7 +189,6 @@ $this->db->update('products');
 
 
 
-
     public function Orders()
     {
 
@@ -457,44 +456,10 @@ public function Dashboard()
         echo "</table>";
     }
 
-    // Export to PDF without library (just outputs HTML with PDF headers)
-    public function export_pdf()
-    {
-        $customers = $this->CustomerModel->get_all_customers();
-
-        $html = '<h2 style="text-align:center;">Customer List</h2>';
-        $html .= '<table border="1" cellpadding="10" cellspacing="0" style="width:100%; border-collapse: collapse;">';
-        $html .= '<tr style="background-color:#f2f2f2;">
-                    <th>ID</th>
-                    <th>Name</th>
-                    <th>Contact</th>
-                  </tr>';
-
-        foreach ($customers as $cust) {
-            $html .= '<tr>
-                        <td>' . $cust->id . '</td>
-                        <td>' . htmlspecialchars($cust->name) . '</td>
-                        <td>' . htmlspecialchars($cust->contact) . '</td>
-                      </tr>';
-        }
-
-        $html .= '</table>';
-
-        $filename = "customers_" . date('Ymd_His') . ".pdf";
-        header("Content-Type: application/pdf");
-        header("Content-Disposition: attachment; filename=\"$filename\"");
-        header("Cache-Control: max-age=0");
-
-        echo $html;
-        exit;
-    }
+  
 
     // View-only PDF version (optional)
-    public function export_pdf_view()
-    {
-        $data['customers'] = $this->CustomerModel->get_all_customers();
-        $this->load->view('admin/export_pdf', $data);
-    }
+   
     public function change_password_handler()
     {
         if (!$this->session->userdata('username')) {
@@ -599,6 +564,7 @@ public function Dashboard()
             'customer_name'   => $customer_name,
             'customer_mobile' => $customer_mobile,
             'invoice_date'    => $date,
+            'return_date'     => $this->input->post('returnDate') ?: null,
             'deposit_amount'  => $depositAmount,
             'discount_amount' => $discountAmount,
             'total_amount'    => $totalAmount,
@@ -608,6 +574,7 @@ public function Dashboard()
             'payment_mode'    => $paymentMode
         ];
         $invoice_id = $this->Billing_model->insert_invoice($invoice_data);
+        
 
         // Prepare and insert items
         $items = [];
@@ -640,6 +607,9 @@ public function Dashboard()
         if (!empty($items)) {
             $this->Billing_model->insert_invoice_items($items);
         }
+        foreach ($items as $item) {
+        $this->OrdersModel->insert_order_from_invoice($invoice_id, $item);
+    }
         // Generate custom invoice number
         $unique_code = strtoupper(substr(md5(uniqid(rand(), true)), 0, 6));
         $item_count = count($items);
@@ -827,16 +797,24 @@ public function update_due_manual()
     }
 }
 
-public function updateOrderStatus() {
+public function updateOrderStatus()
+{
     $invoice_id = $this->input->post('invoice_id');
     $item_name  = $this->input->post('item_name');
     $status     = $this->input->post('status');
 
-    $this->load->model('OrdersModel');
-    $updated = $this->OrdersModel->update_status($invoice_id, $item_name, $status);
+    log_message('debug', 'UpdateOrderStatus: invoice_id='.$invoice_id.' item_name='.$item_name.' status='.$status);
 
-    echo json_encode(['success' => $updated]);
+    if ($invoice_id && $item_name && $status) {
+        $this->load->model('OrdersModel');
+        $updated = $this->OrdersModel->update_status($invoice_id, $item_name, $status);
+
+        echo json_encode(['success' => $updated, 'msg' => $updated ? 'Updated' : 'No rows affected']);
+    } else {
+        echo json_encode(['success' => false, 'msg' => 'Missing params']);
+    }
 }
+
 
 }
 

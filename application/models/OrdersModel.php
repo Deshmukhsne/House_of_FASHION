@@ -18,18 +18,52 @@ class OrdersModel extends CI_Model {
                    itm.total,
                    itm.status,
                    p.image as product_image');   // ✅ get image from products
-                $this->db->from('invoices inv');
-                $this->db->join('invoice_items itm', 'inv.id = itm.invoice_id', 'left');
-                $this->db->join('products p', 'p.name = itm.item_name AND p.category_id = itm.category', 'left'); 
-                // join on both name + category for safety
-                $query = $this->db->get();
-                return $query->result_array();
-
+        $this->db->from('invoices inv');
+        $this->db->join('invoice_items itm', 'inv.id = itm.invoice_id', 'left');
+        $this->db->join('products p', 'p.name = itm.item_name AND p.category_id = itm.category', 'left'); 
+        $query = $this->db->get();
+        return $query->result_array();
     }
-  public function update_status($invoice_id, $item_name, $status) {
+    
+    // Update status in invoice_items
+  
+
+    // ✅ Insert order record whenever invoice+items are created
+    public function insert_order_from_invoice($invoice_id, $item) {
+        // Get invoice details
+        $invoice = $this->db->get_where('invoices', ['id' => $invoice_id])->row_array();
+
+        // Get product image
+        $product = $this->db->get_where('products', [
+            'name'        => $item['item_name'],
+            'category_id' => $item['category']
+        ])->row_array();
+
+        $orderData = [
+            'invoice_id'     => $invoice['id'],
+            'invoice_no'     => $invoice['invoice_no'],
+            'customer_name'  => $invoice['customer_name'],
+            'customer_mobile'=> $invoice['customer_mobile'],
+            'invoice_date'   => $invoice['invoice_date'],
+            'return_date'    => $invoice['return_date'],
+            'item_name'      => $item['item_name'],
+            'category'       => $item['category'],
+            'price'          => $item['price'],
+            'quantity'       => $item['quantity'],
+            'total'          => $item['total'],
+            'status'         => $item['status'] ?? 'Issued',
+            'product_image'  => $product['image'] ?? null
+        ];
+
+        return $this->db->insert('orders', $orderData);
+    }
+public function update_status($invoice_id, $item_name, $status)
+{
     $this->db->where('invoice_id', $invoice_id);
     $this->db->where('item_name', $item_name);
-    return $this->db->update('invoice_items', ['status' => $status]);
+    $this->db->update('invoice_items', ['status' => $status]);
+
+    return $this->db->affected_rows() > 0;
 }
 
 

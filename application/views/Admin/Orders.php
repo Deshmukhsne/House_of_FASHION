@@ -241,7 +241,25 @@ function showImage(imgElement) {
             });
         }
     </script>
-  
+    <script>
+      function updateStatus(newStatus, invoiceId, itemName) {
+    fetch("<?= base_url('updateOrderStatus') ?>", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: "invoice_id=" + invoiceId + "&item_name=" + encodeURIComponent(itemName) + "&status=" + newStatus
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.success) {
+            Swal.fire({ icon: 'success', title: 'Updated!', text: 'Order status updated successfully', timer: 1500, showConfirmButton: false });
+        } else {
+            Swal.fire({ icon: 'error', title: 'Failed!', text: data.msg || 'Something went wrong.' });
+        }
+    })
+    .catch(err => console.error(err));
+}
+
+  </script>
   <script>
     function filterCategory(category) {
   let rows = document.querySelectorAll("#ordersTableContainer tbody tr");
@@ -299,13 +317,15 @@ function filterCategory(category) {
 <script>
 function forwardToDryClean(invoiceId) {
   // Redirect with invoice_id
-  window.location.href = "<?= base_url('Admin/DryClean_Forward/') ?>" + invoiceId;
+  window.location.href = "<?= base_url('AdminController/DryCleaning_Forward/') ?>" + invoiceId;
 }
 </script>
 
 <script>
 function updateStatus(newStatus, invoiceId, itemName) {
-    fetch("<?= base_url('Admin/updateOrderStatus') ?>", {
+    fetch("<?= base_url('updateOrderStatus') ?>", {
+
+
         method: "POST",
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
         body: "invoice_id=" + invoiceId + "&item_name=" + encodeURIComponent(itemName) + "&status=" + newStatus
