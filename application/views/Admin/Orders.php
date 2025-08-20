@@ -159,7 +159,7 @@
             <td><?= $order['invoice_date'] ?></td>
             <td><?= $order['return_date'] ?></td>
             <td><?= $order['price'] ?></td>
-           
+            <td><?= $order['times_rented']?></td>
           <td>
     <?php if ($order['status'] == 'Returned' && $order['category'] != 'Accessories'): ?>
         <button 

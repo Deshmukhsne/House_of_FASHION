@@ -10,8 +10,8 @@ class OrdersController extends CI_Controller {
 
     // Show orders list
     public function index() {
-        // Fetch directly from orders table
-        $data['orders'] = $this->db->get('orders')->result_array();
+        // Fetch orders using model
+        $data['orders'] = $this->OrdersModel->get_orders();
         $this->load->view('Admin/Orders', $data);
     }
 
@@ -32,13 +32,14 @@ class OrdersController extends CI_Controller {
         $items = $this->input->post('items'); // items[] array from form
         foreach ($items as $item) {
             $itemData = [
-                'invoice_id' => $invoice_id,
-                'item_name'  => $item['item_name'],
-                'category'   => $item['category'],
-                'price'      => $item['price'],
-                'quantity'   => $item['quantity'],
-                'total'      => $item['total'],
-                'status'     => $item['status'] ?? 'Issued'
+                'invoice_id'   => $invoice_id,
+                'item_name'    => $item['item_name'],
+                'category'     => $item['category'],
+                'price'        => $item['price'],
+                'quantity'     => $item['quantity'],
+                'total'        => $item['total'],
+                'times_rented' => $item['times_rented'],
+                'status'       => $item['status'] ?? 'Issued'
             ];
             $this->db->insert('invoice_items', $itemData);
 
@@ -56,14 +57,23 @@ class OrdersController extends CI_Controller {
         $item_name  = $this->input->post('item_name');
         $status     = $this->input->post('status');
 
-        // Update in invoice_items
+        // Update in invoice_items (with times_rented increment if Rented)
         $updated1 = $this->OrdersModel->update_status($invoice_id, $item_name, $status);
 
-        // Update in orders
+        // Update in orders table also
+        if ($status == 'Rented') {
+            $this->db->set('times_rented', 'times_rented + 1', FALSE);
+        }
         $this->db->where('invoice_id', $invoice_id);
         $this->db->where('item_name', $item_name);
         $updated2 = $this->db->update('orders', ['status' => $status]);
 
         echo json_encode(['success' => ($updated1 && $updated2)]);
     }
+    public function productSales()
+{
+    $this->load->model('OrdersModel');
+    $data['sales'] = $this->OrdersModel->get_product_sales();
+    $this->load->view('product_sales', $data);
+}
 }

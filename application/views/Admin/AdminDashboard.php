@@ -259,70 +259,62 @@
 
 
                             <div class="row mt-5">
-    <!-- Revenue Analytics -->
-    <div class="col-lg-8 col-md-12 mb-4 mb-lg-0">
-        <div class="card h-100" style="height: 400px;">
-            <div class="card-header d-flex justify-content-between align-items-center">
-                <h5 class="mb-0">Revenue Analytics</h5>
-            </div>
-            <div class="card-body d-flex align-items-center justify-content-center">
-                <canvas id="revenueChart" style="max-height: 200px; width: 100%;"></canvas>
-            </div>
-        </div>
-    </div>
-
-    <!-- Payment Methods -->
-    <div class="col-lg-4 col-md-12">
-        <div class="card h-100" style="height: 400px;">
-            <div class="card-header">
-                <h5 class="mb-0">Payment Methods</h5>
-            </div>
-            <div class="card-body d-flex align-items-center justify-content-center">
-                <canvas id="paymentChart" style="max-height: 200px; width: 100%;"></canvas>
-            </div>
-        </div>
-    </div>
-</div>
-
-
-                            <div class="row mt-5">
-                                <!-- Category-wise Sales -->
-                                <div class="col-md-6 mb-4 mb-md-0">
-                                    <div class="card h-100">
-                                        <div class="card-header">
-                                            <h5 class="mb-0">Category-wise Sales</h5>
+                                <!-- Revenue Analytics -->
+                                <div class="col-lg-8 col-md-12 mb-4 mb-lg-0">
+                                    <div class="card h-100" style="height: 400px;">
+                                        <div class="card-header d-flex justify-content-between align-items-center">
+                                            <h5 class="mb-0">Revenue Analytics</h5>
                                         </div>
-                                        <div class="card-body p-0">
-                                            <div class="table-responsive">
-                                                <table class="table table-hover mb-0">
-                                                    <thead>
-                                                        <tr>
-                                                            <th>Category</th>
-                                                            <th>Items Sold</th>
-                                                            <th>Revenue</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        <?php if (!empty($category_sales)): ?>
-                                                            <?php foreach ($category_sales as $row): ?>
-                                                                <tr>
-                                                                    <td>
-                                                                        <span class="saree-badge badge">
-                                                                            <?= ucfirst($row['category']); ?>
-                                                                        </span>
-                                                                    </td>
-                                                                    <td><?= $row['items_sold']; ?></td>
-                                                                    <td>₹<?= number_format($row['revenue'], 2); ?></td>
-                                                                </tr>
-                                                            <?php endforeach; ?>
-                                                        <?php else: ?>
-                                                            <tr>
-                                                                <td colspan="4" class="text-center">No sales data available</td>
-                                                            </tr>
-                                                        <?php endif; ?>
-                                                    </tbody>
-                                                </table>
-                                            </div>
+                                        <div class="card-body d-flex align-items-center justify-content-center">
+                                            <canvas id="revenueChart" style="max-height: 200px; width: 100%;"></canvas>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Payment Methods -->
+                                <div class="col-lg-4 col-md-12">
+                                    <div class="card h-100" style="height: 400px;">
+                                        <div class="card-header">
+                                            <h5 class="mb-0">Payment Methods</h5>
+                                        </div>
+                                        <div class="card-body d-flex align-items-center justify-content-center">
+                                            <canvas id="paymentChart" style="max-height: 200px; width: 100%;"></canvas>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                             
+                            <div class="row mt-5">
+                                <div class="row">
+                                <!-- Product-wise Sales -->
+                                <div class="col-md-6">
+                                    <div class="card">
+                                        <div class="card-header d-flex justify-content-between align-items-center">
+                                            <h4 class="mb-0">Product-wise Sales</h4>
+                                            <input type="text" id="searchBox" class="form-control w-50" placeholder="Search...">
+                                        </div>
+
+                                        <div class="card-body">
+                                            <table class="table table-bordered" id="salesTable">
+                                            <thead>
+                                                <tr>
+                                                    <th>Category</th>
+                                                    <th>Product</th>
+                                                    <th>Items Sold</th>
+                                                    <th>Revenue</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <?php foreach ($sales as $s): ?>
+                                                <tr>
+                                                    <td><?= $s->category ?></td>
+                                                    <td><?= $s->item_name ?></td>
+                                                    <td><?= $s->items_rented ?></td>
+                                                    <td>₹<?= number_format($s->revenue, 2) ?></td>
+                                                </tr>
+                                                <?php endforeach; ?>
+                                            </tbody>
+                                            </table>
                                         </div>
                                     </div>
                                 </div>
@@ -336,40 +328,61 @@
                                         </div>
                                         <div class="card-body p-0">
                                             <div class="list-group list-group-flush">
-                                                <a href="#" class="list-group-item list-group-item-action">
-                                                    <div class="d-flex w-100 justify-content-between">
-                                                        <h6 class="mb-1">Bill #MLC-1025</h6>
-                                                        <small class="text-success">₹3,850</small>
-                                                    </div>
-                                                    <small class="text-muted">Saree (2), Accessories (3) - Cash Payment</small>
-                                                </a>
-                                                <a href="#" class="list-group-item list-group-item-action">
-                                                    <div class="d-flex w-100 justify-content-between">
-                                                        <h6 class="mb-1">Bill #MLC-1024</h6>
-                                                        <small class="text-success">₹5,250</small>
-                                                    </div>
-                                                    <small class="text-muted">Dress (1), Accessories (2) - Online Payment</small>
-                                                </a>
-                                                <a href="#" class="list-group-item list-group-item-action">
-                                                    <div class="d-flex w-100 justify-content-between">
-                                                        <h6 class="mb-1">Bill #MLC-1023</h6>
-                                                        <small class="text-warning">₹2,150 (Pending)</small>
-                                                    </div>
-                                                    <small class="text-muted">Saree (1) - Credit</small>
-                                                </a>
-                                                <a href="#" class="list-group-item list-group-item-action">
-                                                    <div class="d-flex w-100 justify-content-between">
-                                                        <h6 class="mb-1">Bill #MLC-1022</h6>
-                                                        <small class="text-success">₹4,750</small>
-                                                    </div>
-                                                    <small class="text-muted">Dress (2) - Cash Payment</small>
-                                                </a>
+                                            <a href="#" class="list-group-item list-group-item-action">
+                                                <div class="d-flex w-100 justify-content-between">
+                                                    <h6 class="mb-1">Bill #MLC-1025</h6>
+                                                    <small class="text-success">₹3,850</small>
+                                                </div>
+                                                <small class="text-muted">Saree (2), Accessories (3) - Cash Payment</small>
+                                            </a>
+                                            <a href="#" class="list-group-item list-group-item-action">
+                                                <div class="d-flex w-100 justify-content-between">
+                                                    <h6 class="mb-1">Bill #MLC-1024</h6>
+                                                    <small class="text-success">₹5,250</small>
+                                                </div>
+                                                <small class="text-muted">Dress (1), Accessories (2) - Online Payment</small>
+                                            </a>
+                                            <a href="#" class="list-group-item list-group-item-action">
+                                                <div class="d-flex w-100 justify-content-between">
+                                                    <h6 class="mb-1">Bill #MLC-1023</h6>
+                                                    <small class="text-warning">₹2,150 (Pending)</small>
+                                                </div>
+                                                <small class="text-muted">Saree (1) - Credit</small>
+                                            </a>
+                                            <a href="#" class="list-group-item list-group-item-action">
+                                                <div class="d-flex w-100 justify-content-between">
+                                                    <h6 class="mb-1">Bill #MLC-1022</h6>
+                                                    <small class="text-success">₹4,750</small>
+                                                </div>
+                                                <small class="text-muted">Dress (2) - Cash Payment</small>
+                                            </a>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
+                                </div>
                             </div>
 
+                            <script>
+document.getElementById("searchBox").addEventListener("keyup", function() {
+    let input = this.value.toLowerCase();  // get typed text
+    let rows = document.querySelectorAll("#salesTable tbody tr");
+
+    rows.forEach(row => {
+        let category = row.cells[0].textContent.toLowerCase();
+        let product  = row.cells[1].textContent.toLowerCase();
+
+        // show row if input matches category OR product (or empty = show all)
+        if (category.includes(input) || product.includes(input)) {
+            row.style.display = "";
+        } else {
+            row.style.display = "none";
+        }
+    });
+});
+</script>
+
+                        
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
                             <script>
                                 document.addEventListener('DOMContentLoaded', function() {

@@ -207,6 +207,7 @@ public function Dashboard()
     // Load models first
     $this->load->model('Product_model');
     $this->load->model('Admin_Model');
+    $this->load->model('Category_model');
 
     // Stock data
     $data['total_stock_quantity'] = $this->Product_model->get_total_stock_quantity();
@@ -222,6 +223,12 @@ public function Dashboard()
         $data['revenue_analytics'] = $this->Admin_Model->get_revenue_analytics();
         $data['category_sales'] = $this->Admin_Model->get_category_wise_sales();
         $data['payment_stats'] = $this->Admin_Model->get_payment_method_stats();
+        $data['categories'] = $this->Category_model->get_all_categories();
+
+        $this->load->model('OrdersModel');
+
+        // Get sales data (product-wise sales)
+        $data['sales'] = $this->OrdersModel->get_product_sales();
 
     // Load dashboard view once
     $this->load->view('Admin/AdminDashboard', $data);
@@ -817,6 +824,12 @@ public function updateOrderStatus()
     }
 }
 
+public function productSales()
+{
+    $this->load->model('OrdersModel');
+    $data['sales'] = $this->OrdersModel->get_product_sales();
+    $this->load->view('product_sales', $data);
+}
 
 }
 

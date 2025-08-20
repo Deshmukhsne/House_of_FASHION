@@ -17,6 +17,7 @@ class OrdersModel extends CI_Model {
                    itm.quantity,
                    itm.total,
                    itm.status,
+                   itm.times_rented,
                    p.image as product_image');   // ✅ get image from products
         $this->db->from('invoices inv');
         $this->db->join('invoice_items itm', 'inv.id = itm.invoice_id', 'left');
@@ -24,9 +25,6 @@ class OrdersModel extends CI_Model {
         $query = $this->db->get();
         return $query->result_array();
     }
-    
-    // Update status in invoice_items
-  
 
     // ✅ Insert order record whenever invoice+items are created
     public function insert_order_from_invoice($invoice_id, $item) {
@@ -52,27 +50,44 @@ class OrdersModel extends CI_Model {
             'quantity'       => $item['quantity'],
             'total'          => $item['total'],
             'status'         => $item['status'] ?? 'Issued',
+            'times_rented'   => $item['times_rented'],
             'product_image'  => $product['image'] ?? null
         ];
 
         return $this->db->insert('orders', $orderData);
     }
-public function update_status($invoice_id, $item_name, $status)
-{
-    $this->db->where('invoice_id', $invoice_id);
-    $this->db->where('item_name', $item_name);
-    $this->db->update('invoice_items', ['status' => $status]);
 
-    return $this->db->affected_rows() > 0;
-}
-public function get_all_products_for_drycleaning()
+    // ✅ Update status (and increment times_rented if Rented)
+    public function update_status($invoice_id, $item_name, $status)
+    {
+        if ($status == 'Rented') {
+            $this->db->set('times_rented', 'times_rented + 1', FALSE);
+        }
+
+        $this->db->where('invoice_id', $invoice_id);
+        $this->db->where('item_name', $item_name);
+        $this->db->update('invoice_items', ['status' => $status]);
+
+        return $this->db->affected_rows() > 0;
+    }
+
+    // ✅ Get all products that need dry cleaning (returned clothes only)
+    public function get_all_products_for_drycleaning()
+    {
+        $this->db->select('*');
+        $this->db->from('invoice_items');
+        $this->db->where('status', 'Returned');
+        $this->db->where('category !=', 'Accessories'); // exclude accessories
+        return $this->db->get()->result_array();
+    }
+    // OrdersModel.php
+public function get_product_sales()
 {
-    $this->db->select('*');
+    $this->db->select('category, item_name, COUNT(*) as items_rented, SUM(price) as revenue');
     $this->db->from('invoice_items');
-    $this->db->where('status', 'Returned');
-    $this->db->where('category !=', 'Accessories'); // exclude accessories
-    return $this->db->get()->result_array();
+    $this->db->group_by('item_name');
+    $query = $this->db->get();
+    return $query->result();
 }
-
 
 }
