@@ -5,26 +5,28 @@ class OrdersModel extends CI_Model {
 
     // Get all orders by joining invoices and invoice_items
     public function get_orders() {
-        $this->db->select('inv.id as invoice_id,
-                   inv.invoice_no,
-                   inv.customer_name,
-                   inv.customer_mobile,
-                   inv.invoice_date,
-                   inv.return_date,
-                   itm.item_name,
-                   itm.category,
-                   itm.price,
-                   itm.quantity,
-                   itm.total,
-                   itm.status,
-                   itm.times_rented,
-                   p.image as product_image');   // ✅ get image from products
-        $this->db->from('invoices inv');
-        $this->db->join('invoice_items itm', 'inv.id = itm.invoice_id', 'left');
-        $this->db->join('products p', 'p.name = itm.item_name AND p.category_id = itm.category', 'left'); 
-        $query = $this->db->get();
-        return $query->result_array();
-    }
+    $this->db->select('inv.id as invoice_id,
+               inv.invoice_no,
+               inv.customer_name,
+               inv.customer_mobile,
+               inv.invoice_date,
+               inv.return_date,
+               itm.item_name,
+               itm.category,
+               itm.price,
+               p.main_category,
+               itm.quantity,
+               itm.total,
+               itm.status,
+               itm.times_rented,
+               p.image as product_image');   // ✅ get image from products
+    $this->db->from('invoices inv');
+    $this->db->join('invoice_items itm', 'inv.id = itm.invoice_id', 'left');
+    $this->db->join('products p', 'p.name = itm.item_name', 'left'); // ✅ fixed
+    $query = $this->db->get();
+    return $query->result_array();
+}
+
 
     // ✅ Insert order record whenever invoice+items are created
     public function insert_order_from_invoice($invoice_id, $item) {
