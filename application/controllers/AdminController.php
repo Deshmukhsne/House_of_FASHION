@@ -533,6 +533,8 @@ public function Dashboard()
         $customer_name   = $this->input->post('customerName', true);
         $customer_mobile = $this->input->post('customerMobile', true);
         $date            = $this->input->post('date', true);
+        $return_date         = $this->input->post('return_date', true);
+
 
         if (!$customer_name || !$date || !$customer_mobile) {
             echo json_encode([
@@ -564,7 +566,7 @@ public function Dashboard()
             'customer_name'   => $customer_name,
             'customer_mobile' => $customer_mobile,
             'invoice_date'    => $date,
-            'return_date'     => $this->input->post('returnDate') ?: null,
+            'return_date'     => $return_date,
             'deposit_amount'  => $depositAmount,
             'discount_amount' => $discountAmount,
             'total_amount'    => $totalAmount,

@@ -84,8 +84,8 @@
                                 <option value="">-- Select Product --</option>
                                 <?php if (!empty($products)): ?>
                                     <?php foreach ($products as $product): ?>
-                                        <option value="<?= $product->product_name ?>">
-                                            <?= $product->product_name ?> (Order #<?= $product->order_id ?>)
+                                        <option value="<?= $product['item_name'] ?>">
+                                            <?= $product['item_name'] ?> 
                                         </option>
                                     <?php endforeach; ?>
                                 <?php else: ?>

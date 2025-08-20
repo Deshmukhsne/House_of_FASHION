@@ -259,30 +259,31 @@
 
 
                             <div class="row mt-5">
-                                <div class="col-lg-8 col-md-12 mb-4 mb-lg-0">
-                                    <div class="card h-100">
-                                        <div class="card-header d-flex justify-content-between align-items-center">
-                                            <h5 class="mb-0">Revenue Analytics</h5>
+    <!-- Revenue Analytics -->
+    <div class="col-lg-8 col-md-12 mb-4 mb-lg-0">
+        <div class="card h-100" style="height: 400px;">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Revenue Analytics</h5>
+            </div>
+            <div class="card-body d-flex align-items-center justify-content-center">
+                <canvas id="revenueChart" style="max-height: 200px; width: 100%;"></canvas>
+            </div>
+        </div>
+    </div>
 
-                                        </div>
-                                        <div class="card-body">
-                                            <canvas id="revenueChart" height="320"></canvas>
-                                        </div>
-                                    </div>
-                                </div>
+    <!-- Payment Methods -->
+    <div class="col-lg-4 col-md-12">
+        <div class="card h-100" style="height: 400px;">
+            <div class="card-header">
+                <h5 class="mb-0">Payment Methods</h5>
+            </div>
+            <div class="card-body d-flex align-items-center justify-content-center">
+                <canvas id="paymentChart" style="max-height: 200px; width: 100%;"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
 
-                                <div class="col-lg-4 col-md-12">
-                                    <div class="card h-100">
-                                        <div class="card-header">
-                                            <h5 class="mb-0">Payment Methods</h5>
-                                        </div>
-                                        <div class="card-body d-flex flex-column justify-content-center">
-                                            <canvas id="paymentChart" height="0"></canvas>
-                                           
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
 
                             <div class="row mt-5">
                                 <!-- Category-wise Sales -->

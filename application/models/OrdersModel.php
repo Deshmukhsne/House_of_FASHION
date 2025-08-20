@@ -65,6 +65,14 @@ public function update_status($invoice_id, $item_name, $status)
 
     return $this->db->affected_rows() > 0;
 }
+public function get_all_products_for_drycleaning()
+{
+    $this->db->select('*');
+    $this->db->from('invoice_items');
+    $this->db->where('status', 'Returned');
+    $this->db->where('category !=', 'Accessories'); // exclude accessories
+    return $this->db->get()->result_array();
+}
 
 
 }
