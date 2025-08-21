@@ -44,7 +44,8 @@ class Product_model extends CI_Model
     {
         return $this->db->delete('products', ['id' => $id]);
     }
-     public function get_products_with_category() {
+    public function get_products_with_category()
+    {
         $this->db->select('products.*, categories.name as category_name');
         $this->db->from('products');
         $this->db->join('categories', 'categories.id = products.category_id', 'left');
@@ -65,7 +66,20 @@ class Product_model extends CI_Model
         $this->db->select_sum('stock');
         $query = $this->db->get('products');
         return $query->row()->stock;
-    } 
+    }
+    public function update_stock_after_sale($item_name, $quantity)
+    {
+        // Find product by name
+        $this->db->where('name', $item_name);
+        $product = $this->db->get('products')->row();
+
+        if ($product) {
+            $new_stock = max(0, ($product->stock - $quantity)); // avoid negative
+            $this->db->where('id', $product->id);
+            $this->db->update('products', ['stock' => $new_stock]);
+        }
+    }
+
 
     public function get_monthly_report($year, $month)
     {
