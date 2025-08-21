@@ -224,8 +224,8 @@
                         <input type="hidden" name="totalAmount" id="totalAmountInput">
                         <input type="hidden" name="totalPayable" id="totalPayableInput">
                         <div class="text-center mt-4">
-                            <button class="btn btn-gold px-4 py-2" type="submit">Save Invoice</button>
-                            <button class="btn btn-outline-secondary px-4 py-2" type="reset" onclick="resetForm()">Clear</button>
+<button class="btn btn-gold px-4 py-2" type="submit" onclick="goToConsent()">Save & Next </button>   
+                         <button class="btn btn-outline-secondary px-4 py-2" type="reset" onclick="resetForm()">Clear</button>
                         </div>
                     </form>
                 </div>
@@ -233,6 +233,12 @@
         </div>
     </div>
 </div>
+<script>
+function goToConsent() {
+    const invoiceNo = document.getElementById('invoiceNo').value;
+    window.location.href = "<?= base_url('AdminController/consent_form/') ?>" + invoiceNo;
+}
+</script>
 <script>
 // Product data from PHP
 const PRODUCTS = <?php

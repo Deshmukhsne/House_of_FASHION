@@ -126,6 +126,7 @@
         <th>Customer</th>
         <th>Mobile</th>
         <th>Product</th>
+        <th>Main Category</th>
         <!-- <th>Image</th> -->
         <th>Quantity</th>
         <th>Issue</th>
@@ -143,6 +144,7 @@
             <td><?= $order['customer_name'] ?></td>
             <td><?= $order['customer_mobile'] ?></td>
             <td><?= $order['item_name'] ?></td>
+            <td><?= $order['main_category'] ?></td>
             <!-- <td>
               <?php if (!empty($order['image'])): ?>
                 <img src="data:image/jpeg;base64,<?= base64_encode($order['image']) ?>"
@@ -159,15 +161,26 @@
             <td><?= $order['invoice_date'] ?></td>
             <td><?= $order['return_date'] ?></td>
             <td><?= $order['price'] ?></td>
-            <td><?= $order['times_rented']?></td>
+            <!-- <td><?= $order['times_rented']?></td> -->
           <td>
-    <?php if ($order['status'] == 'Returned' && $order['category'] != 'Accessories'): ?>
+    <?php if ($order['status'] == 'Returned' && $order['main_category'] == 'Cloths'): ?>
+        <!-- Show Dry Clean Button -->
         <button 
             class="btn btn-sm btn-warning"
             onclick="forwardToDryClean('<?= $order['invoice_id'] ?>')">
             Send to Dry Clean
         </button>
+
+    <?php elseif ($order['status'] == 'Returned' && $order['main_category'] != 'Cloths'): ?>
+        <!-- Show Add to Stock Button -->
+        <button 
+            class="btn btn-sm btn-success"
+            onclick="addToStock('<?= $order['invoice_id'] ?>', '<?= $order['item_name'] ?>')">
+            Add to Stock
+        </button>
+
     <?php else: ?>
+        <!-- Normal dropdown -->
         <select name="status" class="form-select form-select-sm"
                 onchange="updateStatus(this.value, '<?= $order['invoice_id'] ?>', '<?= $order['item_name'] ?>')">
             <option value="Available" <?= ($order['status'] == 'Available') ? 'selected' : '' ?>>Available</option>
@@ -177,6 +190,7 @@
         </select>
     <?php endif; ?>
 </td>
+
       <td>
               <button class="btn btn-sm btn-primary">Edit</button>
               <button class="btn btn-sm btn-danger">Delete</button>
@@ -209,6 +223,26 @@
   </div>
 </div>
 
+<script>
+  function addToStock(invoiceId, itemName) {
+    fetch("<?= base_url('updateOrderStatus') ?>", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: "invoice_id=" + invoiceId + "&item_name=" + encodeURIComponent(itemName) + "&status=Available"
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.success) {
+            Swal.fire({ icon: 'success', title: 'Stock Updated!', text: 'Item moved back to stock.', timer: 1500, showConfirmButton: false })
+                .then(() => location.reload()); // reload to refresh table
+        } else {
+            Swal.fire({ icon: 'error', title: 'Failed!', text: data.msg || 'Something went wrong.' });
+        }
+    })
+    .catch(err => console.error(err));
+}
+
+</script>
 <script>
 function showImage(imgElement) {
   document.getElementById('modalImage').src = imgElement.src;

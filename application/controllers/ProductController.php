@@ -39,6 +39,7 @@ class ProductController extends CI_Controller
             'name'        => $this->input->post('name'),
             'price'       => $this->input->post('price'),
             'category_id' => $this->input->post('category_id'),
+            'main_category' => $this->input->post('main_category'), // New field for main category
             'stock'       => $this->input->post('stock'),
             'status'      => $this->input->post('status'),
             'image'       => $imagePath
@@ -105,6 +106,7 @@ class ProductController extends CI_Controller
             'name'        => $this->input->post('name'),
             'price'       => $this->input->post('price'),
             'category_id' => $this->input->post('category_id'),
+            'main_category' => $this->input->post('main_category'), // New field for main category
             'stock'       => $this->input->post('stock'),
             'status'      => $this->input->post('status'),
             'image'       => $imagePath

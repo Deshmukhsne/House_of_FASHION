@@ -116,6 +116,8 @@
                                         <!-- In your table header -->
                                         <th>Price(Rs)</th>
                                         <th>Category</th>
+                                        <th>Main Category</th>
+
                                         <th>Stock</th>
                                         <th>Status</th>
                                         <th>Actions</th>
@@ -135,6 +137,7 @@
             <td><?= htmlspecialchars($product->name) ?></td>
             <td><?= number_format((float)($product->price ?? 0), 2) ?></td>
             <td><?= htmlspecialchars($product->category_name ?? '') ?></td>
+            <td><?= htmlspecialchars($product->main_category ?? '') ?></td>
             <td><?= htmlspecialchars($product->stock ?? 0) ?></td>
             <td>
                 <span class="status-badge <?= ($product->status ?? '') == 'Available' ? 'status-available' : (($product->status ?? '') == 'Rented' ? 'status-rented' : 'status-dryclean') ?>">
@@ -186,6 +189,13 @@
                                         <option value="<?= $cat['id'] ?>"><?= $cat['name'] ?></option>
                                     <?php endforeach; ?>
                                 </select>
+                                
+                                <select name="main_category" class="form-select mb-2">
+                                    <option value="" readonly >Main Category</option>
+                                    <option value="Available">Cloths</option>
+                                    <option value="Rented">Accessories</option>
+                                </select>
+
 
                                 <input type="number" name="stock" class="form-control mb-2" placeholder="Stock Quantity" required>
                                 <select name="status" class="form-select mb-2">
@@ -267,7 +277,13 @@
                                             <?php endforeach; ?>
                                         </select>
                                     </div>
-
+                                    <div class="mb-3">
+                                        <label>Main Category</label>
+                                        <select class="form-select" name="main_category" id="edit_product_main_category">
+                                            <option value="" readonly>Main Category</option>
+                                            <option value="Cloths">Cloths</option>
+                                            <option value="Accessories">Accessories</option>
+                                        </select>
 
                                     <!-- Stock -->
                                     <div class="mb-3">

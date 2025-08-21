@@ -382,7 +382,8 @@ class AdminController extends CI_Controller
     {
         $this->load->view('Admin/BillHistory');
     }
-    public function ConsentForm()
+    //concent form 
+    public function consent_form()
     {
         $this->load->view('Admin/consent');
     }
@@ -530,111 +531,106 @@ class AdminController extends CI_Controller
     }
 
     /* -------- SAVE INVOICE ---------- */
-    public function save_invoice()
-    {
-        // Basic validation (server-side)
+    // public function save_invoice()
+    // {
+    //     // Basic validation (server-side)
 
-        $customer_name   = $this->input->post('customerName', true);
-        $customer_mobile = $this->input->post('customerMobile', true);
-        $date            = $this->input->post('date', true);
-        $return_date         = $this->input->post('return_date', true);
-
-
-        if (!$customer_name || !$date || !$customer_mobile) {
-            echo json_encode([
-                'success' => false,
-                'message' => 'Customer Name, Mobile No, and Date are required.'
-            ]);
-            exit;
-        }
-
-        // Header fields
-        $depositAmount   = (float)$this->input->post('depositAmount');
-        $discountAmount  = (float)$this->input->post('discountAmount');
-        $totalAmount     = (float)$this->input->post('totalAmount');   // from hidden input
-        $totalPayable    = (float)$this->input->post('totalPayable');  // from hidden input
-        $paidAmount      = (float)$this->input->post('paidAmount');
-        $dueAmount       = (float)$this->input->post('dueAmount');
-        $paymentMode     = $this->input->post('paymentMode', true);
-
-        // Items arrays
-        $category_ids = $this->input->post('category');   // category_id[]
-        $product_ids  = $this->input->post('itemName');   // product_id[]
-        $prices       = $this->input->post('price');      // price[]
-        $qtys         = $this->input->post('qty');        // qty[]
-        $totals       = $this->input->post('total');      // total[]
-
-        // Insert invoice header with empty invoice_no (will be updated after generation)
-        $invoice_data = [
-            'invoice_no'      => '',
-            'customer_name'   => $customer_name,
-            'customer_mobile' => $customer_mobile,
-            'invoice_date'    => $date,
-            'return_date'     => $return_date,
-            'deposit_amount'  => $depositAmount,
-            'discount_amount' => $discountAmount,
-            'total_amount'    => $totalAmount,
-            'total_payable'   => $totalPayable,
-            'paid_amount'     => $paidAmount,
-            'due_amount'      => $dueAmount,
-            'payment_mode'    => $paymentMode
-        ];
-        $invoice_id = $this->Billing_model->insert_invoice($invoice_data);
+    //     $customer_name   = $this->input->post('customerName', true);
+    //     $customer_mobile = $this->input->post('customerMobile', true);
+    //     $date            = $this->input->post('date', true);
+    //     $return_date         = $this->input->post('return_date', true);
 
 
-        // Prepare and insert items
-        $items = [];
-        if (is_array($product_ids)) {
-            // Cache lookups to avoid repeated queries
-            $cats = $this->Billing_model->get_categories_map(); // [id => name]
-            $prods = $this->Billing_model->get_products_map();  // [id => ['name'=>..., 'price'=>..., 'category_id'=>...]]
+    //     if (!$customer_name || !$date || !$customer_mobile) {
+    //         echo json_encode([
+    //             'success' => false,
+    //             'message' => 'Customer Name, Mobile No, and Date are required.'
+    //         ]);
+    //         exit;
+    //     }
 
-            for ($i = 0; $i < count($product_ids); $i++) {
-                $pid = (int)$product_ids[$i];
-                if (!isset($prods[$pid])) continue;
+    //     // Header fields
+    //     $depositAmount   = (float)$this->input->post('depositAmount');
+    //     $discountAmount  = (float)$this->input->post('discountAmount');
+    //     $totalAmount     = (float)$this->input->post('totalAmount');   // from hidden input
+    //     $totalPayable    = (float)$this->input->post('totalPayable');  // from hidden input
+    //     $paidAmount      = (float)$this->input->post('paidAmount');
+    //     $dueAmount       = (float)$this->input->post('dueAmount');
+    //     $paymentMode     = $this->input->post('paymentMode', true);
 
-                $cat_id = (int)($category_ids[$i] ?? $prods[$pid]['category_id']);
-                $category_name = $cats[$cat_id] ?? 'NA';
+    //     // Items arrays
+    //     $category_ids = $this->input->post('category');   // category_id[]
+    //     $product_ids  = $this->input->post('itemName');   // product_id[]
+    //     $prices       = $this->input->post('price');      // price[]
+    //     $qtys         = $this->input->post('qty');        // qty[]
+    //     $totals       = $this->input->post('total');      // total[]
 
-                $price = isset($prices[$i]) ? (float)$prices[$i] : (float)$prods[$pid]['price'];
-                $qty   = isset($qtys[$i]) ? (int)$qtys[$i] : 1;
-                $total = isset($totals[$i]) ? (float)$totals[$i] : ($price * $qty);
+    //     // Insert invoice header with empty invoice_no (will be updated after generation)
+    //     $invoice_data = [
+    //         'invoice_no'      => '',
+    //         'customer_name'   => $customer_name,
+    //         'customer_mobile' => $customer_mobile,
+    //         'invoice_date'    => $date,
+    //         'return_date'     => $return_date,
+    //         'deposit_amount'  => $depositAmount,
+    //         'discount_amount' => $discountAmount,
+    //         'total_amount'    => $totalAmount,
+    //         'total_payable'   => $totalPayable,
+    //         'paid_amount'     => $paidAmount,
+    //         'due_amount'      => $dueAmount,
+    //         'payment_mode'    => $paymentMode
+    //     ];
+    //     $invoice_id = $this->Billing_model->insert_invoice($invoice_data);
 
-                $items[] = [
-                    'invoice_id' => $invoice_id,
-                    'category'   => $category_name,
-                    'item_name'  => $prods[$pid]['name'],
-                    'price'      => $price,
-                    'quantity'   => $qty,
-                    'total'      => $total
-                ];
-            }
-        }
-        if (!empty($items)) {
-            $this->Billing_model->insert_invoice_items($items);
-        }
-        // Update stock for each item
-        $this->load->model('Product_model');
-        foreach ($items as $item) {
-            $this->Product_model->update_stock_after_sale($item['item_name'], $item['quantity']);
-        }
-        foreach ($items as $item) {
-            $this->OrdersModel->insert_order_from_invoice($invoice_id, $item);
-        }
-        // Generate custom invoice number
-        $unique_code = strtoupper(substr(md5(uniqid(rand(), true)), 0, 6));
-        $item_count = count($items);
-        $custom_invoice_no = "BILL{$invoice_id}{$item_count}{$unique_code}";
-        $this->Billing_model->update_invoice_number($invoice_id, $custom_invoice_no);
 
-        // Return JSON response
-        echo json_encode([
-            'success' => true,
-            'message' => 'Invoice saved successfully!',
-            'invoice_no' => $custom_invoice_no
-        ]);
-        exit;
-    }
+    //     // Prepare and insert items
+    //     $items = [];
+    //     if (is_array($product_ids)) {
+    //         // Cache lookups to avoid repeated queries
+    //         $cats = $this->Billing_model->get_categories_map(); // [id => name]
+    //         $prods = $this->Billing_model->get_products_map();  // [id => ['name'=>..., 'price'=>..., 'category_id'=>...]]
+
+    //         for ($i = 0; $i < count($product_ids); $i++) {
+    //             $pid = (int)$product_ids[$i];
+    //             if (!isset($prods[$pid])) continue;
+
+    //             $cat_id = (int)($category_ids[$i] ?? $prods[$pid]['category_id']);
+    //             $category_name = $cats[$cat_id] ?? 'NA';
+
+    //             $price = isset($prices[$i]) ? (float)$prices[$i] : (float)$prods[$pid]['price'];
+    //             $qty   = isset($qtys[$i]) ? (int)$qtys[$i] : 1;
+    //             $total = isset($totals[$i]) ? (float)$totals[$i] : ($price * $qty);
+
+    //             $items[] = [
+    //                 'invoice_id' => $invoice_id,
+    //                 'category'   => $category_name,
+    //                 'item_name'  => $prods[$pid]['name'],
+    //                 'price'      => $price,
+    //                 'quantity'   => $qty,
+    //                 'total'      => $total
+    //             ];
+    //         }
+    //     }
+    //     if (!empty($items)) {
+    //         $this->Billing_model->insert_invoice_items($items);
+    //     }
+    //     foreach ($items as $item) {
+    //     $this->OrdersModel->insert_order_from_invoice($invoice_id, $item);
+    // }
+    //     // Generate custom invoice number
+    //     $unique_code = strtoupper(substr(md5(uniqid(rand(), true)), 0, 6));
+    //     $item_count = count($items);
+    //     $custom_invoice_no = "BILL{$invoice_id}{$item_count}{$unique_code}";
+    //     $this->Billing_model->update_invoice_number($invoice_id, $custom_invoice_no);
+
+    //     // Return JSON response
+    //     echo json_encode([
+    //         'success' => true,
+    //         'message' => 'Invoice saved successfully!',
+    //         'invoice_no' => $custom_invoice_no
+    //     ]);
+    //     exit;
+    // }
 
     /* -------- BILLING HISTORY (LIST) ---------- */
     public function BillHistory()
@@ -832,5 +828,43 @@ class AdminController extends CI_Controller
         $this->load->model('OrdersModel');
         $data['sales'] = $this->OrdersModel->get_product_sales();
         $this->load->view('product_sales', $data);
+    }
+    //Billing section and consent form
+    public function save_invoice()
+    {
+        $this->load->database();
+        $this->load->helper('url');
+
+
+        $invoiceData = [
+            'invoice_no'     => $this->input->post('invoiceNo'),
+            'customer_name'  => $this->input->post('customerName'),
+            'customer_mobile' => $this->input->post('customerMobile'),
+            'invoice_date'   => $this->input->post('date'),
+            'return_date'    => $this->input->post('returnDate'),
+            'deposit_amount' => $this->input->post('depositAmount'),
+            'discount_amount' => $this->input->post('discountAmount'),
+            'total_amount'   => $this->input->post('totalAmount'),
+            'total_payable'  => $this->input->post('totalPayable'),
+            'paid_amount'    => $this->input->post('paidAmount'),
+            'due_amount'     => $this->input->post('dueAmount'),
+            'payment_mode'   => $this->input->post('paymentMode'),
+        ];
+
+
+        $inserted = $this->db->insert('invoices', $invoiceData);
+
+        if ($inserted) {
+            echo json_encode([
+                'success' => true,
+                'message' => 'Invoice saved successfully!',
+                'invoice_no' => $invoiceData['invoice_no']
+            ]);
+        } else {
+            echo json_encode([
+                'success' => false,
+                'message' => 'Failed to save invoice'
+            ]);
+        }
     }
 }
