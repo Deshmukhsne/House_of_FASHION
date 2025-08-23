@@ -283,197 +283,218 @@
                                     </div>
                                 </div>
                             </div>
-                             
+
                             <div class="row mt-5">
                                 <div class="row">
-                                <!-- Product-wise Sales -->
-                                <div class="col-md-6">
-                                    <div class="card">
-                                        <div class="card-header d-flex justify-content-between align-items-center">
-                                            <h4 class="mb-0">Product-wise Sales</h4>
-                                            <input type="text" id="searchBox" class="form-control w-50" placeholder="Search...">
-                                        </div>
+                                    <!-- Product-wise Sales -->
+                                    <div class="col-md-6">
+                                        <div class="card">
+                                            <div class="card-header d-flex justify-content-between align-items-center">
+                                                <h4 class="mb-0">Product-wise Sales</h4>
+                                                <input type="text" id="searchBox" class="form-control w-50" placeholder="Search...">
+                                            </div>
 
-                                        <div class="card-body">
-                                            <table class="table table-bordered" id="salesTable">
-                                            <thead>
-                                                <tr>
-                                                    <th>Category</th>
-                                                    <th>Product</th>
-                                                    <th>Items Sold</th>
-                                                    <th>Revenue</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <?php foreach ($sales as $s): ?>
-                                                <tr>
-                                                    <td><?= $s->category ?></td>
-                                                    <td><?= $s->item_name ?></td>
-                                                    <td><?= $s->items_rented ?></td>
-                                                    <td>₹<?= number_format($s->revenue, 2) ?></td>
-                                                </tr>
-                                                <?php endforeach; ?>
-                                            </tbody>
-                                            </table>
+                                            <div class="card-body">
+                                                <table class="table table-bordered" id="salesTable">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Category</th>
+                                                            <th>Product</th>
+                                                            <th>Items Sold</th>
+                                                            <th>Revenue</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <?php foreach ($sales as $s): ?>
+                                                            <tr>
+                                                                <td><?= $s->category_name ?></td>
+                                                                <td><?= $s->item_name ?></td>
+                                                                <td><?= $s->items_rented ?></td>
+                                                                <td>₹<?= number_format($s->revenue, 2) ?></td>
+                                                            </tr>
+                                                        <?php endforeach; ?>
+                                                    </tbody>
+                                                </table>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
 
-                                <!-- Recent Transactions -->
-                                <div class="col-md-6">
-                                    <div class="card h-100">
-                                        <div class="card-header d-flex justify-content-between align-items-center">
-                                            <h5 class="mb-0">Recent Transactions</h5>
-                                            <a href="#" class="btn btn-sm btn-outline-primary">View All</a>
-                                        </div>
-                                        <div class="card-body p-0">
-                                            <div class="list-group list-group-flush">
-                                            <a href="#" class="list-group-item list-group-item-action">
-                                                <div class="d-flex w-100 justify-content-between">
-                                                    <h6 class="mb-1">Bill #MLC-1025</h6>
-                                                    <small class="text-success">₹3,850</small>
+                                    <!-- Recent Transactions -->
+                                    <div class="col-md-6">
+                                        <div class="card h-100">
+                                            <div class="card-header d-flex justify-content-between align-items-center">
+                                                <h5 class="mb-0">Recent Transactions</h5>
+                                                <a href="#" class="btn btn-sm btn-outline-primary">View All</a>
+                                            </div>
+                                            <div class="card-body p-0">
+                                                <div class="list-group list-group-flush">
+                                                    <a href="#" class="list-group-item list-group-item-action">
+                                                        <div class="d-flex w-100 justify-content-between">
+                                                            <h6 class="mb-1">Bill #MLC-1025</h6>
+                                                            <small class="text-success">₹3,850</small>
+                                                        </div>
+                                                        <small class="text-muted">Saree (2), Accessories (3) - Cash Payment</small>
+                                                    </a>
+                                                    <a href="#" class="list-group-item list-group-item-action">
+                                                        <div class="d-flex w-100 justify-content-between">
+                                                            <h6 class="mb-1">Bill #MLC-1024</h6>
+                                                            <small class="text-success">₹5,250</small>
+                                                        </div>
+                                                        <small class="text-muted">Dress (1), Accessories (2) - Online Payment</small>
+                                                    </a>
+                                                    <a href="#" class="list-group-item list-group-item-action">
+                                                        <div class="d-flex w-100 justify-content-between">
+                                                            <h6 class="mb-1">Bill #MLC-1023</h6>
+                                                            <small class="text-warning">₹2,150 (Pending)</small>
+                                                        </div>
+                                                        <small class="text-muted">Saree (1) - Credit</small>
+                                                    </a>
+                                                    <a href="#" class="list-group-item list-group-item-action">
+                                                        <div class="d-flex w-100 justify-content-between">
+                                                            <h6 class="mb-1">Bill #MLC-1022</h6>
+                                                            <small class="text-success">₹4,750</small>
+                                                        </div>
+                                                        <small class="text-muted">Dress (2) - Cash Payment</small>
+                                                    </a>
                                                 </div>
-                                                <small class="text-muted">Saree (2), Accessories (3) - Cash Payment</small>
-                                            </a>
-                                            <a href="#" class="list-group-item list-group-item-action">
-                                                <div class="d-flex w-100 justify-content-between">
-                                                    <h6 class="mb-1">Bill #MLC-1024</h6>
-                                                    <small class="text-success">₹5,250</small>
-                                                </div>
-                                                <small class="text-muted">Dress (1), Accessories (2) - Online Payment</small>
-                                            </a>
-                                            <a href="#" class="list-group-item list-group-item-action">
-                                                <div class="d-flex w-100 justify-content-between">
-                                                    <h6 class="mb-1">Bill #MLC-1023</h6>
-                                                    <small class="text-warning">₹2,150 (Pending)</small>
-                                                </div>
-                                                <small class="text-muted">Saree (1) - Credit</small>
-                                            </a>
-                                            <a href="#" class="list-group-item list-group-item-action">
-                                                <div class="d-flex w-100 justify-content-between">
-                                                    <h6 class="mb-1">Bill #MLC-1022</h6>
-                                                    <small class="text-success">₹4,750</small>
-                                                </div>
-                                                <small class="text-muted">Dress (2) - Cash Payment</small>
-                                            </a>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                </div>
                             </div>
 
                             <script>
-document.getElementById("searchBox").addEventListener("keyup", function() {
-    let input = this.value.toLowerCase();  // get typed text
-    let rows = document.querySelectorAll("#salesTable tbody tr");
+                                document.getElementById("searchBox").addEventListener("keyup", function() {
+                                    let input = this.value.toLowerCase(); // get typed text
+                                    let rows = document.querySelectorAll("#salesTable tbody tr");
 
-    rows.forEach(row => {
-        let category = row.cells[0].textContent.toLowerCase();
-        let product  = row.cells[1].textContent.toLowerCase();
+                                    rows.forEach(row => {
+                                        let category = row.cells[0].textContent.toLowerCase();
+                                        let product = row.cells[1].textContent.toLowerCase();
 
-        // show row if input matches category OR product (or empty = show all)
-        if (category.includes(input) || product.includes(input)) {
-            row.style.display = "";
-        } else {
-            row.style.display = "none";
-        }
-    });
-});
-</script>
+                                        // show row if input matches category OR product (or empty = show all)
+                                        if (category.includes(input) || product.includes(input)) {
+                                            row.style.display = "";
+                                        } else {
+                                            row.style.display = "none";
+                                        }
+                                    });
+                                });
+                            </script>
 
-                        
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+                            <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
                             <script>
                                 document.addEventListener('DOMContentLoaded', function() {
-                                  // Revenue Chart
-const revenueCtx = document.getElementById('revenueChart').getContext('2d');
-const revenueChart = new Chart(revenueCtx, {
-    type: 'line',
-    data: {
-        labels: <?php echo json_encode($revenue_analytics['labels']); ?>,
-        datasets: [{
-            label: 'Daily Revenue',
-            data: <?php echo json_encode($revenue_analytics['datasets']['total_revenue']); ?>,
-            borderColor: '#ffda06',
-            backgroundColor: 'rgba(255, 218, 6, 0.15)',
-            tension: 0.3,
-            fill: true,
-            pointRadius: 4,
-            pointHoverRadius: 6,
-            borderWidth: 3
-        }]
-    },
-    options: {
-        responsive: true,
-        plugins: {
-            legend: {
-                position: 'top',
-                labels: { font: { weight: '600' } }
-            },
-            tooltip: {
-                callbacks: {
-                    label: ctx => `Revenue: ₹${ctx.raw.toLocaleString('en-IN')}`
-                },
-                backgroundColor: 'rgba(0,0,0,0.75)',
-                titleFont: { weight: '700' },
-                bodyFont: { weight: '500' }
-            }
-        },
-        scales: {
-            y: {
-                beginAtZero: true,
-                ticks: {
-                    callback: val => '₹' + val.toLocaleString('en-IN'),
-                    font: { weight: '600' }
-                },
-                grid: { color: '#e9ecef' }
-            },
-            x: {
-                ticks: { font: { weight: '600' } },
-                grid: { display: false }
-            }
-        }
-    }
-});
+                                    // Revenue Chart
+                                    const revenueCtx = document.getElementById('revenueChart').getContext('2d');
+                                    const revenueChart = new Chart(revenueCtx, {
+                                        type: 'line',
+                                        data: {
+                                            labels: <?php echo json_encode($revenue_analytics['labels']); ?>,
+                                            datasets: [{
+                                                label: 'Daily Revenue',
+                                                data: <?php echo json_encode($revenue_analytics['datasets']['total_revenue']); ?>,
+                                                borderColor: '#ffda06',
+                                                backgroundColor: 'rgba(255, 218, 6, 0.15)',
+                                                tension: 0.3,
+                                                fill: true,
+                                                pointRadius: 4,
+                                                pointHoverRadius: 6,
+                                                borderWidth: 3
+                                            }]
+                                        },
+                                        options: {
+                                            responsive: true,
+                                            plugins: {
+                                                legend: {
+                                                    position: 'top',
+                                                    labels: {
+                                                        font: {
+                                                            weight: '600'
+                                                        }
+                                                    }
+                                                },
+                                                tooltip: {
+                                                    callbacks: {
+                                                        label: ctx => `Revenue: ₹${ctx.raw.toLocaleString('en-IN')}`
+                                                    },
+                                                    backgroundColor: 'rgba(0,0,0,0.75)',
+                                                    titleFont: {
+                                                        weight: '700'
+                                                    },
+                                                    bodyFont: {
+                                                        weight: '500'
+                                                    }
+                                                }
+                                            },
+                                            scales: {
+                                                y: {
+                                                    beginAtZero: true,
+                                                    ticks: {
+                                                        callback: val => '₹' + val.toLocaleString('en-IN'),
+                                                        font: {
+                                                            weight: '600'
+                                                        }
+                                                    },
+                                                    grid: {
+                                                        color: '#e9ecef'
+                                                    }
+                                                },
+                                                x: {
+                                                    ticks: {
+                                                        font: {
+                                                            weight: '600'
+                                                        }
+                                                    },
+                                                    grid: {
+                                                        display: false
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    });
 
                                     // Payment Chart
-                                  // Payment Chart
-const paymentCtx = document.getElementById('paymentChart').getContext('2d');
-const paymentChart = new Chart(paymentCtx, {
-    type: 'doughnut',
-    data: {
-        labels: <?php echo json_encode($payment_stats['labels']); ?>,
-        datasets: [{
-            data: <?php echo json_encode($payment_stats['amounts']); ?>,
-            backgroundColor: ['#f3ac29', '#8d6213'],
-            borderWidth: 0
-        }]
-    },
-    options: {
-        responsive: true,
-        cutout: '70%',
-        plugins: {
-            legend: {
-                position: 'bottom',
-                labels: {
-                    font: { weight: '600', size: 14 }
-                }
-            },
-            tooltip: {
-                callbacks: {
-                    label: ctx => {
-                        const label = ctx.label || '';
-                        const value = ctx.raw || 0;
-                        const total = ctx.dataset.data.reduce((a, b) => a + b, 0);
-                        const percent = Math.round((value / total) * 100);
-                        return `${label}: ₹${value.toLocaleString('en-IN')} (${percent}%)`;
-                    }
-                }
-            }
-        }
-    }
-});
+                                    // Payment Chart
+                                    const paymentCtx = document.getElementById('paymentChart').getContext('2d');
+                                    const paymentChart = new Chart(paymentCtx, {
+                                        type: 'doughnut',
+                                        data: {
+                                            labels: <?php echo json_encode($payment_stats['labels']); ?>,
+                                            datasets: [{
+                                                data: <?php echo json_encode($payment_stats['amounts']); ?>,
+                                                backgroundColor: ['#f3ac29', '#8d6213'],
+                                                borderWidth: 0
+                                            }]
+                                        },
+                                        options: {
+                                            responsive: true,
+                                            cutout: '70%',
+                                            plugins: {
+                                                legend: {
+                                                    position: 'bottom',
+                                                    labels: {
+                                                        font: {
+                                                            weight: '600',
+                                                            size: 14
+                                                        }
+                                                    }
+                                                },
+                                                tooltip: {
+                                                    callbacks: {
+                                                        label: ctx => {
+                                                            const label = ctx.label || '';
+                                                            const value = ctx.raw || 0;
+                                                            const total = ctx.dataset.data.reduce((a, b) => a + b, 0);
+                                                            const percent = Math.round((value / total) * 100);
+                                                            return `${label}: ₹${value.toLocaleString('en-IN')} (${percent}%)`;
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    });
                                 });
                             </script>
 
@@ -506,4 +527,4 @@ const paymentChart = new Chart(paymentCtx, {
                             <?php endif; ?>
 </body>
 
-</html> 
+</html>

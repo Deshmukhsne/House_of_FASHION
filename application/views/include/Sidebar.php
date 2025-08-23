@@ -308,6 +308,12 @@
                     <div class="collapse" id="drySubmenu">
                         <ul class="nav flex-column ms-3">
                             <li class="nav-item">
+                                <a href="<?= base_url('AdminController/Vendors') ?>" class="sidebar-link" style="font-size: 18px;">
+                                    <i class="bi bi-file-earmark-plus"></i>
+                                    <span class="ms-1">Vendor Management</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
                                 <a href="<?= base_url('AdminController/DryCleaning_Forward') ?>" class="sidebar-link" style="font-size: 18px;">
                                     <i class="bi bi-file-earmark-plus"></i>
                                     <span class="ms-1">Give to Drycleaning</span>
@@ -370,7 +376,7 @@
                                 </a>
                             </li>
 
-                         
+
                         </ul>
                     </div>
                 </li>

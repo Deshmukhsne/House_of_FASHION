@@ -116,53 +116,60 @@
                                         <!-- In your table header -->
                                         <th>Price(Rs)</th>
                                         <th>Category</th>
-                                        <th>Main Category</th>
+                                        <!-- <th>Main Category</th> -->
 
                                         <th>Stock</th>
                                         <th>Status</th>
                                         <th>Actions</th>
                                     </tr>
                                 </thead>
-                               <tbody>
-    <?php foreach ($products as $product): ?>
-        <tr>
-            <td>
-                <?php if (!empty($product->image) && file_exists($product->image)): ?>
-                    <img src="<?= base_url($product->image) ?>" height="60"
-                         onclick="openImageModal('<?= base_url($product->image) ?>')" style="cursor:pointer;" />
-                <?php else: ?>
-                    <span>No Image</span>
-                <?php endif; ?>
-            </td>
-            <td><?= htmlspecialchars($product->name) ?></td>
-            <td><?= number_format((float)($product->price ?? 0), 2) ?></td>
-            <td><?= htmlspecialchars($product->category_name ?? '') ?></td>
-            <td><?= htmlspecialchars($product->main_category ?? '') ?></td>
-            <td><?= htmlspecialchars($product->stock ?? 0) ?></td>
-            <td>
-                <span class="status-badge <?= ($product->status ?? '') == 'Available' ? 'status-available' : (($product->status ?? '') == 'Rented' ? 'status-rented' : 'status-dryclean') ?>">
-                    <?= htmlspecialchars($product->status ?? '') ?>
-                </span>
-            </td>
-            <td>
-                <button type="button" class="btn btn-sm btn-outline-primary"
-                    onclick='openEditModal(<?= json_encode([
-                        "id" => $product->id,
-                        "name" => $product->name,
-                        "price" => $product->price,
-                        "stock" => $product->stock ?? 0,
-                        "status" => $product->status ?? "",
-                        "category_id" => $product->category_id,
-                        "image" => $product->image
-                    ]) ?>)'>
-                    Edit
-                </button>
-                <a href="<?= base_url('ProductController/delete_product/' . $product->id) ?>" 
-                   class="btn btn-sm btn-danger" onclick="return confirm('Delete?')">Delete</a>
-            </td>
-        </tr>
-    <?php endforeach; ?>
-</tbody>
+                                <tbody>
+                                    <?php foreach ($products as $product): ?>
+                                        <tr>
+                                            <td>
+                                                <?php if (!empty($product->image) && file_exists($product->image)): ?>
+                                                    <img src="<?= base_url($product->image) ?>" height="60"
+                                                        onclick="openImageModal('<?= base_url($product->image) ?>')" style="cursor:pointer;" />
+                                                <?php else: ?>
+                                                    <span>No Image</span>
+                                                <?php endif; ?>
+                                            </td>
+                                            <td><?= htmlspecialchars($product->name) ?></td>
+                                            <td><?= number_format((float)($product->price ?? 0), 2) ?></td>
+                                            <td><?= htmlspecialchars($product->category_name ?? '') ?></td>
+                                            <!-- <td><?= htmlspecialchars($product->main_category ?? '') ?></td> -->
+                                            <td><?= htmlspecialchars($product->stock ?? 0) ?></td>
+
+                                            <td>
+                                                <?php
+                                                $status = ($product->stock <= 0) ? 'Rented' : 'Available';
+                                                ?>
+                                                <span class="status-badge 
+        <?= $status == 'Available' ? 'status-available' : 'status-rented' ?>">
+                                                    <?= htmlspecialchars($status) ?>
+                                                </span>
+                                            </td>
+
+
+                                            <td>
+                                                <button type="button" class="btn btn-sm btn-outline-primary"
+                                                    onclick='openEditModal(<?= json_encode([
+                                                                                "id" => $product->id,
+                                                                                "name" => $product->name,
+                                                                                "price" => $product->price,
+                                                                                "stock" => $product->stock ?? 0,
+                                                                                "status" => $product->status ?? "",
+                                                                                "category_id" => $product->category_id,
+                                                                                "image" => $product->image
+                                                                            ]) ?>)'>
+                                                    Edit
+                                                </button>
+                                                <a href="<?= base_url('ProductController/delete_product/' . $product->id) ?>"
+                                                    class="btn btn-sm btn-danger" onclick="return confirm('Delete?')">Delete</a>
+                                            </td>
+                                        </tr>
+                                    <?php endforeach; ?>
+                                </tbody>
 
                             </table>
 
@@ -189,9 +196,9 @@
                                         <option value="<?= $cat['id'] ?>"><?= $cat['name'] ?></option>
                                     <?php endforeach; ?>
                                 </select>
-                                
+
                                 <select name="main_category" class="form-select mb-2">
-                                    <option value="" readonly >Main Category</option>
+                                    <option value="" readonly>Main Category</option>
                                     <option value="Available">Cloths</option>
                                     <option value="Rented">Accessories</option>
                                 </select>
@@ -285,38 +292,38 @@
                                             <option value="Accessories">Accessories</option>
                                         </select>
 
-                                    <!-- Stock -->
-                                    <div class="mb-3">
-                                        <label>Stock</label>
-                                        <input type="number" class="form-control" name="stock" id="edit_product_stock">
-                                    </div>
+                                        <!-- Stock -->
+                                        <div class="mb-3">
+                                            <label>Stock</label>
+                                            <input type="number" class="form-control" name="stock" id="edit_product_stock">
+                                        </div>
 
-                                    <!-- Status -->
-                                    <div class="mb-3">
-                                        <label>Status</label>
-                                        <select class="form-select" name="status" id="edit_product_status">
-                                            <option value="Available">Available</option>
-                                            <option value="Rented">Rented</option>
-                                            <option value="In Dry Clean">In Dry Clean</option>
-                                        </select>
-                                    </div>
+                                        <!-- Status -->
+                                        <div class="mb-3">
+                                            <label>Status</label>
+                                            <select class="form-select" name="status" id="edit_product_status">
+                                                <option value="Available">Available</option>
+                                                <option value="Rented">Rented</option>
+                                                <option value="In Dry Clean">In Dry Clean</option>
+                                            </select>
+                                        </div>
 
-                                    <!-- Current Image -->
-                                    <div class="mb-3">
-                                        <label>Current Image</label><br>
-                                        <img id="edit_product_image_preview" src="" alt="Current Product Image" width="100" class="border rounded mb-2">
-                                    </div>
+                                        <!-- Current Image -->
+                                        <div class="mb-3">
+                                            <label>Current Image</label><br>
+                                            <img id="edit_product_image_preview" src="" alt="Current Product Image" width="100" class="border rounded mb-2">
+                                        </div>
 
-                                    <!-- New Image -->
-                                    <div class="mb-3">
-                                        <label>Change Image</label>
-                                        <input type="file" class="form-control" name="image">
+                                        <!-- New Image -->
+                                        <div class="mb-3">
+                                            <label>Change Image</label>
+                                            <input type="file" class="form-control" name="image">
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="submit" class="btn btn-primary">Update Product</button>
                                     </div>
                                 </div>
-                                <div class="modal-footer">
-                                    <button type="submit" class="btn btn-primary">Update Product</button>
-                                </div>
-                            </div>
                         </form>
                     </div>
                 </div>

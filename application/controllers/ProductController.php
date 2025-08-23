@@ -117,4 +117,189 @@ class ProductController extends CI_Controller
         $this->session->set_flashdata('success', 'Product updated successfully!');
         redirect('ProductController');
     }
+    // Add this method to your ProductController for testing
+    public function test_stock_update()
+    {
+        $this->load->model('Product_model');
+
+        // Test with a known product
+        $test_product_name = "Banarsi Saree"; // Use a product name you know exists
+        $test_quantity = 1;
+
+        echo "Testing stock update for: " . $test_product_name . "<br>";
+
+        $result = $this->Product_model->update_stock_after_sale($test_product_name, $test_quantity);
+
+        echo "Result: " . ($result ? "SUCCESS" : "FAILED") . "<br>";
+
+        // Check current stock
+        $this->db->where('name', $test_product_name);
+        $product = $this->db->get('products')->row();
+
+        if ($product) {
+            echo "Current stock: " . $product->stock . "<br>";
+        } else {
+            echo "Product not found!<br>";
+        }
+
+        // Show all products for reference
+        echo "<h3>All Products:</h3>";
+        $products = $this->db->get('products')->result();
+        foreach ($products as $p) {
+            echo $p->name . " - Stock: " . $p->stock . "<br>";
+        }
+    }
+    // Add this to your ProductController for testing the invoice process
+    public function test_invoice_process()
+    {
+        $this->load->model('Product_model');
+
+        // Simulate POST data that would come from a real invoice
+        $_POST = [
+            'invoiceNo' => 'TEST-001',
+            'customerName' => 'Test Customer',
+            'customerMobile' => '1234567890',
+            'date' => date('Y-m-d'),
+            'returnDate' => date('Y-m-d', strtotime('+7 days')),
+            'depositAmount' => 100,
+            'discountAmount' => 0,
+            'totalAmount' => 100,
+            'totalPayable' => 100,
+            'paidAmount' => 100,
+            'dueAmount' => 0,
+            'paymentMode' => 'Cash',
+            'items' => [
+                [
+                    'item_name' => 'Banarsi Saree',
+                    'category' => 'Saree',
+                    'price' => 100,
+                    'quantity' => 1,
+                    'total' => 100
+                ]
+            ]
+        ];
+
+        // Call the save_invoice method
+        $this->save_invoice();
+
+        // Check the result
+        echo "<br><br>Check your application/logs/ directory for detailed logs";
+    }
+    public function save_invoice()
+    {
+        $this->load->database();
+        $this->load->helper('url');
+        $this->load->model('Product_model');
+
+        // Enable detailed logging
+        log_message('debug', '=== START OF save_invoice PROCESS ===');
+        log_message('debug', 'POST data: ' . print_r($_POST, true));
+
+        // Save main invoice
+        $invoiceData = [
+            'invoice_no'      => $this->input->post('invoiceNo'),
+            'customer_name'   => $this->input->post('customerName'),
+            'customer_mobile' => $this->input->post('customerMobile'),
+            'invoice_date'    => $this->input->post('date'),
+            'return_date'     => $this->input->post('returnDate'),
+            'deposit_amount'  => $this->input->post('depositAmount'),
+            'discount_amount' => $this->input->post('discountAmount'),
+            'total_amount'    => $this->input->post('totalAmount'),
+            'total_payable'   => $this->input->post('totalPayable'),
+            'paid_amount'     => $this->input->post('paidAmount'),
+            'due_amount'      => $this->input->post('dueAmount'),
+            'payment_mode'    => $this->input->post('paymentMode'),
+        ];
+
+        log_message('debug', 'Invoice data: ' . print_r($invoiceData, true));
+
+        // Start transaction for data integrity
+        $this->db->trans_start();
+
+        if ($this->db->insert('invoices', $invoiceData)) {
+            $invoice_id = $this->db->insert_id();
+            log_message('debug', 'Invoice created with ID: ' . $invoice_id);
+
+            // ✅ Get items from POST (assume frontend sends array of items)
+            $items = $this->input->post('items');
+
+            log_message('debug', 'Raw items data: ' . print_r($items, true));
+
+            if (!empty($items) && is_array($items)) {
+                log_message('debug', 'Processing ' . count($items) . ' items');
+
+                foreach ($items as $index => $item) {
+                    log_message('debug', 'Item ' . $index . ' data: ' . print_r($item, true));
+
+                    // Check if the item has the required fields
+                    if (!isset($item['item_name']) || !isset($item['quantity'])) {
+                        log_message('error', 'Item missing required fields: ' . print_r($item, true));
+                        continue;
+                    }
+
+                    $invoice_item_data = [
+                        'invoice_id' => $invoice_id,
+                        'item_name'  => $item['item_name'],
+                        'category'   => $item['category'] ?? '',
+                        'price'      => $item['price'],
+                        'quantity'   => $item['quantity'],
+                        'total'      => $item['total'],
+                        'status'     => 'Rented',
+                        'times_rented' => 1
+                    ];
+
+                    log_message('debug', 'Inserting invoice item: ' . print_r($invoice_item_data, true));
+
+                    // Insert into invoice_items
+                    $insert_result = $this->db->insert('invoice_items', $invoice_item_data);
+                    log_message('debug', 'Invoice item insert result: ' . ($insert_result ? 'SUCCESS' : 'FAILED'));
+
+                    // 🔽 Update stock using item_name - with error handling
+                    log_message('debug', 'Attempting stock update for: "' . $item['item_name'] . '" with quantity: ' . $item['quantity']);
+
+                    $stockUpdated = $this->Product_model->update_stock_after_sale(
+                        $item['item_name'],
+                        $item['quantity']
+                    );
+
+                    log_message('debug', 'Stock update result: ' . ($stockUpdated ? 'SUCCESS' : 'FAILED'));
+
+                    if (!$stockUpdated) {
+                        log_message('error', 'Failed to update stock for: ' . $item['item_name']);
+                    }
+                }
+            } else {
+                log_message('error', 'No items found or items is not an array');
+            }
+
+            // Complete transaction
+            $this->db->trans_complete();
+
+            if ($this->db->trans_status() === FALSE) {
+                // Transaction failed
+                log_message('error', 'Transaction failed - rolling back');
+                $this->db->trans_rollback();
+                echo json_encode([
+                    'success' => false,
+                    'message' => 'Failed to save invoice and update inventory'
+                ]);
+            } else {
+                // Transaction succeeded
+                log_message('debug', 'Transaction completed successfully');
+                echo json_encode([
+                    'success'    => true,
+                    'message'    => 'Invoice saved successfully!',
+                    'invoice_no' => $invoiceData['invoice_no']
+                ]);
+            }
+        } else {
+            log_message('error', 'Failed to insert invoice');
+            echo json_encode([
+                'success' => false,
+                'message' => 'Failed to save invoice'
+            ]);
+        }
+
+        log_message('debug', '=== END OF save_invoice PROCESS ===');
+    }
 }

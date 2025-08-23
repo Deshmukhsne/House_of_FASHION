@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>Dry Cleaning Status</title>
@@ -22,181 +23,207 @@
             font-weight: 400;
             font-size: 2rem;
         }
-        .btn-stock { background-color: #28a745; color: white; }
-        .btn-stock:hover { background-color: #218838; }
-        .btn-delete { background-color: #dc3545; color: white; }
-        .btn-delete:hover { background-color: #b02a37; }
+
+        .btn-stock {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .btn-stock:hover {
+            background-color: #218838;
+        }
+
+        .btn-delete {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .btn-delete:hover {
+            background-color: #b02a37;
+        }
     </style>
 </head>
+
 <body>
-<div class="d-flex">
-    <?php $this->load->view('include/sidebar'); ?>
-    <div class="main">
-        <?php $this->load->view('include/navbar'); ?>
+    <div class="d-flex">
+        <?php $this->load->view('include/sidebar'); ?>
+        <div class="main">
+            <?php $this->load->view('include/navbar'); ?>
 
-        <div class="container-fluid p-4">
-            <div class="container mt-5 p-4 bg-light rounded shadow">
-                <h2 class="section-heading mb-4">Dry Cleaning Status</h2>
+            <div class="container-fluid p-4">
+                <div class="container mt-5 p-4 bg-light rounded shadow">
+                    <h2 class="section-heading mb-4">Dry Cleaning Status</h2>
 
-                <table class="table table-bordered table-striped" id="cleaningTable">
-                    <thead class="table-dark">
-                    <tr>
-                        <th>ID</th>
-                        <th>Vendor Name</th>
-                        <th>Vendor Mobile</th>
-                        <th>Product Name</th>
-                        <th>Product Status</th>
-                        <th>Forward Date</th>
-                        <th>Return Date</th>
-                        <th>Status</th>
-                        <th>Expected Return</th>
-                        <th>Cleaning Notes</th>
-                        <th>Action</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <?php foreach ($drycleaning_data as $item): ?>
-                        <tr data-id="<?= $item->id ?>">
-                            <td><?= $item->id ?></td>
-                            <td><?= $item->vendor_name ?></td>
-                            <td><?= $item->vendor_mobile ?></td>
-                            <td><?= $item->product_name ?></td>
-                            <td><?= $item->product_status ?></td>
-                            <td><?= $item->forward_date ?></td>
-                            <td><?= $item->return_date ?></td>
-                            <td>
-                                <select name="status" class="form-select" data-id="<?= $item->id ?>">
-                                    <option value="Forwarded" <?= $item->status == 'Forwarded' ? 'selected' : '' ?>>Forwarded</option>
-                                    <option value="In Cleaning" <?= $item->status == 'In Cleaning' ? 'selected' : '' ?>>In Cleaning</option>
-                                    <option value="Returned" <?= $item->status == 'Returned' ? 'selected' : '' ?>>Returned</option>
-                                </select>
-                            </td>
-                            <td><?= $item->expected_return ?></td>
-                            <td><?= $item->cleaning_notes ?></td>
-                            <td>
-                                <button class="btn btn-stock btn-sm">Add in Stock</button>
-                                <button class="btn btn-delete btn-sm">Delete</button>
-                            </td>
-                        </tr>
-                    <?php endforeach; ?>
-                    </tbody>
-                </table>
+                    <table class="table table-bordered table-striped" id="cleaningTable">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>ID</th>
+                                <th>Vendor Name</th>
+                                <th>Vendor Mobile</th>
+                                <th>Product Name</th>
+                                <th>Product Status</th>
+                                <th>Forward Date</th>
+                                <th>Return Date</th>
+                                <th>Status</th>
+                                <th>Cleaning Notes</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($drycleaning_data as $item): ?>
+                                <tr data-id="<?= $item->id ?>">
+                                    <td><?= $item->id ?></td>
+                                    <td><?= $item->vendor_name ?></td>
+                                    <td><?= $item->vendor_mobile ?></td>
+                                    <td><?= $item->product_name ?></td>
+                                    <td><?= $item->product_status ?></td>
+                                    <td><?= $item->forward_date ?></td>
+                                    <td><?= $item->return_date ?></td>
+                                    <td>
+                                        <select name="status" class="form-select" data-id="<?= $item->id ?>">
+                                            <option value="Forwarded" <?= $item->status == 'Forwarded' ? 'selected' : '' ?>>Forwarded</option>
+                                            <option value="In Cleaning" <?= $item->status == 'In Cleaning' ? 'selected' : '' ?>>In Cleaning</option>
+                                            <option value="Returned" <?= $item->status == 'Returned' ? 'selected' : '' ?>>Returned</option>
+                                        </select>
+                                    </td>
+                                    <td><?= $item->cleaning_notes ?></td>
+                                    <td>
+                                        <button class="btn btn-stock btn-sm">Add in Stock</button>
+                                        <button class="btn btn-delete btn-sm">Delete</button>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
-<script>
-$(document).ready(function() {
+    <script>
+        $(document).ready(function() {
 
-    // Update Status
-    $("#cleaningTable").on("change", "select[name='status']", function() {
-        let recordID = $(this).data("id");
-        let newStatus = $(this).val();
+            // Update Status
+            $("#cleaningTable").on("change", "select[name='status']", function() {
+                let recordID = $(this).data("id");
+                let newStatus = $(this).val();
 
-        $.post("<?= base_url('drycleaning/update_status') ?>", {
-            id: recordID,
-            status: newStatus
-        }, function(response) {
-            let res = JSON.parse(response);
-            if (res.success) {
-                Swal.fire({ icon: 'success', title: 'Status Updated', timer: 1200, showConfirmButton: false });
-            } else {
-                Swal.fire({ icon: 'error', title: 'Update Failed' });
-            }
-        });
-    });
-
-    // Add to Stock
-    $("#cleaningTable").on("click", ".btn-stock", function() {
-        let row = $(this).closest("tr");
-        let status = row.find("select[name='status']").val();
-        let recordID = row.data("id");
-        let productName = row.find("td:eq(3)").text().trim();
-
-        if (status !== "Returned") {
-            Swal.fire({
-                icon: 'warning',
-                title: 'Status must be Returned',
-                text: 'Only returned items can be added to stock.'
-            });
-            return;
-        }
-
-        Swal.fire({
-            icon: 'question',
-            title: 'Add to Stock?',
-            text: `Do you want to add ${productName} to stock?`,
-            showCancelButton: true,
-            confirmButtonColor: '#28a745',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, Add'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                $.post("<?= base_url('AdminController/ProductInventory') ?>", { id: recordID }, function() {
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Added to Stock',
-                        text: `${productName} added successfully!`
-                    }).then(() => {
-                        row.remove();
-                    });
-                }).fail(function() {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error',
-                        text: 'Failed to add item to stock.'
-                    });
-                });
-            }
-        });
-    });
-
-    // Delete Record
-    $("#cleaningTable").on("click", ".btn-delete", function() {
-        let row = $(this).closest("tr");
-        let recordID = row.data("id");
-        let productName = row.find("td:eq(3)").text().trim();
-
-        Swal.fire({
-            icon: 'warning',
-            title: 'Delete Item?',
-            text: `Delete ${productName}?`,
-            showCancelButton: true,
-            confirmButtonColor: '#dc3545',
-            cancelButtonColor: '#6c757d',
-            confirmButtonText: 'Yes, Delete'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                $.post("<?= base_url('AdminController/delete_drycleaning') ?>", { id: recordID }, function(response) {
+                $.post("<?= base_url('drycleaning/update_status') ?>", {
+                    id: recordID,
+                    status: newStatus
+                }, function(response) {
                     let res = JSON.parse(response);
                     if (res.success) {
                         Swal.fire({
                             icon: 'success',
-                            title: 'Deleted',
-                            text: `${productName} deleted successfully.`
-                        }).then(() => {
-                            row.remove();
+                            title: 'Status Updated',
+                            timer: 1200,
+                            showConfirmButton: false
                         });
                     } else {
                         Swal.fire({
                             icon: 'error',
-                            title: 'Error',
-                            text: 'Failed to delete item.'
+                            title: 'Update Failed'
                         });
                     }
-                }).fail(function() {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error',
-                        text: 'Server error occurred.'
-                    });
                 });
-            }
-        });
-    });
+            });
 
-});
-</script>
+            // Add to Stock
+            $("#cleaningTable").on("click", ".btn-stock", function() {
+                let row = $(this).closest("tr");
+                let status = row.find("select[name='status']").val();
+                let recordID = row.data("id");
+                let productName = row.find("td:eq(3)").text().trim();
+
+                if (status !== "Returned") {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Status must be Returned',
+                        text: 'Only returned items can be added to stock.'
+                    });
+                    return;
+                }
+
+                Swal.fire({
+                    icon: 'question',
+                    title: 'Add to Stock?',
+                    text: `Do you want to add ${productName} to stock?`,
+                    showCancelButton: true,
+                    confirmButtonColor: '#28a745',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes, Add'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.post("<?= base_url('AdminController/ProductInventory') ?>", {
+                            id: recordID
+                        }, function() {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Added to Stock',
+                                text: `${productName} added successfully!`
+                            }).then(() => {
+                                row.remove();
+                            });
+                        }).fail(function() {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: 'Failed to add item to stock.'
+                            });
+                        });
+                    }
+                });
+            });
+
+            // Delete Record
+            $("#cleaningTable").on("click", ".btn-delete", function() {
+                let row = $(this).closest("tr");
+                let recordID = row.data("id");
+                let productName = row.find("td:eq(3)").text().trim();
+
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Delete Item?',
+                    text: `Delete ${productName}?`,
+                    showCancelButton: true,
+                    confirmButtonColor: '#dc3545',
+                    cancelButtonColor: '#6c757d',
+                    confirmButtonText: 'Yes, Delete'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.post("<?= base_url('AdminController/delete_drycleaning') ?>", {
+                            id: recordID
+                        }, function(response) {
+                            let res = JSON.parse(response);
+                            if (res.success) {
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Deleted',
+                                    text: `${productName} deleted successfully.`
+                                }).then(() => {
+                                    row.remove();
+                                });
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error',
+                                    text: 'Failed to delete item.'
+                                });
+                            }
+                        }).fail(function() {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: 'Server error occurred.'
+                            });
+                        });
+                    }
+                });
+            });
+
+        });
+    </script>
 </body>
+
 </html>

@@ -102,31 +102,21 @@
             text-align: right;
         }
 
-        /* Improved Signature canvas styling */
+        /* Signature canvas styling */
         .signature-pad-container {
             margin: 15px 0;
             position: relative;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            background-color: #f9f9f9;
-            padding: 10px;
         }
 
         #signatureCanvas {
-            display: block;
-            width: 100%;
-            height: 200px;
+            border: 1px solid #ddd;
+            background-color: #f9f9f9;
             border-radius: 4px;
-            cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 40 40'><circle cx='20' cy='20' r='18' fill='black' opacity='0.3'/></svg>") 20 20, crosshair;
-            touch-action: none;
-            background-color: white;
-            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1) inset;
+            cursor: crosshair;
         }
 
         .signature-actions {
             margin-top: 10px;
-            display: flex;
-            gap: 10px;
         }
 
         .signature-status {
@@ -143,37 +133,6 @@
             display: none;
         }
 
-        /* Instructions for signing */
-        .signature-instructions {
-            font-size: 14px;
-            color: #6c757d;
-            margin-bottom: 10px;
-        }
-
-        /* Mobile-specific improvements */
-        @media (max-width: 768px) {
-            body {
-                padding: 15px;
-            }
-
-            .form-container,
-            .invoice-container {
-                padding: 20px;
-            }
-
-            #signatureCanvas {
-                height: 180px;
-            }
-
-            .signature-actions {
-                flex-direction: column;
-            }
-
-            .signature-actions .btn {
-                width: 100%;
-            }
-        }
-
         @media print {
             body {
                 background: #fff;
@@ -185,54 +144,47 @@
             }
 
             .form-container,
-            {
-            border: none;
-            padding: 0;
-            box-shadow: none;
-            page-break-after: always;
-        }
+            .invoice-container {
+                border: none;
+                padding: 0;
+                box-shadow: none;
+                page-break-after: always;
+            }
 
-        .invoice-container {
-            page-break-before: always;
-        }
+            .invoice-container {
+                page-break-before: always;
+            }
 
-        .signature-block {
-            display: flex;
-            justify-content: space-between;
-        }
+            .signature-block {
+                display: flex;
+                justify-content: space-between;
+            }
 
-        .signature-block>div {
-            width: 48%;
-        }
+            .signature-block>div {
+                width: 48%;
+            }
 
+            /* Hide signature canvas in print, show the captured signature */
+            .signature-pad-container {
+                display: none;
+            }
 
-        /* Resize signature image for print */
-        .signature-image {
-            display: inline-block;
-            max-width: 120px;
-            height: auto;
-            border-bottom: 1px dotted #000;
-            margin-left: 10px;
-        }
+            .signature-image {
+                display: block;
+                max-width: 100%;
+                height: auto;
+                border-bottom: 1px dotted #000;
+                margin-top: 10px;
+            }
 
-        .signature-pad-container {
-            display: none;
-        }
+            .signature-actions,
+            .signature-status {
+                display: none;
+            }
 
-        /* Keep the canvas hidden during print */
-        #signatureCanvas {
-            display: none !important;
-        }
-
-        .signature-actions,
-        .signature-status,
-        .signature-instructions {
-            display: none;
-        }
-
-        .action-buttons {
-            display: none;
-        }
+            .action-buttons {
+                display: none;
+            }
         }
 
         /* For screen view, hide the printed signature image */
@@ -271,6 +223,8 @@
         <p>- I understand that the rental item(s) remain the sole property of the Rental Shop and that I have no
             ownership rights over them.</p>
 
+        <p>- I agree to follow all usage instructions provided by the Rental Shop and use the rented item(s) only for
+            lawful purposes.</p>
 
         <p>- I hereby release the Rental Shop from any claims, liabilities, or damages arising from the use of the
             rented item(s), except where caused by the Rental Shop's negligence.</p>
@@ -317,36 +271,27 @@
             <div class="col-md-6">
                 <p><strong>CUSTOMER</strong></p>
                 <p><b>Name:</b> <?php echo htmlspecialchars($invoice['customer_name']); ?></p>
-                <p class="d-flex align-items-start">
-                <p class="d-flex align-items-center">
-                    <b class="me-2">Signature:</b>
-                    <!-- Signature Image for Print -->
-                    <img id="signatureImage" class="signature-image" alt="Customer Signature">
-                </p>
+                <p><b>Signature: </b></p>
 
-                <!-- Signature Pad (screen only) -->
-                <div class="signature-instructions">
-                    Sign in the box below using your mouse, finger, or stylus
-                </div>
+                <!-- Signature Pad -->
                 <div class="signature-pad-container">
-                    <canvas id="signatureCanvas"></canvas>
+                    <canvas id="signatureCanvas" width="400" height="200"></canvas>
                     <div class="signature-actions">
-                        <button id="clearSignature" class="btn btn-secondary">Clear Signature</button>
-                        <button id="undoSignature" class="btn btn-outline-secondary">Undo</button>
+                        <button id="clearSignature" class="btn btn-secondary btn-sm">Clear</button>
                     </div>
                     <div id="signatureStatus" class="signature-status">Please sign above</div>
                 </div>
+
+                <!-- This will store the signature data for form submission -->
                 <textarea id="signatureData" name="signature_data" class="signature-data"></textarea>
+
+                <!-- This will store the document hash for verification -->
                 <textarea id="documentHash" name="document_hash" class="signature-data"></textarea>
 
-
                 <!-- This will display the signature in print view -->
-                <!-- <img id="signatureImage" class="signature-image" alt="Customer Signature"> -->
+                <img id="signatureImage" class="signature-image" alt="Customer Signature">
             </div>
         </div>
-
-
-    </div>
     </div>
 
     <!-- Invoice Section -->
@@ -365,12 +310,11 @@
                 <p><strong>Invoice Date:</strong> <?php echo date('F j, Y', strtotime($invoice['invoice_date'])); ?></p>
                 <p><strong>Return Date:</strong> <?php echo date('F j, Y', strtotime($invoice['return_date'])); ?></p>
             </div>
-            <div class="col-md-6 text-end">
+            <div class="col-md-6">
                 <p><strong>Customer Name:</strong> <?php echo htmlspecialchars($invoice['customer_name']); ?></p>
                 <p><strong>Customer Mobile:</strong> <?php echo htmlspecialchars($invoice['customer_mobile']); ?></p>
                 <p><strong>Payment Mode:</strong> <?php echo htmlspecialchars($invoice['payment_mode']); ?></p>
             </div>
-
         </div>
 
         <table class="invoice-table">
@@ -454,74 +398,29 @@
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
-        // Initialize signature pad with improved settings
+        // Initialize signature pad
         const canvas = document.getElementById('signatureCanvas');
-        let signaturePad;
+        const signaturePad = new SignaturePad(canvas, {
+            backgroundColor: 'rgb(255, 255, 255)',
+            penColor: 'rgb(0, 0, 0)'
+        });
 
-        // Track signature history for undo functionality
-        let signatureHistory = [];
-
-        function initSignaturePad() {
-            // Clear any existing signature pad
-            if (signaturePad) {
-                signaturePad.off();
-            }
-
-            // Set canvas size properly
-            const container = canvas.parentElement;
-            canvas.width = container.offsetWidth;
-            canvas.height = 200;
-
-            // Adjust for high DPI displays
+        // Adjust canvas size for high DPI displays
+        function resizeCanvas() {
             const ratio = Math.max(window.devicePixelRatio || 1, 1);
             canvas.width = canvas.offsetWidth * ratio;
             canvas.height = canvas.offsetHeight * ratio;
             canvas.getContext("2d").scale(ratio, ratio);
-
-            // Initialize with better drawing settings
-            signaturePad = new SignaturePad(canvas, {
-                minWidth: 1,
-                maxWidth: 4,
-                throttle: 16, // Increase drawing precision
-                velocityFilterWeight: 0.7,
-                backgroundColor: 'rgb(255, 255, 255)',
-                penColor: 'rgb(0, 0, 0)'
-            });
-
-            // Clear history when initializing
-            signatureHistory = [];
-
-            // Add event listeners
-            signaturePad.addEventListener("beginStroke", () => {
-                // Save state before new stroke for undo functionality
-                if (!signaturePad.isEmpty()) {
-                    signatureHistory.push(signaturePad.toData());
-                }
-                updateSignatureStatus();
-            });
-
-            signaturePad.addEventListener("endStroke", updateSignatureStatus);
+            signaturePad.clear(); // otherwise isEmpty() might return incorrect value
         }
 
-        // Adjust canvas when window resizes
-        window.addEventListener('resize', initSignaturePad);
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
 
         // Clear signature button
         document.getElementById('clearSignature').addEventListener('click', function() {
-            // Save current state before clearing
-            if (!signaturePad.isEmpty()) {
-                signatureHistory.push(signaturePad.toData());
-            }
             signaturePad.clear();
             updateSignatureStatus();
-        });
-
-        // Undo last stroke
-        document.getElementById('undoSignature').addEventListener('click', function() {
-            if (signatureHistory.length > 0) {
-                signaturePad.fromData(signatureHistory.pop());
-                updateSignatureStatus();
-            }
         });
 
         // Update signature status
@@ -531,10 +430,13 @@
                 status.textContent = 'Please sign above';
                 status.classList.remove('signature-valid');
             } else {
-                status.textContent = 'Signature captured - You can undo or clear if needed';
+                status.textContent = 'Signature captured';
                 status.classList.add('signature-valid');
             }
         }
+
+        signaturePad.addEventListener('beginStroke', updateSignatureStatus);
+        signaturePad.addEventListener('endStroke', updateSignatureStatus);
 
         // Generate a hash of the document content for verification
         function generateDocumentHash() {
@@ -612,9 +514,8 @@
             };
         }
 
-        // Initialize when page loads
+        // Initialize document hash on load
         window.onload = function() {
-            initSignaturePad();
             generateDocumentHash();
         };
     </script>

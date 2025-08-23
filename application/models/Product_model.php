@@ -67,18 +67,18 @@ class Product_model extends CI_Model
         $query = $this->db->get('products');
         return $query->row()->stock;
     }
-    public function update_stock_after_sale($item_name, $quantity)
-    {
-        // Find product by name
-        $this->db->where('name', $item_name);
-        $product = $this->db->get('products')->row();
+    // public function update_stock_after_sale($item_name, $quantity)
+    // {
+    //     // Find product by name
+    //     $this->db->where('name', $item_name);
+    //     $product = $this->db->get('products')->row();
 
-        if ($product) {
-            $new_stock = max(0, ($product->stock - $quantity)); // avoid negative
-            $this->db->where('id', $product->id);
-            $this->db->update('products', ['stock' => $new_stock]);
-        }
-    }
+    //     if ($product) {
+    //         $new_stock = max(0, ($product->stock - $quantity)); // avoid negative
+    //         $this->db->where('id', $product->id);
+    //         $this->db->update('products', ['stock' => $new_stock]);
+    //     }
+    // }
 
 
     public function get_monthly_report($year, $month)
@@ -149,5 +149,54 @@ class Product_model extends CI_Model
             'data' => $data,
             'days_in_month' => $days_in_month
         ];
+    }
+    // In Product_model.php
+    public function update_stock_after_sale($item_name, $quantity)
+    {
+        // Trim and clean the item name
+        $item_name = trim($item_name);
+        $quantity = (int)$quantity;
+
+        log_message('debug', 'Attempting to update stock for: "' . $item_name . '" with quantity: ' . $quantity);
+
+        // First, let's check what products we have in the database
+        $all_products = $this->db->get('products')->result();
+        log_message('debug', 'All products in DB: ' . json_encode(array_column($all_products, 'name')));
+
+        // Try to find the product with a more flexible approach
+        $this->db->like('name', $item_name);
+        $product = $this->db->get('products')->row();
+
+        if ($product) {
+            log_message('debug', 'Found product: ' . $product->name . ' (ID: ' . $product->id . ') with current stock: ' . $product->stock);
+
+            $new_stock = max(0, $product->stock - $quantity);
+            log_message('debug', 'New stock will be: ' . $new_stock);
+
+            $this->db->where('id', $product->id);
+            $result = $this->db->update('products', ['stock' => $new_stock]);
+
+            if ($result) {
+                log_message('debug', 'Stock updated successfully for: ' . $product->name);
+                return true;
+            } else {
+                log_message('error', 'Database update failed for: ' . $product->name);
+                return false;
+            }
+        } else {
+            log_message('error', 'No product found with name: "' . $item_name . '"');
+
+            // Let's try a different approach - check if there's any similar product
+            $this->db->select('name');
+            $this->db->from('products');
+            $this->db->like('name', $item_name, 'both');
+            $similar = $this->db->get()->result();
+
+            if (!empty($similar)) {
+                log_message('debug', 'Similar product names found: ' . json_encode(array_column($similar, 'name')));
+            }
+
+            return false;
+        }
     }
 }

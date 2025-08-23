@@ -49,16 +49,14 @@ class AdminController extends CI_Controller
     {
         $this->load->view("CommonLinks");
     }
-
-
-
-
-
-
     public function DryCleaning_Forward()
     {
         $this->load->model('OrdersModel');
+        $this->load->model('Vendor_model');
+
         $data['products'] = $this->OrdersModel->get_all_products_for_drycleaning();
+        $data['vendors'] = $this->Vendor_model->get_all_vendors();
+        // $this->load->view('AdminController/drycleaning_form', $data);
         $this->load->view('Admin/DryCleaning_Forward', $data);
     }
 
@@ -91,33 +89,7 @@ class AdminController extends CI_Controller
     }
 
 
-    // Save new record
-    public function save_drycleaning()
-    {
-        $this->load->model('DryCleaning_model');
 
-        $data = [
-            'vendor_name'     => $this->input->post('vendor_name'),
-            'vendor_mobile'   => $this->input->post('vendor_mobile'),
-            'product_name'    => $this->input->post('product_name'),
-            'product_status'  => $this->input->post('product_status'),
-            'forward_date'    => $this->input->post('forward_date'),
-            'return_date'     => $this->input->post('return_date') ?: null,
-            'status'          => 'Forwarded', // default
-            'expected_return' => $this->input->post('expected_return') ?: null,
-            'cleaning_notes'  => $this->input->post('cleaning_notes'),
-            'created_at'      => date('Y-m-d H:i:s'),
-            'updated_at'      => date('Y-m-d H:i:s')
-        ];
-
-        if ($this->DryCleaning_model->insert($data)) {
-            $this->session->set_flashdata('success', 'Record added successfully.');
-        } else {
-            $this->session->set_flashdata('error', 'Failed to add record.');
-        }
-
-        redirect('AdminController/DryCleaning_Status');
-    }
 
     // Status page
     public function DryCleaning_Status()
@@ -383,10 +355,7 @@ class AdminController extends CI_Controller
         $this->load->view('Admin/BillHistory');
     }
     //concent form 
-    public function consent_form()
-    {
-        $this->load->view('Admin/consent');
-    }
+
     public function MonthlyReport()
     {
         if (!$this->session->userdata('username')) {
@@ -530,107 +499,7 @@ class AdminController extends CI_Controller
         $this->load->view('BillingDashboard', $data);
     }
 
-    /* -------- SAVE INVOICE ---------- */
-    // public function save_invoice()
-    // {
-    //     // Basic validation (server-side)
 
-    //     $customer_name   = $this->input->post('customerName', true);
-    //     $customer_mobile = $this->input->post('customerMobile', true);
-    //     $date            = $this->input->post('date', true);
-    //     $return_date         = $this->input->post('return_date', true);
-
-
-    //     if (!$customer_name || !$date || !$customer_mobile) {
-    //         echo json_encode([
-    //             'success' => false,
-    //             'message' => 'Customer Name, Mobile No, and Date are required.'
-    //         ]);
-    //         exit;
-    //     }
-
-    //     // Header fields
-    //     $depositAmount   = (float)$this->input->post('depositAmount');
-    //     $discountAmount  = (float)$this->input->post('discountAmount');
-    //     $totalAmount     = (float)$this->input->post('totalAmount');   // from hidden input
-    //     $totalPayable    = (float)$this->input->post('totalPayable');  // from hidden input
-    //     $paidAmount      = (float)$this->input->post('paidAmount');
-    //     $dueAmount       = (float)$this->input->post('dueAmount');
-    //     $paymentMode     = $this->input->post('paymentMode', true);
-
-    //     // Items arrays
-    //     $category_ids = $this->input->post('category');   // category_id[]
-    //     $product_ids  = $this->input->post('itemName');   // product_id[]
-    //     $prices       = $this->input->post('price');      // price[]
-    //     $qtys         = $this->input->post('qty');        // qty[]
-    //     $totals       = $this->input->post('total');      // total[]
-
-    //     // Insert invoice header with empty invoice_no (will be updated after generation)
-    //     $invoice_data = [
-    //         'invoice_no'      => '',
-    //         'customer_name'   => $customer_name,
-    //         'customer_mobile' => $customer_mobile,
-    //         'invoice_date'    => $date,
-    //         'return_date'     => $return_date,
-    //         'deposit_amount'  => $depositAmount,
-    //         'discount_amount' => $discountAmount,
-    //         'total_amount'    => $totalAmount,
-    //         'total_payable'   => $totalPayable,
-    //         'paid_amount'     => $paidAmount,
-    //         'due_amount'      => $dueAmount,
-    //         'payment_mode'    => $paymentMode
-    //     ];
-    //     $invoice_id = $this->Billing_model->insert_invoice($invoice_data);
-
-
-    //     // Prepare and insert items
-    //     $items = [];
-    //     if (is_array($product_ids)) {
-    //         // Cache lookups to avoid repeated queries
-    //         $cats = $this->Billing_model->get_categories_map(); // [id => name]
-    //         $prods = $this->Billing_model->get_products_map();  // [id => ['name'=>..., 'price'=>..., 'category_id'=>...]]
-
-    //         for ($i = 0; $i < count($product_ids); $i++) {
-    //             $pid = (int)$product_ids[$i];
-    //             if (!isset($prods[$pid])) continue;
-
-    //             $cat_id = (int)($category_ids[$i] ?? $prods[$pid]['category_id']);
-    //             $category_name = $cats[$cat_id] ?? 'NA';
-
-    //             $price = isset($prices[$i]) ? (float)$prices[$i] : (float)$prods[$pid]['price'];
-    //             $qty   = isset($qtys[$i]) ? (int)$qtys[$i] : 1;
-    //             $total = isset($totals[$i]) ? (float)$totals[$i] : ($price * $qty);
-
-    //             $items[] = [
-    //                 'invoice_id' => $invoice_id,
-    //                 'category'   => $category_name,
-    //                 'item_name'  => $prods[$pid]['name'],
-    //                 'price'      => $price,
-    //                 'quantity'   => $qty,
-    //                 'total'      => $total
-    //             ];
-    //         }
-    //     }
-    //     if (!empty($items)) {
-    //         $this->Billing_model->insert_invoice_items($items);
-    //     }
-    //     foreach ($items as $item) {
-    //     $this->OrdersModel->insert_order_from_invoice($invoice_id, $item);
-    // }
-    //     // Generate custom invoice number
-    //     $unique_code = strtoupper(substr(md5(uniqid(rand(), true)), 0, 6));
-    //     $item_count = count($items);
-    //     $custom_invoice_no = "BILL{$invoice_id}{$item_count}{$unique_code}";
-    //     $this->Billing_model->update_invoice_number($invoice_id, $custom_invoice_no);
-
-    //     // Return JSON response
-    //     echo json_encode([
-    //         'success' => true,
-    //         'message' => 'Invoice saved successfully!',
-    //         'invoice_no' => $custom_invoice_no
-    //     ]);
-    //     exit;
-    // }
 
     /* -------- BILLING HISTORY (LIST) ---------- */
     public function BillHistory()
@@ -829,42 +698,231 @@ class AdminController extends CI_Controller
         $data['sales'] = $this->OrdersModel->get_product_sales();
         $this->load->view('product_sales', $data);
     }
-    //Billing section and consent form
     public function save_invoice()
     {
         $this->load->database();
         $this->load->helper('url');
+        $this->load->model('Product_model');
 
-
+        // Save main invoice
         $invoiceData = [
-            'invoice_no'     => $this->input->post('invoiceNo'),
-            'customer_name'  => $this->input->post('customerName'),
+            'invoice_no'      => $this->input->post('invoiceNo'),
+            'customer_name'   => $this->input->post('customerName'),
             'customer_mobile' => $this->input->post('customerMobile'),
-            'invoice_date'   => $this->input->post('date'),
-            'return_date'    => $this->input->post('returnDate'),
-            'deposit_amount' => $this->input->post('depositAmount'),
-            'discount_amount' => $this->input->post('discountAmount'),
-            'total_amount'   => $this->input->post('totalAmount'),
-            'total_payable'  => $this->input->post('totalPayable'),
-            'paid_amount'    => $this->input->post('paidAmount'),
-            'due_amount'     => $this->input->post('dueAmount'),
-            'payment_mode'   => $this->input->post('paymentMode'),
+            'invoice_date'    => $this->input->post('date'),
+            'return_date'     => $this->input->post('returnDate'),
+            'deposit_amount'  => $this->input->post('depositAmount') ?: 0,
+            'discount_amount' => $this->input->post('discountAmount') ?: 0,
+            'total_amount'    => $this->input->post('totalAmount') ?: 0,
+            'total_payable'   => $this->input->post('totalPayable') ?: 0,
+            'paid_amount'     => $this->input->post('paidAmount') ?: 0,
+            'due_amount'      => $this->input->post('dueAmount') ?: 0,
+            'payment_mode'    => $this->input->post('paymentMode'),
         ];
 
+        // Start transaction for data integrity
+        $this->db->trans_start();
 
-        $inserted = $this->db->insert('invoices', $invoiceData);
+        if ($this->db->insert('invoices', $invoiceData)) {
+            $invoice_id = $this->db->insert_id();
 
-        if ($inserted) {
-            echo json_encode([
-                'success' => true,
-                'message' => 'Invoice saved successfully!',
-                'invoice_no' => $invoiceData['invoice_no']
-            ]);
+            // Get items from POST
+            $items_json = $this->input->post('items');
+            $items = json_decode($items_json, true);
+
+            if (!empty($items) && is_array($items)) {
+                foreach ($items as $item) {
+                    // Check if the item has the required fields
+                    if (!isset($item['item_name']) || !isset($item['quantity'])) {
+                        continue;
+                    }
+                    // Fetch category name from categories table using category ID
+                    $category_name = '';
+                    if (!empty($item['category'])) {
+                        $this->db->select('name');
+                        $this->db->where('id', $item['category']);
+                        $category_query = $this->db->get('categories');
+                        if ($category_query->num_rows() > 0) {
+                            $category_name = $category_query->row()->name;
+                        }
+                    }
+
+                    $invoice_item_data = [
+                        'invoice_id' => $invoice_id,
+                        'item_name'  => $item['item_name'],
+                        'category'   => $item['category'] ?? '',
+                        'category_name'  => $category_name, // Now populated
+                        'price'      => $item['price'] ?? 0,
+                        'quantity'   => $item['quantity'],
+                        'total'      => $item['total'] ?? 0,
+                        'status'     => 'Rented',
+                        'times_rented' => 1
+                    ];
+
+                    // Insert into invoice_items
+                    $this->db->insert('invoice_items', $invoice_item_data);
+
+                    // Update stock using item_name
+                    $this->Product_model->update_stock_after_sale(
+                        $item['item_name'],
+                        $item['quantity']
+                    );
+                }
+            }
+
+            // Complete transaction
+            $this->db->trans_complete();
+
+            if ($this->db->trans_status() === FALSE) {
+                // Transaction failed
+                $this->db->trans_rollback();
+                $this->session->set_flashdata('error', 'Failed to save invoice and update inventory');
+                redirect('AdminController/invoice_form');
+            } else {
+                // Transaction succeeded - redirect to consent form
+                redirect('AdminController/consent_form/' . $invoiceData['invoice_no']);
+            }
         } else {
-            echo json_encode([
-                'success' => false,
-                'message' => 'Failed to save invoice'
-            ]);
+            $this->session->set_flashdata('error', 'Failed to save invoice');
+            redirect('AdminController/invoice_form');
+
+            // After saving invoice items, update stock
+            foreach ($this->input->post('items') as $item) {
+                $this->db->set('stock', 'stock - ' . (int)$item['quantity'], FALSE);
+                $this->db->where('id', $item['product_id']);
+                $this->db->update('products');
+
+                if ($this->db->trans_status() === FALSE) {
+                    // Transaction failed
+                    $this->db->trans_rollback();
+                    $this->session->set_flashdata('error', 'Failed to save invoice and update inventory');
+                    redirect('AdminController/invoice_form');
+                } else {
+                    // Transaction succeeded - redirect to consent form with invoice number
+                    redirect('AdminController/consent/' . $invoiceData['invoice_no']);
+                }
+            }
         }
+    }
+    public function return_item($invoice_item_id)
+    {
+        $item = $this->db->get_where('invoice_items', ['id' => $invoice_item_id])->row();
+
+        if (!$item) return false;
+
+        // Find product by name instead of ID
+        $product = $this->db->get_where('products', ['name' => $item->item_name])->row();
+
+        if ($product && $item->status !== 'Returned') {
+            $this->db->set('stock', 'stock + ' . (int)$item->quantity, FALSE);
+            $this->db->where('id', $product->id);
+            $this->db->update('products');
+
+            $this->db->where('id', $invoice_item_id);
+            $this->db->update('invoice_items', ['status' => 'Returned']);
+
+            return true;
+        }
+
+        return false;
+    }
+    public function consent_form($invoice_no)
+    {
+        // Fetch invoice data
+        $this->load->database();
+        $invoice = $this->db->get_where('invoices', ['invoice_no' => $invoice_no])->row_array();
+
+        // Check if invoice exists
+        if (!$invoice) {
+            show_error('Invoice not found', 404);
+        }
+
+        // Fetch invoice items
+        $invoice_id = $invoice['id'];
+        $items = $this->db->get_where('invoice_items', ['invoice_id' => $invoice_id])->result_array();
+
+        // Pass data to view
+        $data['invoice'] = $invoice;
+        $data['items'] = $items;
+
+        $this->load->view('admin/consent', $data); // Load your consent view
+    }
+
+    public function increaseStock()
+    {
+        $drycleaning_id = $this->input->post('id');
+
+        // First, get the dry cleaning record to find the product name
+        $this->db->where('id', $drycleaning_id);
+        $query = $this->db->get('drycleaning_status');
+        $drycleaning_item = $query->row();
+
+        if (!$drycleaning_item) {
+            $this->output
+                ->set_content_type('application/json')
+                ->set_output(json_encode(array('success' => false, 'message' => 'Dry cleaning record not found')));
+            return;
+        }
+
+        // Find the product by name
+        $this->db->where('name', $drycleaning_item->product_name);
+        $query = $this->db->get('products');
+        $product = $query->row();
+
+        if ($product) {
+            // Increment the stock by 1
+            $new_stock = $product->stock + 1;
+
+            // Update the database
+            $this->db->where('id', $product->id);
+            $this->db->update('products', array('stock' => $new_stock));
+
+            // Also delete the dry cleaning record
+            $this->db->where('id', $drycleaning_id);
+            $this->db->delete('drycleaning_status');
+
+            $this->output
+                ->set_content_type('application/json')
+                ->set_output(json_encode(array('success' => true, 'new_stock' => $new_stock)));
+        } else {
+            $this->output
+                ->set_content_type('application/json')
+                ->set_output(json_encode(array('success' => false, 'message' => 'Product not found in inventory')));
+        }
+    }
+    public function save_drycleaning()
+    {
+        $this->load->model('DryCleaning_model');
+
+        $data = [
+            'vendor_name'     => $this->input->post('vendor_name'),
+            'vendor_mobile'   => $this->input->post('vendor_mobile'),
+            'product_name'    => $this->input->post('product_name'),
+            'product_status'  => $this->input->post('product_status'),
+            'forward_date'    => $this->input->post('forward_date'),
+            'return_date'     => $this->input->post('return_date') ?: null,
+            'status'          => 'Forwarded', // default
+            // 'expected_return' => $this->input->post('expected_return') ?: null,
+            'cleaning_notes'  => $this->input->post('cleaning_notes'),
+            'created_at'      => date('Y-m-d H:i:s'),
+            'updated_at'      => date('Y-m-d H:i:s')
+        ];
+
+        if ($this->DryCleaning_model->insert($data)) {
+            $this->session->set_flashdata('success', 'Record added successfully.');
+        } else {
+            $this->session->set_flashdata('error', 'Failed to add record.');
+        }
+
+        redirect('AdminController/DryCleaning_Status');
+    }
+    public function Vendors()
+    {
+        $this->load->model('Vendor_model');
+        $data['vendors'] = $this->Vendor_model->get_all_vendors();
+
+
+        // OR if it's in application/views/Admin/vendors.php
+        $this->load->view('Admin/Vendors', $data);
     }
 }
