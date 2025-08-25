@@ -182,9 +182,9 @@
                                             <th>Image</th>
                                             <th>Name</th>
                                             <th>Price(Rs)</th>
+                                            <th>MRP(Rs)</th> <!-- ✅ new -->
                                             <th>Category</th>
                                             <th>Main Category</th>
-
                                             <th>Stock</th>
                                             <th>Status</th>
                                             <th>Actions</th>
@@ -203,27 +203,26 @@
                                                 </td>
                                                 <td><?= htmlspecialchars($product->name) ?></td>
                                                 <td><?= number_format((float)($product->price ?? 0), 2) ?></td>
+                                                <td><?= number_format((float)($product->mrp ?? 0), 2) ?></td> <!-- ✅ new -->
                                                 <td><?= htmlspecialchars($product->category_name ?? '') ?></td>
                                                 <td><?= htmlspecialchars($product->main_category ?? '') ?></td>
                                                 <td><?= htmlspecialchars($product->stock ?? 0) ?></td>
-
                                                 <td>
                                                     <?php
                                                     $status = ($product->stock <= 0) ? 'Rented' : 'Available';
                                                     ?>
                                                     <span class="status-badge 
-        <?= $status == 'Available' ? 'status-available' : 'status-rented' ?>">
+                    <?= $status == 'Available' ? 'status-available' : 'status-rented' ?>">
                                                         <?= htmlspecialchars($status) ?>
                                                     </span>
                                                 </td>
-
-
                                                 <td>
                                                     <button type="button" class="btn btn-sm btn-outline-primary"
                                                         onclick='openEditModal(<?= json_encode([
                                                                                     "id" => $product->id,
                                                                                     "name" => $product->name,
                                                                                     "price" => $product->price,
+                                                                                    "mrp" => $product->mrp,  // ✅ new
                                                                                     "stock" => $product->stock ?? 0,
                                                                                     "status" => $product->status ?? "",
                                                                                     "category_id" => $product->category_id,
@@ -238,7 +237,6 @@
                                             </tr>
                                         <?php endforeach; ?>
                                     </tbody>
-
                                 </table>
                             </div>
                         </div>
@@ -256,8 +254,14 @@
 
                             <div class="modal-body">
                                 <input type="text" name="name" class="form-control mb-2" placeholder="Product Name" required>
-                                <!-- In the addProductModal -->
-                                <input type="number" name="price" class="form-control mb-2" placeholder="Product Price" step="1" required>
+
+                                <!-- Product Price -->
+                                <input type="number" name="price" class="form-control mb-2" placeholder="Product Price" step="0.01" required>
+
+                                <!-- ✅ New MRP Field -->
+                                <input type="number" name="mrp" class="form-control mb-2" placeholder="MRP (Maximum Retail Price)" step="0.01" required>
+
+                                <!-- Category -->
                                 <select name="category_id" class="form-select mb-2" required>
                                     <option value="">Select Category</option>
                                     <?php foreach ($categories as $cat): ?>
@@ -265,19 +269,24 @@
                                     <?php endforeach; ?>
                                 </select>
 
+                                <!-- Main Category -->
                                 <select name="main_category" class="form-select mb-2">
                                     <option value="" readonly>Main Category</option>
-                                    <option value="Available">Cloths</option>
-                                    <option value="Rented">Accessories</option>
+                                    <option value="Cloths">Cloths</option>
+                                    <option value="Accessories">Accessories</option>
                                 </select>
 
-
+                                <!-- Stock -->
                                 <input type="number" name="stock" class="form-control mb-2" placeholder="Stock Quantity" required>
+
+                                <!-- Status -->
                                 <select name="status" class="form-select mb-2">
                                     <option value="Available">Available</option>
                                     <option value="Rented">Rented</option>
                                     <option value="In Dry Clean">In Dry Clean</option>
                                 </select>
+
+                                <!-- Image -->
                                 <input type="file" name="image" class="form-control mb-2" required>
                             </div>
 
