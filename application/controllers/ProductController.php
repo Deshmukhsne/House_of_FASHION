@@ -39,7 +39,7 @@ class ProductController extends CI_Controller
             'name'        => $this->input->post('name'),
             'price'       => $this->input->post('price'),
             'category_id' => $this->input->post('category_id'),
-            'main_category' => $this->input->post('main_category'), // New field for main category
+            'main_category' => $this->input->post('main_category'), 
             'stock'       => $this->input->post('stock'),
             'status'      => $this->input->post('status'),
             'image'       => $imagePath
@@ -74,7 +74,7 @@ class ProductController extends CI_Controller
     {
         $data['categories'] = $this->Category_model->get_all_categories();
         $data['product']    = $this->Product_model->get_product_by_id($id);
-
+        
         if (empty($data['product'])) {
             show_404();
         }
@@ -106,7 +106,7 @@ class ProductController extends CI_Controller
             'name'        => $this->input->post('name'),
             'price'       => $this->input->post('price'),
             'category_id' => $this->input->post('category_id'),
-            'main_category' => $this->input->post('main_category'), // New field for main category
+            'main_category' => $this->input->post('main_category'), 
             'stock'       => $this->input->post('stock'),
             'status'      => $this->input->post('status'),
             'image'       => $imagePath
@@ -117,74 +117,7 @@ class ProductController extends CI_Controller
         $this->session->set_flashdata('success', 'Product updated successfully!');
         redirect('ProductController');
     }
-    // Add this method to your ProductController for testing
-    public function test_stock_update()
-    {
-        $this->load->model('Product_model');
-
-        // Test with a known product
-        $test_product_name = "Banarsi Saree"; // Use a product name you know exists
-        $test_quantity = 1;
-
-        echo "Testing stock update for: " . $test_product_name . "<br>";
-
-        $result = $this->Product_model->update_stock_after_sale($test_product_name, $test_quantity);
-
-        echo "Result: " . ($result ? "SUCCESS" : "FAILED") . "<br>";
-
-        // Check current stock
-        $this->db->where('name', $test_product_name);
-        $product = $this->db->get('products')->row();
-
-        if ($product) {
-            echo "Current stock: " . $product->stock . "<br>";
-        } else {
-            echo "Product not found!<br>";
-        }
-
-        // Show all products for reference
-        echo "<h3>All Products:</h3>";
-        $products = $this->db->get('products')->result();
-        foreach ($products as $p) {
-            echo $p->name . " - Stock: " . $p->stock . "<br>";
-        }
-    }
-    // Add this to your ProductController for testing the invoice process
-    public function test_invoice_process()
-    {
-        $this->load->model('Product_model');
-
-        // Simulate POST data that would come from a real invoice
-        $_POST = [
-            'invoiceNo' => 'TEST-001',
-            'customerName' => 'Test Customer',
-            'customerMobile' => '1234567890',
-            'date' => date('Y-m-d'),
-            'returnDate' => date('Y-m-d', strtotime('+7 days')),
-            'depositAmount' => 100,
-            'discountAmount' => 0,
-            'totalAmount' => 100,
-            'totalPayable' => 100,
-            'paidAmount' => 100,
-            'dueAmount' => 0,
-            'paymentMode' => 'Cash',
-            'items' => [
-                [
-                    'item_name' => 'Banarsi Saree',
-                    'category' => 'Saree',
-                    'price' => 100,
-                    'quantity' => 1,
-                    'total' => 100
-                ]
-            ]
-        ];
-
-        // Call the save_invoice method
-        $this->save_invoice();
-
-        // Check the result
-        echo "<br><br>Check your application/logs/ directory for detailed logs";
-    }
+    
     public function save_invoice()
     {
         $this->load->database();

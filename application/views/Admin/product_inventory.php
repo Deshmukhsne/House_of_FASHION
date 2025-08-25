@@ -113,10 +113,9 @@
                                     <tr>
                                         <th>Image</th>
                                         <th>Name</th>
-                                        <!-- In your table header -->
                                         <th>Price(Rs)</th>
                                         <th>Category</th>
-                                        <!-- <th>Main Category</th> -->
+                                        <th>Main Category</th>
 
                                         <th>Stock</th>
                                         <th>Status</th>
@@ -137,7 +136,7 @@
                                             <td><?= htmlspecialchars($product->name) ?></td>
                                             <td><?= number_format((float)($product->price ?? 0), 2) ?></td>
                                             <td><?= htmlspecialchars($product->category_name ?? '') ?></td>
-                                            <!-- <td><?= htmlspecialchars($product->main_category ?? '') ?></td> -->
+                                            <td><?= htmlspecialchars($product->main_category ?? '') ?></td>
                                             <td><?= htmlspecialchars($product->stock ?? 0) ?></td>
 
                                             <td>
@@ -160,6 +159,7 @@
                                                                                 "stock" => $product->stock ?? 0,
                                                                                 "status" => $product->status ?? "",
                                                                                 "category_id" => $product->category_id,
+                                                                                "main_category" => $product->main_category ?? "",
                                                                                 "image" => $product->image
                                                                             ]) ?>)'>
                                                     Edit
