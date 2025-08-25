@@ -191,6 +191,7 @@
                                         </tr>
                                     </thead>
                                     <tbody id="itemTable">
+                                        <!-- Single initial row -->
                                         <tr>
                                             <td>
                                                 <select name="category[]" class="form-select category-select" onchange="onCategoryChange(this)">
@@ -218,7 +219,7 @@
                                                 <input type="number" name="total[]" class="form-control total" readonly />
                                             </td>
                                             <td>
-                                                <button type="button" class="btn btn-sm btn-danger" onclick="removeRow(this)">Remove</button>
+                                                <button type="button" class="btn btn-sm btn-danger" onclick="removeRow(this)" disabled>Remove</button>
                                             </td>
                                         </tr>
                                     </tbody>
@@ -254,7 +255,7 @@
                             <input type="hidden" name="totalAmount" id="totalAmountInput">
                             <input type="hidden" name="totalPayable" id="totalPayableInput">
                             <div class="text-center mt-4">
-                                <button class="btn btn-gold px-4 py-2" type="submit" onclick="goToConsent()">Save & Next </button>
+                                <button class="btn btn-gold px-4 py-2" type="submit" onclick="goToConsent()">Save & Next</button>
                                 <button class="btn btn-outline-secondary px-4 py-2" type="reset" onclick="resetForm()">Clear</button>
                             </div>
                         </form>
@@ -315,32 +316,58 @@
             const tbody = document.getElementById('itemTable');
             const tr = document.createElement('tr');
             tr.innerHTML = `
-        <td>
-            <select name="category[]" class="form-select category-select" onchange="onCategoryChange(this)">
-                <option value="">Select</option>
-                <?php foreach ($categories as $c): ?>
-                <option value="<?= $c['id']; ?>"><?= htmlspecialchars($c['name']); ?></option>
-                <?php endforeach; ?>
-            </select>
-        </td>
-        <td>
-            <select name="itemName[]" class="form-select product-select" onchange="onProductChange(this)">
-                <option value="">Select Item</option>
-            </select>
-        </td>
-        <td><input type="number" name="price[]" class="form-control price" readonly /></td>
-        <td><input type="number" name="qty[]" class="form-control qty" min="1" value="1" oninput="updateRowTotal(this)" /></td>
-        <td><input type="number" name="days[]" class="form-control days" min="1" value="${document.getElementById('rentalDays').value || 1}" oninput="updateRowTotal(this)" /></td>
-        <td><input type="number" name="total[]" class="form-control total" readonly /></td>
-        <td><button type="button" class="btn btn-sm btn-danger" onclick="removeRow(this)">Remove</button></td>
-    `;
+                <td>
+                    <select name="category[]" class="form-select category-select" onchange="onCategoryChange(this)">
+                        <option value="">Select</option>
+                        <?php foreach ($categories as $c): ?>
+                        <option value="<?= $c['id']; ?>"><?= htmlspecialchars($c['name']); ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </td>
+                <td>
+                    <select name="itemName[]" class="form-select product-select" onchange="onProductChange(this)">
+                        <option value="">Select Item</option>
+                    </select>
+                </td>
+                <td><input type="number" name="price[]" class="form-control price" readonly /></td>
+                <td><input type="number" name="qty[]" class="form-control qty" min="1" value="1" oninput="updateRowTotal(this)" /></td>
+                <td><input type="number" name="days[]" class="form-control days" min="1" value="${document.getElementById('rentalDays').value || 1}" oninput="updateRowTotal(this)" /></td>
+                <td><input type="number" name="total[]" class="form-control total" readonly /></td>
+                <td><button type="button" class="btn btn-sm btn-danger" onclick="removeRow(this)">Remove</button></td>
+            `;
             tbody.appendChild(tr);
+            
+            // Enable remove buttons for all rows except the first one
+            updateRemoveButtons();
         }
 
         // Remove item row
         function removeRow(btn) {
-            btn.closest('tr').remove();
-            updateAllTotals();
+            const tbody = document.getElementById('itemTable');
+            if (tbody.children.length > 1) {
+                btn.closest('tr').remove();
+                updateAllTotals();
+                updateRemoveButtons();
+            }
+        }
+
+        // Update the state of remove buttons (disable for first row)
+        function updateRemoveButtons() {
+            const tbody = document.getElementById('itemTable');
+            const rows = tbody.children;
+            
+            for (let i = 0; i < rows.length; i++) {
+                const removeBtn = rows[i].querySelector('.btn-danger');
+                if (removeBtn) {
+                    if (i === 0 && rows.length > 1) {
+                        removeBtn.disabled = false;
+                    } else if (i === 0 && rows.length === 1) {
+                        removeBtn.disabled = true;
+                    } else {
+                        removeBtn.disabled = false;
+                    }
+                }
+            }
         }
 
         // Handle category selection change
@@ -443,9 +470,48 @@
         function resetForm() {
             document.getElementById('invoiceForm').reset();
             const tbody = document.getElementById('itemTable');
-            tbody.innerHTML = '';
-            addRow();
+            tbody.innerHTML = `
+                <tr>
+                    <td>
+                        <select name="category[]" class="form-select category-select" onchange="onCategoryChange(this)">
+                            <option value="">Select</option>
+                            <?php foreach ($categories as $c): ?>
+                            <option value="<?= $c['id']; ?>"><?= htmlspecialchars($c['name']); ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                    </td>
+                    <td>
+                        <select name="itemName[]" class="form-select product-select" onchange="onProductChange(this)">
+                            <option value="">Select Item</option>
+                        </select>
+                    </td>
+                    <td>
+                        <input type="number" name="price[]" class="form-control price" readonly />
+                    </td>
+                    <td>
+                        <input type="number" name="qty[]" class="form-control qty" min="1" value="1" oninput="updateRowTotal(this)" />
+                    </td>
+                    <td>
+                        <input type="number" name="days[]" class="form-control days" min="1" value="1" oninput="updateRowTotal(this)" />
+                    </td>
+                    <td>
+                        <input type="number" name="total[]" class="form-control total" readonly />
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-sm btn-danger" onclick="removeRow(this)" disabled>Remove</button>
+                    </td>
+                </tr>
+            `;
             updateAllTotals();
+            
+            // Set default dates
+            const today = new Date();
+            const tomorrow = new Date();
+            tomorrow.setDate(today.getDate() + 1);
+            
+            document.getElementById('date').valueAsDate = today;
+            document.getElementById('returnDate').valueAsDate = tomorrow;
+            updateRentalDays();
         }
 
         // Initialize form
@@ -458,9 +524,9 @@
             document.getElementById('date').valueAsDate = today;
             document.getElementById('returnDate').valueAsDate = tomorrow;
             updateRentalDays();
-
-            // Add first row
-            addRow();
+            
+            // Initialize remove buttons state
+            updateRemoveButtons();
         });
 
         // Date change listeners
@@ -468,7 +534,6 @@
         document.getElementById('returnDate').addEventListener('change', updateRentalDays);
 
         // Form submission
-        // Form submission - redirect after save
         document.getElementById('invoiceForm').addEventListener('submit', function(e) {
             e.preventDefault();
 
@@ -554,17 +619,16 @@
             }
         });
     </script>
-    < script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js">
-        </script>
-        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-        <script>
-            // Sidebar toggle functionality
-            const toggler = document.querySelector(".toggler-btn");
-            const closeBtn = document.querySelector(".close-sidebar");
-            const sidebar = document.querySelector("#sidebar");
-            if (toggler && sidebar) toggler.addEventListener("click", () => sidebar.classList.toggle("collapsed"));
-            if (closeBtn && sidebar) closeBtn.addEventListener("click", () => sidebar.classList.remove("collapsed"));
-        </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        // Sidebar toggle functionality
+        const toggler = document.querySelector(".toggler-btn");
+        const closeBtn = document.querySelector(".close-sidebar");
+        const sidebar = document.querySelector("#sidebar");
+        if (toggler && sidebar) toggler.addEventListener("click", () => sidebar.classList.toggle("collapsed"));
+        if (closeBtn && sidebar) closeBtn.addEventListener("click", () => sidebar.classList.remove("collapsed"));
+    </script>
 </body>
 
 </html>
