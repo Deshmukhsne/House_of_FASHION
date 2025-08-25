@@ -184,55 +184,54 @@
                 display: none;
             }
 
-            .form-container,
-            {
-            border: none;
-            padding: 0;
-            box-shadow: none;
-            page-break-after: always;
-        }
+            .form-container {
+                border: none;
+                padding: 0;
+                box-shadow: none;
+                page-break-after: always;
+            }
 
-        .invoice-container {
-            page-break-before: always;
-        }
+            .invoice-container {
+                page-break-before: always;
+            }
 
-        .signature-block {
-            display: flex;
-            justify-content: space-between;
-        }
+            .signature-block {
+                display: flex;
+                justify-content: space-between;
+            }
 
-        .signature-block>div {
-            width: 48%;
-        }
+            .signature-block>div {
+                width: 48%;
+            }
 
 
-        /* Resize signature image for print */
-        .signature-image {
-            display: inline-block;
-            max-width: 120px;
-            height: auto;
-            border-bottom: 1px dotted #000;
-            margin-left: 10px;
-        }
+            /* Resize signature image for print */
+            .signature-image {
+                display: inline-block;
+                max-width: 120px;
+                height: auto;
+                border-bottom: 1px dotted #000;
+                margin-left: 10px;
+            }
 
-        .signature-pad-container {
-            display: none;
-        }
+            .signature-pad-container {
+                display: none;
+            }
 
-        /* Keep the canvas hidden during print */
-        #signatureCanvas {
-            display: none !important;
-        }
+            /* Keep the canvas hidden during print */
+            #signatureCanvas {
+                display: none !important;
+            }
 
-        .signature-actions,
-        .signature-status,
-        .signature-instructions {
-            display: none;
-        }
+            .signature-actions,
+            .signature-status,
+            .signature-instructions {
+                display: none;
+            }
 
-        .action-buttons {
-            display: none;
-        }
+            .action-buttons {
+                display: none;
+            }
         }
 
         /* For screen view, hide the printed signature image */
@@ -573,12 +572,50 @@
             const now = new Date();
             document.getElementById('signatureTimestamp').textContent = now.toLocaleString();
 
-            Swal.fire({
-                icon: 'success',
-                title: 'Signature Saved',
-                text: 'Your digital signature has been saved successfully.',
-                confirmButtonText: 'OK'
-            });
+            // Prepare data for AJAX request
+            const data = {
+                invoice_id: '<?php echo $invoice["id"]; ?>', // Make sure your invoice data includes an ID
+                customer_name: '<?php echo $invoice["customer_name"]; ?>',
+                signature_data: signatureData,
+                document_hash: document.getElementById('documentHash').value,
+                signature_timestamp: now.toISOString().slice(0, 19).replace('T', ' ')
+            };
+
+            // Send AJAX request to save signature
+            fetch('<?php echo site_url("SignatureController/saveSignature"); ?>', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                })
+                .then(response => response.json())
+                .then(result => {
+                    if (result.success) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Signature Saved',
+                            text: 'Your digital signature has been saved successfully.',
+                            confirmButtonText: 'OK'
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'Failed to save signature: ' + result.message,
+                            confirmButtonText: 'OK'
+                        });
+                    }
+                })
+                .catch(error => {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'An error occurred while saving the signature.',
+                        confirmButtonText: 'OK'
+                    });
+                    console.error('Error:', error);
+                });
         }
 
         // Validate signature before printing

@@ -88,7 +88,55 @@ class AdminController extends CI_Controller
         redirect('AdminController/DryCleaning_Forward');
     }
 
+    public function saveSignature()
+    {
+        // Check if it's an AJAX request
+        if (!$this->input->is_ajax_request()) {
+            show_error('Direct access not allowed');
+        }
 
+        // Get POST data
+        $invoice_id = $this->input->post('invoice_id');
+        $signature_data = $this->input->post('signature_data');
+        $document_hash = $this->input->post('document_hash');
+        $customer_name = $this->input->post('customer_name');
+
+        // Validate required fields
+        if (empty($invoice_id) || empty($signature_data) || empty($document_hash)) {
+            echo json_encode([
+                'success' => false,
+                'message' => 'Missing required fields'
+            ]);
+            return;
+        }
+
+        // Load model
+        $this->load->model('Signature_model');
+
+        // Prepare data
+        $signature_data = [
+            'invoice_id' => $invoice_id,
+            'customer_name' => $customer_name,
+            'signature_data' => $signature_data,
+            'document_hash' => $document_hash,
+            'signature_timestamp' => date('Y-m-d H:i:s')
+        ];
+
+        // Save to database
+        $result = $this->Signature_model->saveSignature($signature_data);
+
+        if ($result) {
+            echo json_encode([
+                'success' => true,
+                'message' => 'Signature saved successfully'
+            ]);
+        } else {
+            echo json_encode([
+                'success' => false,
+                'message' => 'Failed to save signature'
+            ]);
+        }
+    }
 
 
     // Status page
