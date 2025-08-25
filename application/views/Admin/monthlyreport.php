@@ -189,6 +189,7 @@
       border-radius: 10px;
       box-shadow: var(--shadow);
       overflow: hidden;
+      width: 100%;
     }
 
     .chart-header {
@@ -201,27 +202,127 @@
     .chart-body {
       padding: 1.5rem;
       height: 400px;
+      position: relative;
+      width: 100%;
     }
 
     /* Responsive Adjustments */
-    @media (max-width: 992px) {
+    @media (max-width: 1200px) {
       .stats-container {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
       }
+    }
 
+    @media (max-width: 992px) {
       .main {
         padding: 1rem;
+      }
+      
+      .report-header {
+        height: auto;
+        padding: 1.5rem;
+      }
+      
+      .report-header h2 {
+        font-size: 1.8rem;
+      }
+      
+      .report-header p {
+        font-size: 1rem;
+      }
+      
+      .chart-body {
+        height: 350px;
       }
     }
 
     @media (max-width: 768px) {
-      .report-header {
+      .stats-container {
+        grid-template-columns: 1fr;
+      }
+      
+      .report-controls .row {
+        flex-direction: column;
+        gap: 1rem;
+      }
+      
+      .report-controls .col-md-5,
+      .report-controls .col-md-2 {
+        width: 100%;
+        max-width: 100%;
+      }
+      
+      .stat-card {
         padding: 1.5rem;
       }
-
+      
+      .stat-value {
+        font-size: 1.8rem;
+      }
+      
       .chart-body {
         height: 300px;
       }
+    }
+
+    @media (max-width: 576px) {
+      .main {
+        padding: 0.5rem;
+      }
+      
+      .container.my-5 {
+        margin-top: 1rem !important;
+        margin-bottom: 1rem !important;
+      }
+      
+      .report-header {
+        padding: 1rem;
+        border-radius: 8px;
+      }
+      
+      .report-header h2 {
+        font-size: 1.5rem;
+      }
+      
+      .report-header p {
+        font-size: 0.9rem;
+      }
+      
+      .report-controls {
+        padding: 1rem;
+      }
+      
+      .stat-card {
+        padding: 1.25rem;
+      }
+      
+      .stat-value {
+        font-size: 1.6rem;
+      }
+      
+      .stat-label {
+        font-size: 0.85rem;
+      }
+      
+      .chart-header {
+        padding: 1rem;
+      }
+      
+      .chart-body {
+        padding: 1rem;
+        height: 250px;
+      }
+      
+      .btn-primary {
+        padding: 0.6rem 1.2rem;
+        font-size: 0.85rem;
+      }
+    }
+
+    /* Chart container responsiveness */
+    .chart-container-wrapper {
+      width: 100%;
+      overflow-x: auto;
     }
 
     /* Animations */
@@ -255,16 +356,6 @@
 
     .chart-card {
       animation: fadeInUp 0.6s ease 0.4s forwards;
-    }
-
-    .chart-card {
-      overflow-x: auto;
-      min-width: 800px;
-    }
-
-    .chart-body {
-      min-width: 800px;
-      height: 400px;
     }
   </style>
 </head>
@@ -340,7 +431,9 @@
               Daily Sales Breakdown
             </div>
             <div class="chart-body">
-              <canvas id="monthlySalesChart"></canvas>
+              <div class="chart-container-wrapper">
+                <canvas id="monthlySalesChart"></canvas>
+              </div>
             </div>
           </div>
         </div>
@@ -409,20 +502,16 @@
               ticks: {
                 callback: function(value) {
                   return '₹' + value.toLocaleString('en-IN');
-                },
-                stepSize: 1000
+                }
               }
             },
             x: {
               ticks: {
-                autoSkip: false,
                 maxRotation: 45,
                 minRotation: 45
               }
             }
-          },
-          barPercentage: 0.8,
-          categoryPercentage: 0.9
+          }
         }
       };
 
@@ -433,8 +522,34 @@
 
       // Create new chart
       window.monthlySalesChart = new Chart(ctx, config);
+      
+      // Adjust chart on window resize
+      window.addEventListener('resize', function() {
+        if (window.monthlySalesChart instanceof Chart) {
+          window.monthlySalesChart.resize();
+        }
+      });
     });
   </script>
+     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Navbar  toggler
+        const toggler = document.querySelector(".toggler-btn");
+        const closeBtn = document.querySelector(".close-sidebar");
+        const sidebar = document.querySelector("#sidebar");
+
+        if (toggler && sidebar) {
+            toggler.addEventListener("click", function() {
+                sidebar.classList.toggle("collapsed");
+            });
+        }
+
+        if (closeBtn && sidebar) {
+            closeBtn.addEventListener("click", function() {
+                sidebar.classList.remove("collapsed");
+            });
+        }
+    </script>
 </body>
 
 </html>

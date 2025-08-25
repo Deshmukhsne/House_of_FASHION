@@ -14,8 +14,6 @@
   <!-- Bootstrap CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
-
-
   <style>
     body {
       background-color: #f9f9f9;
@@ -130,6 +128,101 @@
     .card-body {
       background: #fff;
     }
+
+    /* Responsive styles for the report content */
+    @media (max-width: 992px) {
+      .stat-value {
+        font-size: 1.6rem;
+      }
+      
+      .stat-box {
+        padding: 15px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .report-header h2 {
+        font-size: 1.5rem;
+      }
+      
+      .stat-value {
+        font-size: 1.4rem;
+      }
+      
+      .stat-label {
+        font-size: 0.85rem;
+      }
+      
+      .stat-box {
+        margin-bottom: 15px;
+        padding: 12px;
+      }
+      
+      .card-header {
+        font-size: 0.9rem;
+        padding: 10px 15px;
+      }
+      
+      form .col-md-4 {
+        margin-bottom: 10px;
+      }
+      
+      form .col-md-2 {
+        margin-bottom: 15px;
+      }
+    }
+
+    @media (max-width: 576px) {
+      .report-header h2 {
+        font-size: 1.3rem;
+      }
+      
+      .stat-value {
+        font-size: 1.2rem;
+      }
+      
+      .stat-box {
+        padding: 10px;
+      }
+      
+      .text-muted {
+        font-size: 0.9rem;
+      }
+      
+      .container-fluid.p-4 {
+        padding: 1rem !important;
+      }
+      
+      .container.my-5 {
+        margin-top: 2rem !important;
+        margin-bottom: 2rem !important;
+      }
+    }
+
+    /* Ensure proper spacing on mobile */
+    @media (max-width: 400px) {
+      .report-header h2 {
+        font-size: 1.2rem;
+      }
+      
+      .stat-value {
+        font-size: 1.1rem;
+      }
+      
+      small {
+        font-size: 0.75rem;
+      }
+      
+      form input[type="date"] {
+        padding: 6px 8px;
+        font-size: 0.9rem;
+      }
+      
+      form button {
+        padding: 6px 12px;
+        font-size: 0.9rem;
+      }
+    }
   </style>
 </head>
 
@@ -149,7 +242,7 @@
         <div class="container-fluid p-4">
           <div class="container my-5">
             <!-- Report Header -->
-            <div class="text-center mb-5">
+            <div class="text-center mb-5 report-header">
               <h2 class="text-uppercase">Daily Sales Report</h2>
               <p class="text-muted"><?= date('F j, Y', strtotime($report_date)) ?></p>
 
@@ -157,30 +250,30 @@
               <form method="get" action="" class="mb-4">
                 <input type="hidden" name="page" value="DailyReport">
                 <div class="row justify-content-center">
-                  <div class="col-md-4">
+                  <div class="col-md-4 col-sm-6 col-8">
                     <input type="date" name="date" class="form-control" value="<?= $report_date ?>">
                   </div>
-                  <div class="col-md-2">
-                    <button type="submit" class="btn btn-primary">View Report</button>
+                  <div class="col-md-2 col-sm-4 col-4">
+                    <button type="submit" class="btn btn-primary w-100">View Report</button>
                   </div>
                 </div>
               </form>
             </div>
 
             <div class="row text-center mb-4 align-items-stretch">
-              <div class="col-md-4 mb-3 d-flex">
+              <div class="col-lg-4 col-md-6 mb-3 d-flex">
                 <div class="stat-box w-100 h-100">
                   <p class="stat-label mb-1">Total Orders</p>
                   <div class="stat-value"><?= $report['total_orders'] ?></div>
                 </div>
               </div>
-              <div class="col-md-4 mb-3 d-flex">
+              <div class="col-lg-4 col-md-6 mb-3 d-flex">
                 <div class="stat-box w-100 h-100">
                   <p class="stat-label mb-1">Total Sales</p>
                   <div class="stat-value">₹ <?= number_format($report['total_sales'], 2) ?></div>
                 </div>
               </div>
-              <div class="col-md-4 mb-3 d-flex">
+              <div class="col-lg-4 col-md-12 mb-3 d-flex">
                 <div class="stat-box w-100 h-100">
                   <p class="stat-label mb-1">Top Product</p>
                   <div class="stat-value">
@@ -244,6 +337,7 @@
           },
           options: {
             responsive: true,
+            maintainAspectRatio: false,
             plugins: {
               legend: {
                 position: 'top'
@@ -266,6 +360,22 @@
             }
           }
         });
+        
+        // Make chart responsive by adjusting container height on resize
+        function adjustChartHeight() {
+          const chartContainer = document.getElementById('hourlySalesChart').parentElement;
+          if (window.innerWidth < 768) {
+            chartContainer.style.height = '300px';
+          } else {
+            chartContainer.style.height = 'auto';
+          }
+        }
+        
+        // Initial adjustment
+        adjustChartHeight();
+        
+        // Adjust on window resize
+        window.addEventListener('resize', adjustChartHeight);
       </script>
 </body>
 

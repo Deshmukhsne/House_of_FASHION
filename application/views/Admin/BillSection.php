@@ -99,6 +99,53 @@
             background-color: #fff8e1;
         }
     </style>
+
+    <style>
+    /* Responsive table container */
+    .table-responsive-container {
+        width: 100%;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        margin-bottom: 1rem;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+
+    /* Small devices (phones, 576px and down) */
+    @media (max-width: 576px) {
+        .table {
+            font-size: 0.8rem;
+        }
+        
+        .table th, 
+        .table td {
+            padding: 0.5rem;
+        }
+        
+        .btn-sm {
+            padding: 0.25rem 0.5rem;
+            font-size: 0.7rem;
+        }
+    }
+
+    /* Extra small devices (phones, 400px and down) */
+    @media (max-width: 400px) {
+        .table {
+            font-size: 0.75rem;
+        }
+        
+        .table th, 
+        .table td {
+            padding: 0.3rem;
+        }
+        
+        .form-select, 
+        .form-control {
+            padding: 0.25rem;
+            font-size: 0.75rem;
+        }
+    }
+</style>
 </head>
 
 <body>
@@ -176,8 +223,7 @@
                                 </div>
                             </div>
                             <!-- Items Table -->
-                            <div class="mb-4">
-                                <label class="form-section-title">Rental Items</label>
+                                                        <div class="table-responsive-container">
                                 <table class="table table-bordered align-middle">
                                     <thead class="table-light">
                                         <tr>

@@ -303,6 +303,27 @@
             $("#payDueModal").modal("show");
         });
     </script>
+
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Navbar  toggler
+        const toggler = document.querySelector(".toggler-btn");
+        const closeBtn = document.querySelector(".close-sidebar");
+        const sidebar = document.querySelector("#sidebar");
+
+        if (toggler && sidebar) {
+            toggler.addEventListener("click", function() {
+                sidebar.classList.toggle("collapsed");
+            });
+        }
+
+        if (closeBtn && sidebar) {
+            closeBtn.addEventListener("click", function() {
+                sidebar.classList.remove("collapsed");
+            });
+        }
+    </script>
 </body>
 
 </html>
