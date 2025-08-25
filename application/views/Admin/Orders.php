@@ -67,6 +67,53 @@
       border-bottom: 2px solid #000;
       color: #000;
     }
+
+    /* ====== Responsive Table (Mobile Only) ====== */
+    @media (max-width: 768px) {
+      table thead {
+        display: none;
+        /* Hide header */
+      }
+
+      table,
+      table tbody,
+      table tr,
+      table td {
+        display: block;
+        width: 100%;
+      }
+
+      table tbody tr {
+        margin-bottom: 15px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        background: #fff;
+        padding: 8px;
+      }
+
+      table tbody td {
+        text-align: right;
+        padding: 8px;
+        font-size: 13px;
+        border: none !important;
+        border-bottom: 1px solid #eee;
+        position: relative;
+      }
+
+      table tbody td:last-child {
+        border-bottom: none;
+      }
+
+      table tbody td::before {
+        content: attr(data-label);
+        position: absolute;
+        left: 10px;
+        width: 50%;
+        font-weight: bold;
+        text-align: left;
+        color: #444;
+      }
+    }
   </style>
 </head>
 
@@ -144,11 +191,11 @@
                 ?>
                   <tr class="<?= $highlight ?>">
 
-                    <td><?= $order['invoice_id'] ?></td>
-                    <td><?= $order['customer_name'] ?></td>
-                    <td><?= $order['customer_mobile'] ?></td>
-                    <td><?= $order['item_name'] ?></td>
-                    <td><?= $order['main_category'] ?></td>
+                    <td data-label="Order Id"><?= $order['invoice_id'] ?></td>
+                    <td data-label="Customer"><?= $order['customer_name'] ?></td>
+                    <td data-label="Mobile"><?= $order['customer_mobile'] ?></td>
+                    <td data-label="Product"><?= $order['item_name'] ?></td>
+                    <td data-label="Main Category"><?= $order['main_category'] ?></td>
                     <!-- <td>
                                               <?php if (!empty($order['image'])): ?>
                                                 <img src="data:image/jpeg;base64,<?= base64_encode($order['image']) ?>"
@@ -161,10 +208,10 @@
                                                 No Image
                                               <?php endif; ?>
                                             </td> -->
-                    <td><?= $order['quantity'] ?></td>
-                    <td><?= $order['invoice_date'] ?></td>
-                    <td><?= $order['return_date'] ?></td>
-                    <td><?= $order['price'] ?></td>
+                    <td data-label="Quantity"><?= $order['quantity'] ?></td>
+                    <td data-label="Issue"><?= $order['invoice_date'] ?></td>
+                    <td data-label="Return"><?= $order['return_date'] ?></td>
+                    <td data-label="Price"><?= $order['price'] ?></td>
                     <!-- <td><?= $order['times_rented'] ?></td> -->
                     <td>
                       <?php if ($order['status'] == 'Returned' && $order['main_category'] == 'Cloths'): ?>

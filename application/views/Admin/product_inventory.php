@@ -68,6 +68,73 @@
             background-color: #d1ecf1;
             color: #0c5460;
         }
+
+        /* ====== Mobile Responsiveness ====== */
+        @media (max-width: 768px) {
+            .card-header h5 {
+                font-size: 1rem;
+            }
+
+            .btn-gold {
+                font-size: 0.8rem;
+                padding: 6px 10px;
+                margin-bottom: 5px;
+            }
+
+            .table th,
+            .table td {
+                font-size: 0.8rem;
+                padding: 6px;
+            }
+
+            .table img {
+                max-width: 45px;
+            }
+
+            /* Stack search + filter vertically */
+            .row.mb-3 {
+                flex-direction: column;
+            }
+
+            .row.mb-3 .col-md-6,
+            .row.mb-3 .col-md-3 {
+                width: 100%;
+                margin-bottom: 10px;
+            }
+
+            /* Make modals fit smaller screens */
+            .modal-dialog {
+                max-width: 95% !important;
+                margin: auto;
+            }
+        }
+
+        /* ====== Extra Small Screens ====== */
+        @media (max-width: 480px) {
+            .card-header {
+                flex-direction: column;
+                align-items: flex-start !important;
+            }
+
+            .card-header h5 {
+                margin-bottom: 10px;
+            }
+
+            .btn-gold {
+                width: 100%;
+                margin: 5px 0;
+            }
+
+            .table th,
+            .table td {
+                font-size: 0.75rem;
+                padding: 5px;
+            }
+
+            .table img {
+                max-width: 40px;
+            }
+        }
     </style>
 
 </head>
@@ -108,71 +175,72 @@
                                     </select>
                                 </div>
                             </div>
-                            <table class="table table-bordered mt-3">
-                                <thead>
-                                    <tr>
-                                        <th>Image</th>
-                                        <th>Name</th>
-                                        <th>Price(Rs)</th>
-                                        <th>Category</th>
-                                        <th>Main Category</th>
-
-                                        <th>Stock</th>
-                                        <th>Status</th>
-                                        <th>Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <?php foreach ($products as $product): ?>
+                            <div class="table-responsive">
+                                <table class="table table-bordered mt-3">
+                                    <thead>
                                         <tr>
-                                            <td>
-                                                <?php if (!empty($product->image) && file_exists($product->image)): ?>
-                                                    <img src="<?= base_url($product->image) ?>" height="60"
-                                                        onclick="openImageModal('<?= base_url($product->image) ?>')" style="cursor:pointer;" />
-                                                <?php else: ?>
-                                                    <span>No Image</span>
-                                                <?php endif; ?>
-                                            </td>
-                                            <td><?= htmlspecialchars($product->name) ?></td>
-                                            <td><?= number_format((float)($product->price ?? 0), 2) ?></td>
-                                            <td><?= htmlspecialchars($product->category_name ?? '') ?></td>
-                                            <td><?= htmlspecialchars($product->main_category ?? '') ?></td>
-                                            <td><?= htmlspecialchars($product->stock ?? 0) ?></td>
+                                            <th>Image</th>
+                                            <th>Name</th>
+                                            <th>Price(Rs)</th>
+                                            <th>Category</th>
+                                            <th>Main Category</th>
 
-                                            <td>
-                                                <?php
-                                                $status = ($product->stock <= 0) ? 'Rented' : 'Available';
-                                                ?>
-                                                <span class="status-badge 
-        <?= $status == 'Available' ? 'status-available' : 'status-rented' ?>">
-                                                    <?= htmlspecialchars($status) ?>
-                                                </span>
-                                            </td>
-
-
-                                            <td>
-                                                <button type="button" class="btn btn-sm btn-outline-primary"
-                                                    onclick='openEditModal(<?= json_encode([
-                                                                                "id" => $product->id,
-                                                                                "name" => $product->name,
-                                                                                "price" => $product->price,
-                                                                                "stock" => $product->stock ?? 0,
-                                                                                "status" => $product->status ?? "",
-                                                                                "category_id" => $product->category_id,
-                                                                                "main_category" => $product->main_category ?? "",
-                                                                                "image" => $product->image
-                                                                            ]) ?>)'>
-                                                    Edit
-                                                </button>
-                                                <a href="<?= base_url('ProductController/delete_product/' . $product->id) ?>"
-                                                    class="btn btn-sm btn-danger" onclick="return confirm('Delete?')">Delete</a>
-                                            </td>
+                                            <th>Stock</th>
+                                            <th>Status</th>
+                                            <th>Actions</th>
                                         </tr>
-                                    <?php endforeach; ?>
-                                </tbody>
+                                    </thead>
+                                    <tbody>
+                                        <?php foreach ($products as $product): ?>
+                                            <tr>
+                                                <td>
+                                                    <?php if (!empty($product->image) && file_exists($product->image)): ?>
+                                                        <img src="<?= base_url($product->image) ?>" height="60"
+                                                            onclick="openImageModal('<?= base_url($product->image) ?>')" style="cursor:pointer;" />
+                                                    <?php else: ?>
+                                                        <span>No Image</span>
+                                                    <?php endif; ?>
+                                                </td>
+                                                <td><?= htmlspecialchars($product->name) ?></td>
+                                                <td><?= number_format((float)($product->price ?? 0), 2) ?></td>
+                                                <td><?= htmlspecialchars($product->category_name ?? '') ?></td>
+                                                <td><?= htmlspecialchars($product->main_category ?? '') ?></td>
+                                                <td><?= htmlspecialchars($product->stock ?? 0) ?></td>
 
-                            </table>
+                                                <td>
+                                                    <?php
+                                                    $status = ($product->stock <= 0) ? 'Rented' : 'Available';
+                                                    ?>
+                                                    <span class="status-badge 
+        <?= $status == 'Available' ? 'status-available' : 'status-rented' ?>">
+                                                        <?= htmlspecialchars($status) ?>
+                                                    </span>
+                                                </td>
 
+
+                                                <td>
+                                                    <button type="button" class="btn btn-sm btn-outline-primary"
+                                                        onclick='openEditModal(<?= json_encode([
+                                                                                    "id" => $product->id,
+                                                                                    "name" => $product->name,
+                                                                                    "price" => $product->price,
+                                                                                    "stock" => $product->stock ?? 0,
+                                                                                    "status" => $product->status ?? "",
+                                                                                    "category_id" => $product->category_id,
+                                                                                    "main_category" => $product->main_category ?? "",
+                                                                                    "image" => $product->image
+                                                                                ]) ?>)'>
+                                                        Edit
+                                                    </button>
+                                                    <a href="<?= base_url('ProductController/delete_product/' . $product->id) ?>"
+                                                        class="btn btn-sm btn-danger" onclick="return confirm('Delete?')">Delete</a>
+                                                </td>
+                                            </tr>
+                                        <?php endforeach; ?>
+                                    </tbody>
+
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>
