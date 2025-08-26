@@ -82,24 +82,26 @@ class OrdersModel extends CI_Model
     }
 
     // Sales report
-    public function get_product_sales()
+public function get_product_sales()
 {
     $this->db->select('
+        c.name as category_name,
         p.name as item_name,
         p.mrp,
-        p.price,
-        i.category as category_name,
+        p.price,    
         COUNT(i.id) as items_rented,
         SUM(p.price * i.quantity) as revenue
     ');
     $this->db->from('invoice_items i');
-    $this->db->join('products p', 'i.item_name = p.name', 'left');
-    $this->db->group_by('i.item_name'); // group by product name
-    $this->db->order_by('i.category, i.item_name', 'ASC');
+    $this->db->join('products p', 'i.item_name = p.name', 'left'); // join products to get price & mrp
+    $this->db->join('categories c', 'p.category_id = c.id', 'left'); // join categories to get category name
+    $this->db->group_by('p.id'); // group by product
+    $this->db->order_by('c.name, p.name', 'ASC'); // sort by category & product
 
     $query = $this->db->get();
     return $query->result();
 }
+
 
     
 }
