@@ -60,9 +60,13 @@ class AdminController extends CI_Controller
         // $this->load->view('AdminController/drycleaning_form', $data);
         $this->load->view('Admin/DryCleaning_Forward', $data);
     }
+<<<<<<< HEAD
 
 
 
+=======
+     
+>>>>>>> dc1d641 (update)
     // Save forward form to DB
     public function save_drycleaning_forward()
     {
