@@ -490,6 +490,63 @@
                         statusFilter.addEventListener('change', filterProducts);
                     });
                 </script>
+                <script>
+                    // Add to Stock
+$("#cleaningTable").on("click", ".btn-stock", function() {
+    let row = $(this).closest("tr");
+    let status = row.find("select[name='status']").val();
+    let recordID = row.data("id");
+    let productName = row.find("td:eq(3)").text().trim();
+
+    if (status !== "Returned") {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Status must be Returned',
+            text: 'Only returned items can be added to stock.'
+        });
+        return;
+    }
+
+    Swal.fire({
+        icon: 'question',
+        title: 'Add to Stock?',
+        text: `Do you want to add ${productName} to stock?`,
+        showCancelButton: true,
+        confirmButtonColor: '#28a745',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, Add'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $.post("<?= base_url('AdminController/add_to_stock') ?>", {
+                id: recordID
+            }, function(response) {
+                let res = JSON.parse(response);
+                if (res.success) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Added to Stock',
+                        text: `${productName} added successfully!`
+                    }).then(() => {
+                        row.remove();
+                    });
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: res.message || 'Failed to add item to stock.'
+                    });
+                }
+            }).fail(function() {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Server error occurred.'
+                });
+            });
+        }
+    });
+});
+                </script>
 
 </body>
 
