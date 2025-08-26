@@ -210,9 +210,13 @@
                                                 <td>
                                                     <?php
                                                     $status = ($product->stock <= 0) ? 'Rented' : 'Available';
+                                                    if (isset($product->status) && $product->status === 'In Dry Clean') {
+                                                        $status = 'In Dry Clean';
+                                                    }
                                                     ?>
                                                     <span class="status-badge 
-                    <?= $status == 'Available' ? 'status-available' : 'status-rented' ?>">
+                                                    <?= $status == 'Available' ? 'status-available' : ($status == 'Rented' ? 'status-rented' : 'status-dryclean') ?>"
+                                                    data-status="<?= $status ?>">
                                                         <?= htmlspecialchars($status) ?>
                                                     </span>
                                                 </td>
@@ -224,7 +228,7 @@
                                                                                     "price" => $product->price,
                                                                                     "mrp" => $product->mrp,  // ✅ new
                                                                                     "stock" => $product->stock ?? 0,
-                                                                                    "status" => $product->status ?? "",
+                                                                                    "status" => $status,
                                                                                     "category_id" => $product->category_id,
                                                                                     "main_category" => $product->main_category ?? "",
                                                                                     "image" => $product->image
@@ -339,7 +343,7 @@
                                 <div class="modal-body">
                                     <!-- Hidden ID -->
                                     <input type="hidden" name="product_id" id="edit_product_id">
-                                    <input type="hidden" name="existing_image" value="<?= $product->image ?>">
+                                    <input type="hidden" name="existing_image" id="edit_existing_image">
                                     <!-- Name -->
                                     <div class="mb-3">
                                         <label>Product Name</label>
@@ -349,9 +353,12 @@
                                         <label>Price</label>
                                         <input type="number" class="form-control" name="price" id="edit_product_price" step="0.01">
                                     </div>
+                                    <div class="mb-3">
+                                        <label>MRP</label>
+                                        <input type="number" class="form-control" name="mrp" id="edit_product_mrp" step="0.01">
+                                    </div>
 
                                     <!-- Category -->
-                                    <!-- Edit Modal -->
                                     <div class="mb-3">
                                         <label>Category</label>
                                         <select class="form-select" name="category_id" id="edit_product_category">
@@ -368,46 +375,47 @@
                                             <option value="Cloths">Cloths</option>
                                             <option value="Accessories">Accessories</option>
                                         </select>
-
-                                        <!-- Stock -->
-                                        <div class="mb-3">
-                                            <label>Stock</label>
-                                            <input type="number" class="form-control" name="stock" id="edit_product_stock">
-                                        </div>
-
-                                        <!-- Status -->
-                                        <div class="mb-3">
-                                            <label>Status</label>
-                                            <select class="form-select" name="status" id="edit_product_status">
-                                                <option value="Available">Available</option>
-                                                <option value="Rented">Rented</option>
-                                                <option value="In Dry Clean">In Dry Clean</option>
-                                            </select>
-                                        </div>
-
-                                        <!-- Current Image -->
-                                        <div class="mb-3">
-                                            <label>Current Image</label><br>
-                                            <img id="edit_product_image_preview" src="" alt="Current Product Image" width="100" class="border rounded mb-2">
-                                        </div>
-
-                                        <!-- New Image -->
-                                        <div class="mb-3">
-                                            <label>Change Image</label>
-                                            <input type="file" class="form-control" name="image">
-                                        </div>
                                     </div>
-                                    <div class="modal-footer">
-                                        <button type="submit" class="btn btn-primary">Update Product</button>
+
+                                    <!-- Stock -->
+                                    <div class="mb-3">
+                                        <label>Stock</label>
+                                        <input type="number" class="form-control" name="stock" id="edit_product_stock">
+                                    </div>
+
+                                    <!-- Status -->
+                                    <div class="mb-3">
+                                        <label>Status</label>
+                                        <select class="form-select" name="status" id="edit_product_status">
+                                            <option value="Available">Available</option>
+                                            <option value="Rented">Rented</option>
+                                            <option value="In Dry Clean">In Dry Clean</option>
+                                        </select>
+                                    </div>
+
+                                    <!-- Current Image -->
+                                    <div class="mb-3">
+                                        <label>Current Image</label><br>
+                                        <img id="edit_product_image_preview" src="" alt="Current Product Image" width="100" class="border rounded mb-2">
+                                    </div>
+
+                                    <!-- New Image -->
+                                    <div class="mb-3">
+                                        <label>Change Image</label>
+                                        <input type="file" class="form-control" name="image">
                                     </div>
                                 </div>
+                                <div class="modal-footer">
+                                    <button type="submit" class="btn btn-primary">Update Product</button>
+                                </div>
+                            </div>
                         </form>
                     </div>
                 </div>
 
                 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
                 <script>
-                    // Navbar  toggler
+                    // Navbar toggler
                     const toggler = document.querySelector(".toggler-btn");
                     const closeBtn = document.querySelector(".close-sidebar");
                     const sidebar = document.querySelector("#sidebar");
@@ -446,21 +454,22 @@
                     function openEditModal(product) {
                         document.getElementById('edit_product_id').value = product.id;
                         document.getElementById('edit_product_name').value = product.name;
-                        document.getElementById('edit_product_category').value = product.category_id;
-                        document.getElementById('edit_product_stock').value = product.stock;
                         document.getElementById('edit_product_price').value = product.price;
+                        document.getElementById('edit_product_mrp').value = product.mrp;
+                        document.getElementById('edit_product_category').value = product.category_id;
+                        document.getElementById('edit_product_main_category').value = product.main_category;
+                        document.getElementById('edit_product_stock').value = product.stock;
                         document.getElementById('edit_product_status').value = product.status;
 
                         // Fix the image path - use base_url() only once
                         document.getElementById('edit_product_image_preview').src = product.image ? '<?= base_url() ?>' + product.image : '';
-
-                        // Also update the existing_image hidden field
-                        document.querySelector('input[name="existing_image"]').value = product.image;
+                        document.getElementById('edit_existing_image').value = product.image;
 
                         var myModal = new bootstrap.Modal(document.getElementById('editProductModal'));
                         myModal.show();
                     }
-                    // Search and Filter functionality
+                    
+                    // Search and Filter functionality - FIXED VERSION
                     document.addEventListener('DOMContentLoaded', function() {
                         const searchInput = document.getElementById('searchInput');
                         const statusFilter = document.getElementById('statusFilter');
@@ -472,7 +481,8 @@
 
                             productRows.forEach(row => {
                                 const name = row.querySelector('td:nth-child(2)').textContent.toLowerCase();
-                                const status = row.querySelector('td:nth-child(6) span').textContent;
+                                const statusBadge = row.querySelector('td:nth-child(8) span');
+                                const status = statusBadge ? statusBadge.getAttribute('data-status') : '';
 
                                 const nameMatch = name.includes(searchTerm);
                                 const statusMatch = statusValue === '' || status === statusValue;
@@ -492,60 +502,60 @@
                 </script>
                 <script>
                     // Add to Stock
-$("#cleaningTable").on("click", ".btn-stock", function() {
-    let row = $(this).closest("tr");
-    let status = row.find("select[name='status']").val();
-    let recordID = row.data("id");
-    let productName = row.find("td:eq(3)").text().trim();
+                    $("#cleaningTable").on("click", ".btn-stock", function() {
+                        let row = $(this).closest("tr");
+                        let status = row.find("select[name='status']").val();
+                        let recordID = row.data("id");
+                        let productName = row.find("td:eq(3)").text().trim();
 
-    if (status !== "Returned") {
-        Swal.fire({
-            icon: 'warning',
-            title: 'Status must be Returned',
-            text: 'Only returned items can be added to stock.'
-        });
-        return;
-    }
+                        if (status !== "Returned") {
+                            Swal.fire({
+                                icon: 'warning',
+                                title: 'Status must be Returned',
+                                text: 'Only returned items can be added to stock.'
+                            });
+                            return;
+                        }
 
-    Swal.fire({
-        icon: 'question',
-        title: 'Add to Stock?',
-        text: `Do you want to add ${productName} to stock?`,
-        showCancelButton: true,
-        confirmButtonColor: '#28a745',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Yes, Add'
-    }).then((result) => {
-        if (result.isConfirmed) {
-            $.post("<?= base_url('AdminController/add_to_stock') ?>", {
-                id: recordID
-            }, function(response) {
-                let res = JSON.parse(response);
-                if (res.success) {
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Added to Stock',
-                        text: `${productName} added successfully!`
-                    }).then(() => {
-                        row.remove();
+                        Swal.fire({
+                            icon: 'question',
+                            title: 'Add to Stock?',
+                            text: `Do you want to add ${productName} to stock?`,
+                            showCancelButton: true,
+                            confirmButtonColor: '#28a745',
+                            cancelButtonColor: '#d33',
+                            confirmButtonText: 'Yes, Add'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                $.post("<?= base_url('AdminController/add_to_stock') ?>", {
+                                    id: recordID
+                                }, function(response) {
+                                    let res = JSON.parse(response);
+                                    if (res.success) {
+                                        Swal.fire({
+                                            icon: 'success',
+                                            title: 'Added to Stock',
+                                            text: `${productName} added successfully!`
+                                        }).then(() => {
+                                            row.remove();
+                                        });
+                                    } else {
+                                        Swal.fire({
+                                            icon: 'error',
+                                            title: 'Error',
+                                            text: res.message || 'Failed to add item to stock.'
+                                        });
+                                    }
+                                }).fail(function() {
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Error',
+                                        text: 'Server error occurred.'
+                                    });
+                                });
+                            }
+                        });
                     });
-                } else {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error',
-                        text: res.message || 'Failed to add item to stock.'
-                    });
-                }
-            }).fail(function() {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error',
-                    text: 'Server error occurred.'
-                });
-            });
-        }
-    });
-});
                 </script>
 
 </body>
