@@ -310,9 +310,9 @@
                                                         <?php foreach ($sales as $s): ?>
                                                             <tr>
                                                                 <td><?= $s->category_name ?></td>
-                                                                <td><?= $s->name ?></td>
-                                                                <td><?= $s->mrp?></td>
-                                                                <td><?= $s->price?></td>
+                                                                <td><?= $s->item_name ?></td>
+                                                                <td><?= $s->mrp ?></td>
+                                                                <td>₹<?= $s->price ?></td>
                                                                 <td><?= $s->items_rented ?></td>
                                                                 <td>₹<?= number_format($s->revenue, 2) ?></td>
                                                             </tr>

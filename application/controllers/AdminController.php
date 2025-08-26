@@ -173,38 +173,38 @@ class AdminController extends CI_Controller
     }
 
     // Add to stock (only if Returned)
-    public function add_to_stock() {
-    $id = $this->input->post('id');
-    
-    // Load models
-    $this->load->model('DryCleaning_model');
-    $this->load->model('Product_model'); // You'll need to create this if it doesn't exist
-    
-    // Get dry cleaning record
-    $drycleaning_item = $this->DryCleaning_model->get_by_id($id);
-    
-    if ($drycleaning_item) {
-        // Find the product by name
-        $this->db->where('name', $drycleaning_item->product_name);
-        $product = $this->db->get('products')->row();
-        
-        if ($product) {
-            // Increase stock by 1
-            $new_stock = $product->stock + 1;
-            $this->db->where('id', $product->id);
-            $this->db->update('products', array('stock' => $new_stock));
-            
-            // Delete the dry cleaning record
-            $this->DryCleaning_model->delete($id);
-            
-            echo json_encode(array('success' => true));
-        } else {
-            echo json_encode(array('success' => false, 'message' => 'Product not found'));
+    public function add_to_stock()
+    {
+        $productId = $this->input->post('product_id'); // send from your button
+        $status = $this->input->post('status');
+
+        if ($status !== 'Returned') {
+            echo json_encode(['success' => false, 'message' => 'Status must be Returned']);
+            return;
         }
-    } else {
-        echo json_encode(array('success' => false, 'message' => 'Record not found'));
+        // Get product_id from drycleaning_status table
+        $product_id = $this->input->post('product_id');
+
+        // Increase stock in products table
+        $this->db->set('stock', 'stock+1', FALSE);
+        $this->db->where('id', $product_id);
+        $this->db->update('products');
+
+
+        // Get the current product
+        $product = $this->Product_model->get_product_by_id($productId);
+
+        if (!$product) {
+            echo json_encode(['success' => false, 'message' => 'Product not found']);
+            return;
+        }
+
+        // Increase stock
+        $newStock = $product->stock + 1;
+        $this->Product_model->update_product($productId, ['stock' => $newStock]);
+
+        echo json_encode(['success' => true, 'new_stock' => $newStock]);
     }
-}
 
 
 
@@ -235,16 +235,19 @@ class AdminController extends CI_Controller
         $data['total_revenue'] = $this->Admin_Model->get_total_revenue();
 
         // Category-wise sales
+        $data['category_sales'] = $this->Admin_Model->get_category_wise_sales();
         // Analytics data
         $data['revenue_analytics'] = $this->Admin_Model->get_revenue_analytics();
-        $data['sales'] = $this->Admin_Model->get_category_wise_sales();
+        $data['category_sales'] = $this->Admin_Model->get_category_wise_sales();
         $data['payment_stats'] = $this->Admin_Model->get_payment_method_stats();
         $data['categories'] = $this->Category_model->get_all_categories();
 
         $this->load->model('OrdersModel');
 
+        // print_r($data['category_sales']);die;
         // Get sales data (product-wise sales)
-        // $data['sales'] = $this->OrdersModel->get_product_sales();
+        $data['sales'] = $this->OrdersModel->get_product_sales();
+        // print_r($data['sales']);die;
 
         // Load dashboard view once
         $this->load->view('Admin/AdminDashboard', $data);
