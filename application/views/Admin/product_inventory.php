@@ -181,8 +181,8 @@
                                         <tr>
                                             <th>Image</th>
                                             <th>Name</th>
-                                            <th>Price(Rs)</th>
-                                            <th>MRP(Rs)</th> <!-- ✅ new -->
+                                            <th>Rent(Rs)</th>
+                                            <th>MRP(Rs)</th> 
                                             <th>Category</th>
                                             <th>Main Category</th>
                                             <th>Stock</th>
@@ -350,7 +350,7 @@
                                         <input type="text" class="form-control" name="name" id="edit_product_name">
                                     </div>
                                     <div class="mb-3">
-                                        <label>Price</label>
+                                        <label>Rent</label>
                                         <input type="number" class="form-control" name="price" id="edit_product_price" step="0.01">
                                     </div>
                                     <div class="mb-3">

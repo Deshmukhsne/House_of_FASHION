@@ -62,8 +62,8 @@ class AdminController extends CI_Controller
      public function tailors()
     {
         $this->load->view('Admin/Tailors');
-    }
 
+    }
 
     // Save forward form to DB
     public function save_drycleaning_forward()
@@ -219,6 +219,10 @@ class AdminController extends CI_Controller
         $data['orders'] = $this->OrdersModel->get_orders();
 
         $this->load->view('Admin/Orders', $data);
+
+
+
+        
     }
     public function Dashboard()
     {

@@ -67,6 +67,65 @@
       border-bottom: 2px solid #000;
       color: #000;
     }
+    
+    /* Status badges */
+    .status-badge {
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+    
+    .status-available {
+      background-color: #d4edda;
+      color: #155724;
+    }
+    
+    .status-rented {
+      background-color: #d1ecf1;
+      color: #0c5460;
+    }
+    
+    .status-dryclean {
+      background-color: #fff3cd;
+      color: #856404;
+    }
+    
+    .status-returned {
+      background-color: #d6d8d9;
+      color: #383d41;
+    }
+    
+    .status-overdue {
+      background-color: #f8d7da;
+      color: #721c24;
+    }
+    
+    /* Action buttons */
+    .btn-action {
+      padding: 0.25rem 0.5rem;
+      font-size: 0.75rem;
+      margin: 2px;
+    }
+    
+    /* Table improvements */
+    .table th {
+      background-color: #343a40;
+      color: white;
+      font-weight: 600;
+    }
+    
+    .table-hover tbody tr:hover {
+      background-color: rgba(212, 175, 55, 0.1);
+    }
+    
+    .highlight-overdue {
+      background-color: rgba(220, 53, 69, 0.1) !important;
+    }
+    
+    .highlight-soon {
+      background-color: rgba(255, 193, 7, 0.1) !important;
+    }
 
     /* ====== Responsive Table (Mobile Only) ====== */
     @media (max-width: 768px) {
@@ -89,12 +148,13 @@
         border-radius: 8px;
         background: #fff;
         padding: 8px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
       }
 
       table tbody td {
         text-align: right;
-        padding: 8px;
-        font-size: 13px;
+        padding: 10px;
+        font-size: 14px;
         border: none !important;
         border-bottom: 1px solid #eee;
         position: relative;
@@ -112,6 +172,16 @@
         font-weight: bold;
         text-align: left;
         color: #444;
+      }
+      
+      .btn-action {
+        width: 100%;
+        margin-bottom: 5px;
+      }
+      
+      .status-badge {
+        display: inline-block;
+        margin-bottom: 5px;
       }
     }
   </style>
@@ -131,125 +201,160 @@
       <div class="container-fluid p-4">
         <div class="d-flex justify-content-between align-items-center mb-4">
           <h2>Rental Orders</h2>
+          <button class="btn golden-btn" data-bs-toggle="modal" data-bs-target="#reminderModal">
+            View Reminders
+          </button>
         </div>
 
-        <!-- Search Filter -->
-        <div class="mb-3">
-          <input type="text" id="searchInput" onkeyup="filterTable()" class="form-control"
-            placeholder="Search by customer, product, or status...">
-        </div>
-
-        <?php
-        $categories = array_unique(array_column($orders, 'category'));
-        $today = new DateTime(date("Y-m-d"));
-        $reminderCustomers = [];
-        ?>
-
-        <!-- Category Filter -->
-        <div class="mb-3 d-flex gap-3">
-          <span class="category-option active" onclick="filterCategory('all')">All</span>
-          <?php foreach ($categories as $cat): ?>
-            <span class="category-option" onclick="filterCategory('<?= $cat ?>')"><?= $cat ?></span>
-          <?php endforeach; ?>
+        <!-- Search and Filter Section -->
+        <div class="card mb-4">
+          <div class="card-body">
+            <div class="row">
+              <div class="col-md-6 mb-3 mb-md-0">
+                <input type="text" id="searchInput" onkeyup="filterTable()" class="form-control"
+                  placeholder="Search by customer, product, or status...">
+              </div>
+              <div class="col-md-6">
+                <div class="d-flex gap-3 flex-wrap">
+                  <span class="category-option active" onclick="filterCategory('all')">All</span>
+                  <?php 
+                  // Extract categories from orders if not provided
+                  $categories = isset($categories) ? $categories : [];
+                  if (empty($categories) && !empty($orders)) {
+                    $categories = array();
+                    foreach ($orders as $order) {
+                      if (!empty($order['category']) && !in_array($order['category'], $categories)) {
+                        $categories[] = $order['category'];
+                      }
+                    }
+                  }
+                  
+                  if (!empty($categories)): 
+                    foreach ($categories as $cat): ?>
+                      <span class="category-option" onclick="filterCategory('<?= $cat ?>')"><?= $cat ?></span>
+                  <?php endforeach; endif; ?>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
 
         <!-- Orders Table -->
         <div class="table-responsive">
-          <table class="table table-bordered align-middle mt-3" id="ordersTableContainer">
+          <table class="table table-hover table-bordered align-middle mt-3" id="ordersTableContainer">
             <thead class="table-dark">
               <tr>
-                <th>Order Id</th>
+                <th>Order ID</th>
                 <th>Customer</th>
                 <th>Mobile</th>
                 <th>Product</th>
-                <th>Main Category</th>
-                <!-- <th>Image</th> -->
-                <th>Quantity</th>
-                <th>Issue</th>
-                <th>Return</th>
+                <th>Category</th>
+                <th>Qty</th>
+                <th>Issue Date</th>
+                <th>Return Date</th>
                 <th>Price</th>
                 <th>Status</th>
-                <th>Action</th>
+                <th>Actions</th>
               </tr>
             </thead>
             <tbody>
-              <?php if (!empty($orders)) : ?>
+              <?php 
+              // Initialize variables
+              $today = isset($today) ? $today : new DateTime();
+              $reminderCustomers = isset($reminderCustomers) ? $reminderCustomers : [];
+              
+              if (!empty($orders)) : ?>
                 <?php foreach ($orders as $order) :
                   $highlight = "";
-                  if ($order['status'] == "Rented" && $order['return_date'] != "0000-00-00") {
-                    $returnDate = new DateTime($order['return_date']);
-                    $diff = $today->diff($returnDate)->days;
-
-                    if ($returnDate <= $today) {
-                      $highlight = "table-danger"; // overdue
-                      $reminderCustomers[] = $order['customer_name'];
-                    } elseif ($diff <= 2) {
-                      $highlight = "table-warning"; // due soon
-                      $reminderCustomers[] = $order['customer_name'];
+                  $statusClass = "";
+                  $statusText = $order['status'];
+                  
+                  // Check if return date is valid and not empty
+                  $isValidReturnDate = (!empty($order['return_date']) && $order['return_date'] != "0000-00-00");
+                  
+                  if ($order['status'] == "Rented" && $isValidReturnDate) {
+                    try {
+                      $returnDate = new DateTime($order['return_date']);
+                      $diff = $today->diff($returnDate)->days;
+                      
+                      // Check if return date is in the past
+                      if ($returnDate < $today) {
+                        $highlight = "highlight-overdue";
+                        $statusClass = "status-overdue";
+                        $statusText = "Overdue";
+                        $reminderCustomers[] = $order['customer_name'];
+                      } 
+                      // Check if return date is within 2 days
+                      elseif ($diff <= 2) {
+                        $highlight = "highlight-soon";
+                        $statusClass = "status-rented";
+                        $statusText = "Due Soon";
+                        $reminderCustomers[] = $order['customer_name'];
+                      }
+                    } catch (Exception $e) {
+                      // Handle invalid date format
+                      $highlight = "";
+                    }
+                  } else {
+                    switch($order['status']) {
+                      case 'Available': $statusClass = 'status-available'; break;
+                      case 'Rented': $statusClass = 'status-rented'; break;
+                      case 'Dry Clean': $statusClass = 'status-dryclean'; break;
+                      case 'Returned': $statusClass = 'status-returned'; break;
+                      default: $statusClass = 'status-available';
                     }
                   }
                 ?>
                   <tr class="<?= $highlight ?>">
-
-                    <td data-label="Order Id"><?= $order['invoice_id'] ?></td>
+                    <td data-label="Order ID"><?= $order['invoice_id'] ?></td>
                     <td data-label="Customer"><?= $order['customer_name'] ?></td>
                     <td data-label="Mobile"><?= $order['customer_mobile'] ?></td>
                     <td data-label="Product"><?= $order['item_name'] ?></td>
-                    <td data-label="Main Category"><?= $order['main_category'] ?></td>
-                    <!-- <td>
-                                              <?php if (!empty($order['image'])): ?>
-                                                <img src="data:image/jpeg;base64,<?= base64_encode($order['image']) ?>"
-                                                    width="50" height="50" class="img-thumbnail"
-                                                    style="cursor:pointer"
-                                                    data-bs-toggle="modal"
-                                                    data-bs-target="#imageModal"
-                                                    onclick="showImage(this)">
-                                              <?php else: ?>
-                                                No Image
-                                              <?php endif; ?>
-                                            </td> -->
-                    <td data-label="Quantity"><?= $order['quantity'] ?></td>
-                    <td data-label="Issue"><?= $order['invoice_date'] ?></td>
-                    <td data-label="Return"><?= $order['return_date'] ?></td>
-                    <td data-label="Price"><?= $order['price'] ?></td>
-                    <!-- <td><?= $order['times_rented'] ?></td> -->
-                    <td>
+                    <td data-label="Category"><?= $order['main_category'] ?></td>
+                    <td data-label="Qty"><?= $order['quantity'] ?></td>
+                    <td data-label="Issue Date"><?= $order['invoice_date'] ?></td>
+                    <td data-label="Return Date"><?= $isValidReturnDate ? $order['return_date'] : 'N/A' ?></td>
+                    <td data-label="Price">₹<?= $order['price'] ?></td>
+                    <td data-label="Status">
+                      <span class="status-badge <?= $statusClass ?>"><?= $statusText ?></span>
+                    </td>
+                    <td data-label="Actions">
                       <?php if ($order['status'] == 'Returned' && $order['main_category'] == 'Cloths'): ?>
-                        <!-- Show Dry Clean Button -->
-                        <button
-                          class="btn btn-sm btn-warning"
-                          onclick="forwardToDryClean('<?= $order['invoice_id'] ?>')">
-                          Send to Dry Clean
-                        </button>
-
+                        <div class="d-flex flex-wrap">
+                          <button class="btn btn-warning btn-sm btn-action" 
+                                  onclick="forwardToDryClean('<?= $order['invoice_id'] ?>')">
+                            Dry Clean
+                          </button>
+                          <button class="btn btn-info btn-sm btn-action" 
+                                  onclick="forwardToTailor('<?= $order['invoice_id'] ?>')">
+                            Tailor
+                          </button>
+                        </div>
                       <?php elseif ($order['status'] == 'Returned' && $order['main_category'] != 'Cloths'): ?>
-                        <!-- Show Add to Stock Button -->
-                        <button
-                          class="btn btn-sm btn-success"
-                          onclick="addToStock('<?= $order['invoice_id'] ?>', '<?= $order['item_name'] ?>')">
+                        <button class="btn btn-success btn-sm btn-action" 
+                                onclick="addToStock('<?= $order['invoice_id'] ?>', '<?= $order['item_name'] ?>')">
                           Add to Stock
                         </button>
-
                       <?php else: ?>
-                        <!-- Normal dropdown -->
-                        <select name="status" class="form-select form-select-sm"
-                          onchange="updateStatus(this.value, '<?= $order['invoice_id'] ?>', '<?= $order['item_name'] ?>')">
+                        <select name="status" class="form-select form-select-sm" 
+                                onchange="updateStatus(this.value, '<?= $order['invoice_id'] ?>', '<?= $order['item_name'] ?>')">
                           <option value="Available" <?= ($order['status'] == 'Available') ? 'selected' : '' ?>>Available</option>
                           <option value="Rented" <?= ($order['status'] == 'Rented') ? 'selected' : '' ?>>Rented</option>
                           <option value="Dry Clean" <?= ($order['status'] == 'Dry Clean') ? 'selected' : '' ?>>Dry Clean</option>
                           <option value="Returned" <?= ($order['status'] == 'Returned') ? 'selected' : '' ?>>Returned</option>
                         </select>
                       <?php endif; ?>
-                    </td>
-                    <td>
-                      <button class="btn btn-sm btn-primary">Edit</button>
-                      <button class="btn btn-sm btn-danger">Delete</button>
+                      
+                      <div class="mt-2 d-flex flex-wrap">
+                        <button class="btn btn-primary btn-sm btn-action">Edit</button>
+                        <button class="btn btn-danger btn-sm btn-action">Delete</button>
+                      </div>
                     </td>
                   </tr>
                 <?php endforeach; ?>
               <?php else: ?>
                 <tr>
-                  <td colspan="12" class="text-center">No Orders Found</td>
+                  <td colspan="11" class="text-center py-4">No Orders Found</td>
                 </tr>
               <?php endif; ?>
             </tbody>
@@ -260,6 +365,33 @@
         <nav>
           <ul class="pagination justify-content-center" id="ordersPagination"></ul>
         </nav>
+      </div>
+    </div>
+  </div>
+
+  <!-- Reminder Modal -->
+  <div class="modal fade" id="reminderModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Reminders ⚠️</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <?php if (!empty($reminderCustomers)): ?>
+            <p class="fw-bold">These customers have items due soon or overdue:</p>
+            <ul>
+              <?php foreach(array_unique($reminderCustomers) as $customer): ?>
+                <li><?= $customer ?></li>
+              <?php endforeach; ?>
+            </ul>
+          <?php else: ?>
+            <p>No reminders at this time.</p>
+          <?php endif; ?>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
       </div>
     </div>
   </div>
@@ -312,7 +444,7 @@
               text: 'Order status updated successfully',
               timer: 1500,
               showConfirmButton: false
-            });
+            }).then(() => location.reload());
           } else {
             Swal.fire({
               icon: 'error',
@@ -328,6 +460,31 @@
       window.location.href = "<?= base_url('AdminController/DryCleaning_Forward/') ?>" + invoiceId;
     }
 
+    function forwardToTailor(invoiceId) {
+      fetch("<?= base_url('AdminController/ForwardToTailor/') ?>" + invoiceId, {
+          method: "POST",
+      })
+      .then(res => res.json())
+      .then(data => {
+          if (data.success) {
+              Swal.fire({
+                  icon: 'success',
+                  title: 'Sent!',
+                  text: 'Item forwarded to Tailor.',
+                  timer: 1500,
+                  showConfirmButton: false
+              }).then(() => location.reload());
+          } else {
+              Swal.fire({
+                  icon: 'error',
+                  title: 'Failed!',
+                  text: data.msg || 'Something went wrong.'
+              });
+          }
+      })
+      .catch(err => console.error(err));
+    }
+
     // Filters
     let selectedCategory = "all";
 
@@ -338,7 +495,7 @@
 
       rows.forEach(row => {
         let rowText = row.textContent.toLowerCase();
-        let cellCategory = row.cells[5].textContent.trim();
+        let cellCategory = row.cells[4].textContent.trim(); // Category is in 5th cell (index 4)
 
         let matchesSearch = rowText.includes(filter);
         let matchesCategory = (selectedCategory === "all" || cellCategory === selectedCategory);
@@ -354,38 +511,35 @@
       event.target.classList.add("active");
     }
 
-    // SweetAlert Reminder Popup
-    <?php if (!empty($reminderCustomers)): ?>
-      document.addEventListener("DOMContentLoaded", function() {
-        Swal.fire({
-          title: "Reminder ⚠️",
-          html: "<b>These customers have items due soon or overdue:</b><br><br><?= implode(', ', $reminderCustomers) ?>",
-          icon: "warning",
-          confirmButtonText: "OK"
-        });
-      });
-    <?php endif; ?>
+    // Auto-show reminder modal if there are reminders
+    document.addEventListener("DOMContentLoaded", function() {
+      <?php if (!empty($reminderCustomers)): ?>
+        // Show the reminder modal automatically
+        var reminderModal = new bootstrap.Modal(document.getElementById('reminderModal'));
+        reminderModal.show();
+      <?php endif; ?>
+    });
   </script>
 
- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        // Navbar  toggler
-        const toggler = document.querySelector(".toggler-btn");
-        const closeBtn = document.querySelector(".close-sidebar");
-        const sidebar = document.querySelector("#sidebar");
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    // Navbar toggler
+    const toggler = document.querySelector(".toggler-btn");
+    const closeBtn = document.querySelector(".close-sidebar");
+    const sidebar = document.querySelector("#sidebar");
 
-        if (toggler && sidebar) {
-            toggler.addEventListener("click", function() {
-                sidebar.classList.toggle("collapsed");
-            });
-        }
+    if (toggler && sidebar) {
+      toggler.addEventListener("click", function() {
+        sidebar.classList.toggle("collapsed");
+      });
+    }
 
-        if (closeBtn && sidebar) {
-            closeBtn.addEventListener("click", function() {
-                sidebar.classList.remove("collapsed");
-            });
-        }
-    </script>
+    if (closeBtn && sidebar) {
+      closeBtn.addEventListener("click", function() {
+        sidebar.classList.remove("collapsed");
+      });
+    }
+  </script>
 </body>
 
 </html>
