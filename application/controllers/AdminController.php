@@ -241,6 +241,7 @@ class AdminController extends CI_Controller
         $data['category_sales'] = $this->Admin_Model->get_category_wise_sales();
         $data['payment_stats'] = $this->Admin_Model->get_payment_method_stats();
         $data['categories'] = $this->Category_model->get_all_categories();
+        $data['recent_transactions'] = $this->Admin_Model->get_recent_transactions();
 
         $this->load->model('OrdersModel');
 
@@ -974,13 +975,5 @@ class AdminController extends CI_Controller
 
         // OR if it's in application/views/Admin/vendors.php
         $this->load->view('Admin/Vendors', $data);
-    }
-    public function Tailors()
-    {
-        $this->load->model('Tailor_model');
-        
-        $data['tailors'] = $this->Tailor_model->tailors();
-
-        $this->load->view('Admin/Tailors', $data);
     }
 }

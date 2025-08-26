@@ -189,4 +189,12 @@ class Admin_Model extends CI_Model
 
         return $data;
     }
+    public function get_recent_transactions($limit = 5)
+    {
+        $this->db->select('invoice_no, total_amount, paid_amount, due_amount, payment_mode, invoice_date');
+        $this->db->from('invoices');
+        $this->db->order_by('id', 'DESC');
+        $this->db->limit($limit);
+        return $this->db->get()->result();
+    }
 }
