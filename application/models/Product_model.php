@@ -200,12 +200,14 @@ class Product_model extends CI_Model
         }
     }
 
-    public function get_by_name($name) {
+    public function get_by_name($name)
+    {
         $this->db->where('name', $name);
         return $this->db->get('products')->row();
     }
 
-    public function update_stock($id, $stock) {
+    public function update_stock($id, $stock)
+    {
         $this->db->where('id', $id);
         $this->db->update('products', array('stock' => $stock));
         return $this->db->affected_rows() > 0;
