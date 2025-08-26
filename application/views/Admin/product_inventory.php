@@ -216,7 +216,7 @@
                                                     ?>
                                                     <span class="status-badge 
                                                     <?= $status == 'Available' ? 'status-available' : ($status == 'Rented' ? 'status-rented' : 'status-dryclean') ?>"
-                                                    data-status="<?= $status ?>">
+                                                        data-status="<?= $status ?>">
                                                         <?= htmlspecialchars($status) ?>
                                                     </span>
                                                 </td>
@@ -468,7 +468,7 @@
                         var myModal = new bootstrap.Modal(document.getElementById('editProductModal'));
                         myModal.show();
                     }
-                    
+
                     // Search and Filter functionality - FIXED VERSION
                     document.addEventListener('DOMContentLoaded', function() {
                         const searchInput = document.getElementById('searchInput');
@@ -557,7 +557,29 @@
                         });
                     });
                 </script>
+                <script>
+                    // ✅ Keep a local list of added product names
+                    let existingNames = [];
 
+                    document.getElementById("addProductForm").addEventListener("submit", function(e) {
+                        let nameInput = document.getElementById("productName");
+                        let baseName = nameInput.value.trim();
+                        let finalName = baseName;
+
+                        // Check if name already exists in our list
+                        let counter = 1;
+                        while (existingNames.includes(finalName)) {
+                            finalName = baseName + counter;
+                            counter++;
+                        }
+
+                        // Set updated name in input
+                        nameInput.value = finalName;
+
+                        // Save it in list for next check
+                        existingNames.push(finalName);
+                    });
+                </script>
 </body>
 
 </html>

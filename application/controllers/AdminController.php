@@ -18,6 +18,7 @@ class AdminController extends CI_Controller
         $this->load->model('OrdersModel');
         $this->load->model('DryCleaning_model');
         $this->load->model('Billing_model');
+        $this->load->model('Tailor_model');
     }
 
     public function index()
@@ -975,5 +976,12 @@ class AdminController extends CI_Controller
 
         // OR if it's in application/views/Admin/vendors.php
         $this->load->view('Admin/Vendors', $data);
+    }
+    // Tailor Management
+    public function tailors()
+    {
+        $this->load->model('Tailor_model');
+        $data['tailors'] = $this->Tailor_model->get_all_tailors();
+        $this->load->view('Admin/Tailors', $data);
     }
 }
