@@ -30,4 +30,9 @@ class DryCleaning_model extends CI_Model {
     return $this->db->delete('drycleaning_status'); 
    
 }
+
+public function get_by_id($id) {
+    $this->db->where('id', $id);
+    return $this->db->get('drycleaning_status')->row();
+}
 }
