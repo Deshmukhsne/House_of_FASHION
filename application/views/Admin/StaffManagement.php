@@ -138,13 +138,13 @@
                                 <div class="col-md-4">
                                     <input type="text" name="search" class="form-control" placeholder="Search by name..." value="">
                                 </div>
-                                <div class="col-md-3">
+                                <!-- <div class="col-md-3">
                                     <select name="role" class="form-control">
                                         <option value="">All Roles</option>
                                         <option value="Staff">Staff</option>
                                         <option value="Accountant">Accountant</option>
                                     </select>
-                                </div>
+                                </div> -->
                                 <div class="col-md-3">
                                     <button class="btn btn-dark" type="submit">Search</button>
                                 </div>
@@ -157,59 +157,44 @@
                                             <th>Name</th>
                                             <th>Email</th>
                                             <th>Phone</th>
-                                            <th>Role</th>
                                             <th>Joining Date</th>
                                             <th>Actions</th>
                                         </tr>
                                     </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>John Doe</td>
-                                            <td>john@example.com</td>
-                                            <td>123-456-7890</td>
-                                            <td>Staff</td>
-                                            <td>2023-01-15</td>
-                                            <td class="action-buttons">
-                                                <button class="btn btn-sm btn-warning editBtn"
-                                                    data-id="1"
-                                                    data-name="John Doe"
-                                                    data-email="john@example.com"
-                                                    data-phone="123-456-7890"
-                                                    data-address="123 Main St"
-                                                    data-joining_date="2023-01-15"
-                                                    data-role="Staff"
-                                                    data-username="johndoe"
-                                                    data-bs-toggle="modal"
-                                                    data-bs-target="#editStaffModal">
-                                                    Edit
-                                                </button>
-                                                <a href="#" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete this staff?')">Delete</a>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>Jane Smith</td>
-                                            <td>jane@example.com</td>
-                                            <td>987-654-3210</td>
-                                            <td>Accountant</td>
-                                            <td>2023-03-22</td>
-                                            <td class="action-buttons">
-                                                <button class="btn btn-sm btn-warning editBtn"
-                                                    data-id="2"
-                                                    data-name="Jane Smith"
-                                                    data-email="jane@example.com"
-                                                    data-phone="987-654-3210"
-                                                    data-address="456 Oak Ave"
-                                                    data-joining_date="2023-03-22"
-                                                    data-role="Accountant"
-                                                    data-username="janesmith"
-                                                    data-bs-toggle="modal"
-                                                    data-bs-target="#editStaffModal">
-                                                    Edit
-                                                </button>
-                                                <a href="#" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete this staff?')">Delete</a>
-                                            </td>
-                                        </tr>
-                                    </tbody>
+                                   <tbody>
+    <?php if (!empty($staffs)): ?>
+        <?php foreach ($staffs as $staff): ?>
+            <tr>
+                <td><?= htmlspecialchars($staff->name) ?></td>
+                <td><?= htmlspecialchars($staff->email) ?></td>
+                <td><?= htmlspecialchars($staff->phone) ?></td>
+                <!-- <td><?= htmlspecialchars($staff->role) ?></td> -->
+                <td><?= htmlspecialchars($staff->joining_date) ?></td>
+                <td class="action-buttons">
+                    <button class="btn btn-sm btn-warning editBtn"
+                        data-id="<?= $staff->id ?>"
+                        data-name="<?= htmlspecialchars($staff->name) ?>"
+                        data-email="<?= htmlspecialchars($staff->email) ?>"
+                        data-phone="<?= htmlspecialchars($staff->phone) ?>"
+                        data-address="<?= htmlspecialchars($staff->address) ?>"
+                        data-joining_date="<?= htmlspecialchars($staff->joining_date) ?>"
+                        data-username="<?= htmlspecialchars($staff->username) ?>"
+                        data-bs-toggle="modal"
+                        data-bs-target="#editStaffModal">
+                        Edit
+                    </button>
+                    <a href="<?= base_url('AdminController/delete_staff/'.$staff->id) ?>" 
+                       class="btn btn-sm btn-danger" 
+                       onclick="return confirm('Are you sure you want to delete this staff?')">Delete</a>
+                </td>
+            </tr>
+        <?php endforeach; ?>
+    <?php else: ?>
+        <tr>
+            <td colspan="6" class="text-center">No staff found</td>
+        </tr>
+    <?php endif; ?>
+</tbody>
                                 </table>
                             </div>
                         </div>
@@ -240,13 +225,13 @@
                                 <div class="col-md-6">
                                     <input type="date" name="joining_date" class="form-control" required>
                                 </div>
-                                <div class="col-md-6">
+                                <!-- <div class="col-md-6">
                                     <select name="role" class="form-control" required>
                                         <option value="" disabled selected>Select Role</option>
                                         <option value="Staff">Staff</option>
                                         <option value="Accountant">Accountant</option>
                                     </select>
-                                </div>
+                                </div> -->
                                 <div class="col-md-6">
                                     <input type="text" name="username" class="form-control" placeholder="Username" required>
                                 </div>
@@ -292,13 +277,13 @@
                                         <label>Joining Date</label>
                                         <input type="date" class="form-control" name="joining_date" id="edit_joining_date" required>
                                     </div>
-                                    <div class="col-md-6">
+                                    <!-- <div class="col-md-6">
                                         <label>Role</label>
                                         <select class="form-select" name="role" id="edit_role" required>
                                             <option value="Staff">Staff</option>
                                             <option value="Accountant">Accountant</option>
                                         </select>
-                                    </div>
+                                    </div> -->
                                     <div class="col-md-6">
                                         <label>Username</label>
                                         <input type="text" class="form-control" name="username" id="edit_username" required>
@@ -331,7 +316,6 @@
                 document.getElementById('edit_phone').value = this.dataset.phone;
                 document.getElementById('edit_address').value = this.dataset.address;
                 document.getElementById('edit_joining_date').value = this.dataset.joining_date;
-                document.getElementById('edit_role').value = this.dataset.role;
                 document.getElementById('edit_username').value = this.dataset.username;
             });
         });

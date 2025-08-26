@@ -104,19 +104,25 @@ class Admin_Model extends CI_Model
         $query = $this->db->get('invoices');
         return $query->row()->total_payable ?: 0;
     }
-    public function get_category_wise_sales()
-    {
-        $this->db->select('i.category,
-                       SUM(i.quantity) as items_sold,
-                       SUM(i.total) as revenue,
-                       SUM(p.stock) as items_in_stock');
-        $this->db->from('invoice_items i');
-        $this->db->join('products p', 'i.category = p.category_id', 'left');
-        $this->db->group_by('i.category');
+   public function get_category_wise_sales()
+{
+    $this->db->select('
+        c.name as category_name,
+        p.name,
+        p.mrp,
+        p.price,
+        COUNT(i.id) as times_rented,
+        (COUNT(i.id) * p.price) as total_revenue
+    ');
+    $this->db->from('invoice_items i');
+    $this->db->join('products p', 'i.product_id = p.id', 'left');
+    $this->db->join('categories c', 'p.category_id = c.id', 'left');
+    $this->db->group_by('p.id'); // Group by product
+    $this->db->order_by('c.name, p.name', 'ASC'); // Optional sorting
 
-        $query = $this->db->get();
-        return $query->result_array();
-    }
+    $query = $this->db->get();
+    return $query->result_array();
+}
 
     public function get_revenue_analytics($period = 'monthly')
     {

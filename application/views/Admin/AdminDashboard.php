@@ -300,6 +300,8 @@
                                                         <tr>
                                                             <th>Category</th>
                                                             <th>Product</th>
+                                                            <th>MRP</th>
+                                                            <th>Rent</th>
                                                             <th>Items Sold</th>
                                                             <th>Revenue</th>
                                                         </tr>
@@ -308,7 +310,9 @@
                                                         <?php foreach ($sales as $s): ?>
                                                             <tr>
                                                                 <td><?= $s->category_name ?></td>
-                                                                <td><?= $s->item_name ?></td>
+                                                                <td><?= $s->name ?></td>
+                                                                <td><?= $s->mrp?></td>
+                                                                <td><?= $s->price?></td>
                                                                 <td><?= $s->items_rented ?></td>
                                                                 <td>₹<?= number_format($s->revenue, 2) ?></td>
                                                             </tr>
