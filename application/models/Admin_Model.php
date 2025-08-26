@@ -115,7 +115,7 @@ class Admin_Model extends CI_Model
         (COUNT(i.id) * p.price) as total_revenue
     ');
     $this->db->from('invoice_items i');
-    $this->db->join('products p', 'i.product_id = p.id', 'left');
+    $this->db->join('products p', 'i.item_name = p.name', 'left');
     $this->db->join('categories c', 'p.category_id = c.id', 'left');
     $this->db->group_by('p.id'); // Group by product
     $this->db->order_by('c.name, p.name', 'ASC'); // Optional sorting
