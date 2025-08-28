@@ -119,4 +119,26 @@ class DrycleaningController extends CI_Controller
 
         redirect('drycleaning');
     }
+    public function add_to_stock()
+    {
+        $id = $this->input->post('id'); // drycleaning record id
+
+        // Get the drycleaning record
+        $dryclean = $this->DryCleaning_model->get_by_id($id);
+
+        if ($dryclean) {
+            // Increase stock in products table
+            $this->load->model('Product_model');
+            $this->Product_model->increase_stock($dryclean['product_name']);
+
+            // Update drycleaning status as Added to Stock
+            $this->DryCleaning_model->update_status($id, 'Added to Stock');
+
+            $this->session->set_flashdata('success', 'Stock updated successfully.');
+        } else {
+            $this->session->set_flashdata('error', 'Invalid record.');
+        }
+
+        redirect('AdminController/drycleaning_status');
+    }
 }
