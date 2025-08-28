@@ -225,7 +225,7 @@
 
     <div class="right">
       <div class="slider">
-        
+
         <img src="https://i.pinimg.com/736x/49/fe/5f/49fe5f62f3825eb1dbfe3021206c73e4.jpg" alt="Slide 1">
         <img src="https://i.pinimg.com/1200x/ac/66/04/ac6604a21d0b088908435b89f5ce09c4.jpg" alt="Slide 2">
         <img src="https://i.pinimg.com/736x/e9/a2/cd/e9a2cd2a9546e12268c988633da8aa96.jpg" alt="Slide 3">
