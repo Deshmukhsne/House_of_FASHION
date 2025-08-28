@@ -102,6 +102,13 @@ public function get_product_sales()
     return $query->result();
 }
 
-
-    
+    // Add this method to your OrdersModel
+public function update_order_status($invoice_item_id, $status)
+{
+    $this->db->where('id', $invoice_item_id);
+    return $this->db->update('invoice_items', array(
+        'status' => $status,
+        'updated_at' => date('Y-m-d H:i:s')
+    ));
+}
 }

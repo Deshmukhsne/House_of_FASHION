@@ -1,38 +1,58 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class DryCleaning_model extends CI_Model {
-
-    public function insert($data)
+class DryCleaning_model extends CI_Model
+{
+    public function __construct()
     {
-        $this->db->insert('drycleaning_status', $data);
-        return $this->db->affected_rows() > 0;
+        parent::__construct();
     }
 
-    public function get_all()
+    // Insert dry cleaning forward record - UPDATED FOR YOUR DATABASE STRUCTURE
+    public function insert_forwarding($data)
     {
-        $this->db->order_by('id', 'DESC');
-        return $this->db->get('drycleaning_status')->result();
+        // Map the data to match your database columns
+        $db_data = [
+            'vendor_name' => $data['vendor_name'],
+            'vendor_mobile' => $data['vendor_mobile'],
+            'product_name' => $data['product_name'],
+            'product_status' => $data['product_status'],
+            'forward_date' => $data['forward_date'],
+            'return_date' => $data['return_date'],
+            'status' => $data['status'],
+            'cleaning_notes' => $data['cleaning_notes'],
+            'created_at' => $data['created_at'],
+            'updated_at' => $data['updated_at']
+        ];
+        
+        return $this->db->insert('drycleaning', $db_data);
     }
 
+    // Get product by invoice item ID
+    public function get_product_by_invoice_item($invoice_item_id)
+    {
+        $this->db->select('id as invoice_item_id, item_name, status');
+        $this->db->from('invoice_items');
+        $this->db->where('id', $invoice_item_id);
+        $query = $this->db->get();
+        return $query->row_array();
+    }
+
+    // Get all dry cleaning records
+    public function get_all_drycleaning()
+    {
+        $this->db->order_by('created_at', 'DESC');
+        return $this->db->get('drycleaning')->result_array();
+    }
+
+    // Update dry cleaning status
     public function update_status($id, $status)
     {
         $this->db->where('id', $id);
-        $this->db->update('drycleaning_status', [
+        return $this->db->update('drycleaning', array(
             'status' => $status,
             'updated_at' => date('Y-m-d H:i:s')
-        ]);
-        return $this->db->affected_rows() > 0;
+        ));
     }
-    public function delete($id)
-{
-    $this->db->where('id', $id);
-    return $this->db->delete('drycleaning_status'); 
-   
 }
-
-public function get_by_id($id) {
-    $this->db->where('id', $id);
-    return $this->db->get('drycleaning_status')->row();
-}
-}
+?>

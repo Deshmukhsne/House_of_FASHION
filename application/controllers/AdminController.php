@@ -50,46 +50,6 @@ class AdminController extends CI_Controller
     {
         $this->load->view("CommonLinks");
     }
-    public function DryCleaning_Forward()
-    {
-        $this->load->model('OrdersModel');
-        $this->load->model('Vendor_model');
-
-        $data['products'] = $this->OrdersModel->get_all_products_for_drycleaning();
-        $data['vendors'] = $this->Vendor_model->get_all_vendors();
-        // $this->load->view('AdminController/drycleaning_form', $data);
-        $this->load->view('Admin/DryCleaning_Forward', $data);
-    }
-
-
-
-    // Save forward form to DB
-    public function save_drycleaning_forward()
-    {
-        $this->load->model('DryCleaning_model');
-
-        $data = [
-            'vendor_name'     => $this->input->post('vendor_name'),
-            'vendor_mobile'   => $this->input->post('vendor_mobile'),
-            'product_name'    => $this->input->post('product_name'),
-            'product_status'  => $this->input->post('product_status'),
-            'forward_date'    => $this->input->post('forward_date'),
-            'return_date'     => $this->input->post('return_date') ?: null,
-            'status'          => 'In Cleaning', // default
-            'expected_return' => $this->input->post('expected_return'),
-            'cleaning_notes'  => $this->input->post('cleaning_notes'),
-            'created_at'      => date('Y-m-d H:i:s'),
-            'updated_at'      => date('Y-m-d H:i:s')
-        ];
-
-        if ($this->DryCleaning_model->insert($data)) {
-            $this->session->set_flashdata('success', 'Dry cleaning forwarded successfully.');
-        } else {
-            $this->session->set_flashdata('error', 'Failed to forward dry cleaning.');
-        }
-
-        redirect('AdminController/DryCleaning_Forward');
-    }
 
     public function saveSignature()
     {
@@ -141,7 +101,27 @@ class AdminController extends CI_Controller
         }
     }
 
+    // -----------------------------------------------------------------------------------------------------------------
+    // In your AdminController
+    public function DryCleaning_Forward($invoice_item_id)
+    {
+        $this->load->model('DryCleaning_model');
+        $this->load->model('Vendor_model');
 
+        // Fetch product info for this invoice item
+        $product = $this->DryCleaning_model->get_product_by_invoice_item($invoice_item_id);
+        $vendors = $this->Vendor_model->get_all_vendors();
+
+        $data = [
+            'product' => $product,
+            'vendors' => $vendors,
+            'invoice_item_id' => $invoice_item_id // Make sure this is passed correctly
+        ];
+
+        $this->load->view('Admin/DryCleaning_Forward', $data);
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
     // Status page
     public function DryCleaning_Status()
     {
@@ -730,21 +710,31 @@ class AdminController extends CI_Controller
 
     public function updateOrderStatus()
     {
-        $invoice_id = $this->input->post('invoice_id');
-        $item_name  = $this->input->post('item_name');
-        $status     = $this->input->post('status');
+        $invoiceId = $this->input->post('invoice_id');
+        $itemName  = $this->input->post('item_name');
+        $status    = $this->input->post('status');
 
-        log_message('debug', 'UpdateOrderStatus: invoice_id=' . $invoice_id . ' item_name=' . $item_name . ' status=' . $status);
+        // ✅ Update status in invoice_items
+        $this->db->where('invoice_id', $invoiceId);
+        $this->db->where('item_name', $itemName);
+        $updateItem = $this->db->update('invoice_items', ['status' => $status]);
 
-        if ($invoice_id && $item_name && $status) {
-            $this->load->model('OrdersModel');
-            $updated = $this->OrdersModel->update_status($invoice_id, $item_name, $status);
+        // ✅ If status changed to Available → Increase stock in products
+        if ($status == "Available") {
+            $this->db->set('stock', 'stock + 1', FALSE);
+            $this->db->where('name', $itemName);
+            $this->db->update('products');
+        }
 
-            echo json_encode(['success' => $updated, 'msg' => $updated ? 'Updated' : 'No rows affected']);
+        if ($updateItem) {
+            echo json_encode(['success' => true]);
         } else {
-            echo json_encode(['success' => false, 'msg' => 'Missing params']);
+            echo json_encode(['success' => false, 'msg' => 'Failed to update status']);
         }
     }
+
+
+
 
     public function productSales()
     {
