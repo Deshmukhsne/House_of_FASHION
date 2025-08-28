@@ -38,8 +38,9 @@ class ProductController extends CI_Controller
         $data = [
             'name'        => $this->input->post('name'),
             'price'       => $this->input->post('price'),
+            'mrp'       => $this->input->post('mrp'),
             'category_id' => $this->input->post('category_id'),
-            'main_category' => $this->input->post('main_category'), 
+            'main_category' => $this->input->post('main_category'),
             'stock'       => $this->input->post('stock'),
             'status'      => $this->input->post('status'),
             'image'       => $imagePath
@@ -74,7 +75,7 @@ class ProductController extends CI_Controller
     {
         $data['categories'] = $this->Category_model->get_all_categories();
         $data['product']    = $this->Product_model->get_product_by_id($id);
-        
+
         if (empty($data['product'])) {
             show_404();
         }
@@ -105,8 +106,9 @@ class ProductController extends CI_Controller
         $data = [
             'name'        => $this->input->post('name'),
             'price'       => $this->input->post('price'),
+            'mrp'       => $this->input->post('mrp'),
             'category_id' => $this->input->post('category_id'),
-            'main_category' => $this->input->post('main_category'), 
+            'main_category' => $this->input->post('main_category'),
             'stock'       => $this->input->post('stock'),
             'status'      => $this->input->post('status'),
             'image'       => $imagePath
@@ -117,7 +119,7 @@ class ProductController extends CI_Controller
         $this->session->set_flashdata('success', 'Product updated successfully!');
         redirect('ProductController');
     }
-    
+
     public function save_invoice()
     {
         $this->load->database();

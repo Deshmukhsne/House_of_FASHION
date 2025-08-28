@@ -125,7 +125,7 @@
 
                         <!-- Hidden fields -->
                         <input type="hidden" name="vendor_name" id="vendorName">
-                        <!-- <input type="hidden" name="invoice_item_id" value="<?= isset($invoice_item_id) ? $invoice_item_id : '' ?>"> -->
+                        <input type="hidden" name="invoice_item_id" value="<?= isset($invoice_item_id) ? $invoice_item_id : '' ?>">
                         <input type="hidden" name="product_status" value="In Cleaning">
 
                         <!-- Product Info (pre-filled) -->

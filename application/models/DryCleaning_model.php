@@ -1,5 +1,5 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
+defined('BASEPATH') or exit('No direct script access allowed');
 
 class DryCleaning_model extends CI_Model
 {
@@ -24,7 +24,7 @@ class DryCleaning_model extends CI_Model
             'created_at' => $data['created_at'],
             'updated_at' => $data['updated_at']
         ];
-        
+
         return $this->db->insert('drycleaning', $db_data);
     }
 
@@ -45,14 +45,29 @@ class DryCleaning_model extends CI_Model
         return $this->db->get('drycleaning')->result_array();
     }
 
-    // Update dry cleaning status
+    // // Update dry cleaning status
+    // public function update_status($id, $status)
+    // {
+    //     $this->db->where('id', $id);
+    //     return $this->db->update('drycleaning', array(
+    //         'status' => $status,
+    //         'updated_at' => date('Y-m-d H:i:s')
+    //     ));
+    // }
+
+    public function get_all()
+    {
+        return $this->db->get('drycleaning')->result();
+    }
+
     public function update_status($id, $status)
     {
-        $this->db->where('id', $id);
-        return $this->db->update('drycleaning', array(
-            'status' => $status,
-            'updated_at' => date('Y-m-d H:i:s')
-        ));
+        return $this->db->where('id', $id)
+            ->update('drycleaning', ['status' => $status]);
+    }
+
+    public function delete_record($id)
+    {
+        return $this->db->where('id', $id)->delete('drycleaning');
     }
 }
-?>

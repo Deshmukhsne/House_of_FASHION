@@ -43,8 +43,8 @@ class DrycleaningController extends CI_Controller
             'product_name'    => $post['product_name'],
             'product_status'  => $post['product_status'] ?? 'In Cleaning',
             'forward_date'    => $post['forward_date'],
-            'return_date'     => $post['return_date'],
-            'status'          => 'Forwarded', // initial status
+            'return_date'     => $post['return_date'], // Use return_date instead of expected_return
+            'status'          => 'Forwarded',
             'cleaning_notes'  => $post['cleaning_notes'] ?? null,
             'created_at'      => date('Y-m-d H:i:s'),
             'updated_at'      => date('Y-m-d H:i:s')
@@ -60,7 +60,7 @@ class DrycleaningController extends CI_Controller
             $this->session->set_flashdata('error', 'Failed to forward dry cleaning.');
         }
 
-        redirect('admin/orders'); // Redirect back to orders page
+        redirect('admin/orders');
     }
 
     // View all dry cleaning records
@@ -81,5 +81,28 @@ class DrycleaningController extends CI_Controller
         } else {
             echo json_encode(['success' => false]);
         }
+    }
+    // public function index()
+    // {
+    //     $data['drycleaning_data'] = $this->Drycleaning_model->get_all();
+    //     $this->load->view('drycleaning_status', $data);
+    // }
+
+    public function update_status()
+    {
+        $id = $this->input->post('id');
+        $status = $this->input->post('status');
+
+        $result = $this->Drycleaning_model->update_status($id, $status);
+
+        echo json_encode(['success' => $result]);
+    }
+
+    public function delete_drycleaning()
+    {
+        $id = $this->input->post('id');
+        $result = $this->Drycleaning_model->delete_record($id);
+
+        echo json_encode(['success' => $result]);
     }
 }
