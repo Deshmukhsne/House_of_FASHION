@@ -180,25 +180,16 @@
                                         </td>
 
                                         <td class="action-buttons">
-                                            <?php if ($item->status === 'Returned'): ?>
-                                                <form method="post" action="<?= base_url('DrycleaningController/add_to_stock') ?>" style="display:inline;">
-                                                    <input type="hidden" name="id" value="<?= $item->id ?>">
-                                                    <button type="submit" class="btn btn-stock btn-sm">Add in Stock</button>
-                                                </form>
-                                            <?php elseif ($item->status === 'Completed'): ?>
-                                                <span class="badge bg-success">Completed</span>
+                                            <?php if ($item->status == 'Completed'): ?>
+                                                <span class="badge bg-success">Stock Added</span>
                                             <?php else: ?>
-                                                <button class="btn btn-stock btn-sm" disabled>Add in Stock</button>
+                                                <button class="btn btn-stock btn-sm" <?= $item->status !== 'Returned' ? 'disabled' : '' ?>>Add in Stock</button>
                                             <?php endif; ?>
-
-
                                             <form method="post" action="<?= base_url('drycleaning/delete_drycleaning') ?>" style="display:inline;">
                                                 <input type="hidden" name="id" value="<?= $item->id ?>">
                                                 <button type="submit" class="btn btn-delete btn-sm">Delete</button>
                                             </form>
                                         </td>
-
-
                                     </tr>
                                 <?php endforeach; ?>
                             </tbody>
@@ -266,21 +257,31 @@
                     confirmButtonText: 'Yes, Add'
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        $.post("<?= base_url('AdminController/ProductInventory') ?>", {
-                            id: recordID
-                        }, function() {
-                            Swal.fire({
-                                icon: 'success',
-                                title: 'Added to Stock',
-                                text: `${productName} added successfully!`
-                            }).then(() => {
-                                row.remove();
-                            });
+                        $.post("<?= base_url('DrycleaningController/add_to_stock') ?>", {
+                            id: recordID,
+                            product_name: productName
+                        }, function(response) {
+                            let res = JSON.parse(response);
+                            if (res.success) {
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Added to Stock',
+                                    text: `${productName} added successfully! Stock updated.`
+                                }).then(() => {
+                                    row.remove();
+                                });
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error',
+                                    text: res.message || 'Failed to add item to stock.'
+                                });
+                            }
                         }).fail(function() {
                             Swal.fire({
                                 icon: 'error',
                                 title: 'Error',
-                                text: 'Failed to add item to stock.'
+                                text: 'Server error occurred.'
                             });
                         });
                     }
@@ -361,12 +362,20 @@
                     let row = this.closest("tr");
                     let addStockBtn = row.querySelector(".btn-stock");
 
+                    // Enable button only if status is "Returned"
                     if (this.value === "Returned") {
                         addStockBtn.removeAttribute("disabled");
                     } else {
                         addStockBtn.setAttribute("disabled", "true");
                     }
                 });
+
+                // Initialize button state on page load
+                let row = dropdown.closest("tr");
+                let addStockBtn = row.querySelector(".btn-stock");
+                if (dropdown.value !== "Returned") {
+                    addStockBtn.setAttribute("disabled", "true");
+                }
             });
         });
     </script>
