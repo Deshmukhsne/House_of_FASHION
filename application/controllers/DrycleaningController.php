@@ -93,16 +93,30 @@ class DrycleaningController extends CI_Controller
         $id = $this->input->post('id');
         $status = $this->input->post('status');
 
-        $result = $this->Drycleaning_model->update_status($id, $status);
+        $this->db->where('id', $id);
+        $update = $this->db->update('drycleaning', ['status' => $status]);
 
-        echo json_encode(['success' => $result]);
+        if ($update) {
+            $this->session->set_flashdata('success', 'Status updated successfully.');
+        } else {
+            $this->session->set_flashdata('error', 'Failed to update status.');
+        }
+
+        redirect('AdminController/drycleaning_status'); // change to your view page route
     }
+
 
     public function delete_drycleaning()
     {
         $id = $this->input->post('id');
-        $result = $this->Drycleaning_model->delete_record($id);
+        $result = $this->DryCleaning_model->delete_record($id);
 
-        echo json_encode(['success' => $result]);
+        if ($result) {
+            $this->session->set_flashdata('success', 'Record deleted successfully.');
+        } else {
+            $this->session->set_flashdata('error', 'Failed to delete record.');
+        }
+
+        redirect('drycleaning');
     }
 }

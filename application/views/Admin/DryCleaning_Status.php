@@ -164,25 +164,32 @@
                                         <td><?= $item->vendor_name ?></td>
                                         <td><?= $item->vendor_mobile ?></td>
                                         <td><?= $item->product_name ?></td>
-                                        <!-- <td><?= $item->product_status ?></td> -->
                                         <td><?= $item->forward_date ?></td>
                                         <td><?= $item->return_date ?></td>
-
                                         <td><?= $item->cleaning_notes ?></td>
                                         <td>
-                                            <select name="status" class="form-select" data-id="<?= $item->id ?>">
-                                                <option value="Forwarded" <?= $item->status == 'Forwarded' ? 'selected' : '' ?>>Forwarded</option>
-                                                <option value="In Cleaning" <?= $item->status == 'In Cleaning' ? 'selected' : '' ?>>In Cleaning</option>
-                                                <option value="Returned" <?= $item->status == 'Returned' ? 'selected' : '' ?>>Returned</option>
-                                            </select>
+                                            <form method="post" action="<?= base_url('DrycleaningController/update_status') ?>">
+                                                <input type="hidden" name="id" value="<?= $item->id ?>">
+                                                <select name="status" class="form-select status-dropdown" onchange="this.form.submit()">
+                                                    <option value="Forwarded" <?= $item->status == 'Forwarded' ? 'selected' : '' ?>>Forwarded</option>
+                                                    <option value="In Cleaning" <?= $item->status == 'In Cleaning' ? 'selected' : '' ?>>In Cleaning</option>
+                                                    <option value="Returned" <?= $item->status == 'Returned' ? 'selected' : '' ?>>Returned</option>
+                                                </select>
+                                            </form>
                                         </td>
+
                                         <td class="action-buttons">
-                                            <button class="btn btn-stock btn-sm mb-1 mb-md-0">Add in Stock</button>
-                                            <button class="btn btn-delete btn-sm">Delete</button>
+                                            <button class="btn btn-stock btn-sm" <?= $item->status !== 'Returned' ? 'disabled' : '' ?>>Add in Stock</button>
+                                            <form method="post" action="<?= base_url('drycleaning/delete_drycleaning') ?>" style="display:inline;">
+                                                <input type="hidden" name="id" value="<?= $item->id ?>">
+                                                <button type="submit" class="btn btn-delete btn-sm">Delete</button>
+                                            </form>
                                         </td>
                                     </tr>
                                 <?php endforeach; ?>
                             </tbody>
+
+
                         </table>
                     </div>
                 </div>
@@ -332,6 +339,22 @@
                 sidebar.classList.remove("collapsed");
             });
         }
+    </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            document.querySelectorAll(".status-dropdown").forEach(function(dropdown) {
+                dropdown.addEventListener("change", function() {
+                    let row = this.closest("tr");
+                    let addStockBtn = row.querySelector(".btn-stock");
+
+                    if (this.value === "Returned") {
+                        addStockBtn.removeAttribute("disabled");
+                    } else {
+                        addStockBtn.setAttribute("disabled", "true");
+                    }
+                });
+            });
+        });
     </script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
