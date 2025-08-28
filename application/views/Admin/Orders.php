@@ -119,12 +119,21 @@
       background-color: rgba(212, 175, 55, 0.1);
     }
     
-    .highlight-overdue {
-      background-color: rgba(220, 53, 69, 0.1) !important;
+    /* Highlighting styles */
+    .highlight-today {
+      background-color: rgba(220, 53, 69, 0.2) !important; /* Red for today */
     }
     
-    .highlight-soon {
-      background-color: rgba(255, 193, 7, 0.1) !important;
+    .highlight-tomorrow {
+      background-color: rgba(255, 193, 7, 0.3) !important; /* Yellow for tomorrow */
+    }
+    
+    .highlight-available {
+      background-color: rgba(40, 167, 69, 0.15) !important; /* Green for available */
+    }
+    
+    .highlight-overdue {
+      background-color: rgba(220, 53, 69, 0.1) !important; /* Light red for overdue */
     }
 
     /* ====== Responsive Table (Mobile Only) ====== */
@@ -261,6 +270,8 @@
               <?php 
               // Initialize variables
               $today = isset($today) ? $today : new DateTime();
+              $tomorrow = clone $today;
+              $tomorrow->modify('+1 day');
               $reminderCustomers = isset($reminderCustomers) ? $reminderCustomers : [];
               
               if (!empty($orders)) : ?>
@@ -272,23 +283,34 @@
                   // Check if return date is valid and not empty
                   $isValidReturnDate = (!empty($order['return_date']) && $order['return_date'] != "0000-00-00");
                   
-                  if ($order['status'] == "Rented" && $isValidReturnDate) {
+                  // Highlight available items in green
+                  if ($order['status'] == 'Available') {
+                    $highlight = "highlight-available";
+                  }
+                  // Check for due dates if rented
+                  elseif ($order['status'] == "Rented" && $isValidReturnDate) {
                     try {
                       $returnDate = new DateTime($order['return_date']);
-                      $diff = $today->diff($returnDate)->days;
                       
-                      // Check if return date is in the past
-                      if ($returnDate < $today) {
+                      // Check if return date is today (red)
+                      if ($returnDate->format('Y-m-d') == $today->format('Y-m-d')) {
+                        $highlight = "highlight-today";
+                        $statusClass = "status-overdue";
+                        $statusText = "Due Today";
+                        $reminderCustomers[] = $order['customer_name'];
+                      } 
+                      // Check if return date is tomorrow (yellow)
+                      elseif ($returnDate->format('Y-m-d') == $tomorrow->format('Y-m-d')) {
+                        $highlight = "highlight-tomorrow";
+                        $statusClass = "status-rented";
+                        $statusText = "Due Tomorrow";
+                        $reminderCustomers[] = $order['customer_name'];
+                      }
+                      // Check if return date is in the past (overdue)
+                      elseif ($returnDate < $today) {
                         $highlight = "highlight-overdue";
                         $statusClass = "status-overdue";
                         $statusText = "Overdue";
-                        $reminderCustomers[] = $order['customer_name'];
-                      } 
-                      // Check if return date is within 2 days
-                      elseif ($diff <= 2) {
-                        $highlight = "highlight-soon";
-                        $statusClass = "status-rented";
-                        $statusText = "Due Soon";
                         $reminderCustomers[] = $order['customer_name'];
                       }
                     } catch (Exception $e) {

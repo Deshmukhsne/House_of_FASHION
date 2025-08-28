@@ -99,7 +99,7 @@
                         </script>
                     <?php endif; ?>
 
-                    <form action="<?= base_url('AdminController/save_drycleaning') ?>" method="post" id="drycleaningForm">
+                    <form action="<?= base_url('DrycleaningController/save') ?>" method="post" id="drycleaningForm">
                         <div class="row mb-3">
                             <!-- Vendor Name Dropdown -->
                             <div class="col-md-6">
@@ -116,54 +116,52 @@
                                 </select>
                             </div>
 
-                            <!-- Hidden field to store actual vendor name -->
-                            <input type="hidden" name="vendor_name" id="vendorName">
-
                             <!-- Vendor Mobile Autofill -->
                             <div class="col-md-6">
                                 <label class="form-label">Vendor Mobile</label>
                                 <input type="text" name="vendor_mobile" id="vendorMobile" class="form-control" readonly required>
                             </div>
+                        </div>
 
+                        <!-- Hidden fields -->
+                        <input type="hidden" name="vendor_name" id="vendorName">
+                        <!-- <input type="hidden" name="invoice_item_id" value="<?= isset($invoice_item_id) ? $invoice_item_id : '' ?>"> -->
+                        <input type="hidden" name="product_status" value="In Cleaning">
 
-                            <div class="row mb-3">
-                                <div class="col-md-6">
-                                    <label class="form-label">Product</label>
-                                    <select name="product_name" class="form-select" required>
-                                        <option value="">-- Select Product --</option>
-                                        <?php if (!empty($products)): ?>
-                                            <?php foreach ($products as $product): ?>
-                                                <option value="<?= $product['item_name'] ?>">
-                                                    <?= $product['item_name'] ?>
-                                                </option>
-                                            <?php endforeach; ?>
-                                        <?php else: ?>
-                                            <option value="">No products available</option>
-                                        <?php endif; ?>
-                                    </select>
-                                </div>
-                                <div class="col-md-6">
-                                    <label class="form-label">Product Status</label>
-                                    <select name="product_status" class="form-select">
-                                        <option value="">-- Select Status --</option>
-                                        <option value="Forwarded">Forwarded</option>
-                                        <option value="In Cleaning">In Cleaning</option>
-                                        <option value="Returned">Returned</option>
-                                    </select>
-                                </div>
+                        <!-- Product Info (pre-filled) -->
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Product Name</label>
+                                <input type="text" name="product_name" class="form-control" 
+                                    value="<?= isset($product['item_name']) ? $product['item_name'] : '' ?>" readonly>
                             </div>
-                            <div class="row mb-3">
-                                <div class="col-md-4"> <label class="form-label">Forward Date</label> <input type="date" name="forward_date" class="form-control" required> </div>
-                                <div class="col-md-4"> <label class="form-label">Expected Return</label> <input type="date" name="return_date" class="form-control"> </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Product Status</label>
+                                <input type="text" class="form-control" value="In Cleaning" readonly>
+                            </div>
+                        </div>
 
-                                <div class="mb-3">
-                                    <label class="form-label">Cleaning Notes</label>
-                                    <textarea name="cleaning_notes" class="form-control" rows="3" placeholder="Enter any specific cleaning instructions..."></textarea>
-                                </div>
+                        <!-- Forward and Return Dates -->
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Forward Date</label>
+                                <input type="date" name="forward_date" class="form-control" required 
+                                    value="<?= date('Y-m-d') ?>">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Expected Return Date</label>
+                                <input type="date" name="return_date" class="form-control">
+                            </div>
+                        </div>
 
-                                <div class="text-center">
-                                    <button type="submit" class="btn btn-submit">Forward</button>
-                                </div>
+                        <div class="mb-3">
+                            <label class="form-label">Cleaning Notes</label>
+                            <textarea name="cleaning_notes" class="form-control" rows="3" placeholder="Enter any specific cleaning instructions..."></textarea>
+                        </div>
+
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-submit">Forward to Dry Cleaning</button>
+                        </div>
                     </form>
                 </div>
             </div>
@@ -172,35 +170,18 @@
 
     <script>
         $(document).ready(function() {
+            // Set vendor info when selection changes
             $('#vendorSelect').change(function() {
-                var vendorId = $(this).val();
-                if (vendorId) {
-                    $.ajax({
-                        url: '<?= base_url("Vendors/get_vendor_mobile/") ?>' + vendorId,
-                        method: 'GET',
-                        dataType: 'json',
-                        success: function(data) {
-                            $('#vendorMobile').val(data.mobile);
-                        }
-                    });
-                } else {
-                    $('#vendorMobile').val('');
-                }
+                var selected = this.options[this.selectedIndex];
+                $('#vendorMobile').val(selected.getAttribute('data-mobile') || '');
+                $('#vendorName').val(selected.getAttribute('data-name') || '');
             });
         });
     </script>
 
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        document.getElementById('vendorSelect').addEventListener('change', function() {
-            var selected = this.options[this.selectedIndex];
-            document.getElementById('vendorMobile').value = selected.getAttribute('data-mobile') || '';
-            document.getElementById('vendorName').value = selected.getAttribute('data-name') || '';
-        });
-    </script>
-
-     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        // Navbar  toggler
+        // Navbar toggler
         const toggler = document.querySelector(".toggler-btn");
         const closeBtn = document.querySelector(".close-sidebar");
         const sidebar = document.querySelector("#sidebar");
@@ -218,5 +199,4 @@
         }
     </script>
 </body>
-
 </html>

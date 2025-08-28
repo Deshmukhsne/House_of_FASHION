@@ -216,7 +216,7 @@
                                                     ?>
                                                     <span class="status-badge 
                                                     <?= $status == 'Available' ? 'status-available' : ($status == 'Rented' ? 'status-rented' : 'status-dryclean') ?>"
-                                                    data-status="<?= $status ?>">
+                                                        data-status="<?= $status ?>">
                                                         <?= htmlspecialchars($status) ?>
                                                     </span>
                                                 </td>
@@ -250,14 +250,14 @@
                 <!-- ✅ Keep This Modal Only -->
                 <div class="modal fade" id="addProductModal" tabindex="-1">
                     <div class="modal-dialog">
-                        <form class="modal-content" method="post" action="<?= base_url('ProductController/add_product') ?>" enctype="multipart/form-data">
+                        <form class="modal-content" id="addProductForm" method="post" action="<?= base_url('ProductController/add_product') ?>" enctype="multipart/form-data">
                             <div class="modal-header">
                                 <h5 class="modal-title">Add Product</h5>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                             </div>
 
                             <div class="modal-body">
-                                <input type="text" name="name" class="form-control mb-2" placeholder="Product Name" required>
+                                <input type="text" id="productName" name="name" class="form-control mb-2" placeholder="Product Name" required>
 
                                 <!-- Product Price -->
                                 <input type="number" name="price" class="form-control mb-2" placeholder="Product Price" step="0.01" required>
@@ -468,7 +468,7 @@
                         var myModal = new bootstrap.Modal(document.getElementById('editProductModal'));
                         myModal.show();
                     }
-                    
+
                     // Search and Filter functionality - FIXED VERSION
                     document.addEventListener('DOMContentLoaded', function() {
                         const searchInput = document.getElementById('searchInput');
@@ -555,6 +555,38 @@
                                 });
                             }
                         });
+                    });
+                </script>
+                <script>
+                    // ✅ Load product names directly from database using PHP
+                    let existingNames = <?= json_encode(array_map(function ($p) {
+                                            return $p->name;
+                                        }, $products)) ?>;
+
+                    const nameInput = document.getElementById("productName");
+
+                    nameInput.addEventListener("input", function() {
+                        let baseName = nameInput.value.trim();
+                        if (baseName === "") return;
+
+                        let finalName = baseName;
+                        let counter = 1;
+
+                        // ✅ Check against database product names
+                        while (existingNames.includes(finalName)) {
+                            finalName = baseName + counter;
+                            counter++;
+                        }
+
+                        nameInput.value = finalName;
+                    });
+
+                    // ✅ When form is submitted, add the new name to our local array
+                    document.getElementById("addProductForm").addEventListener("submit", function() {
+                        let name = nameInput.value.trim();
+                        if (name !== "" && !existingNames.includes(name)) {
+                            existingNames.push(name);
+                        }
                     });
                 </script>
 

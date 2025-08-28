@@ -18,6 +18,7 @@ class AdminController extends CI_Controller
         $this->load->model('OrdersModel');
         $this->load->model('DryCleaning_model');
         $this->load->model('Billing_model');
+        $this->load->model('Tailor_model');
     }
 
     public function index()
@@ -49,50 +50,7 @@ class AdminController extends CI_Controller
     {
         $this->load->view("CommonLinks");
     }
-    public function DryCleaning_Forward()
-    {
-        $this->load->model('OrdersModel');
-        $this->load->model('Vendor_model');
-
-        $data['products'] = $this->OrdersModel->get_all_products_for_drycleaning();
-        $data['vendors'] = $this->Vendor_model->get_all_vendors();
-        // $this->load->view('AdminController/drycleaning_form', $data);
-        $this->load->view('Admin/DryCleaning_Forward', $data);
-    }
-     public function tailors()
-    {
-        $this->load->view('Admin/Tailors');
-
-    }
-
-    // Save forward form to DB
-    public function save_drycleaning_forward()
-    {
-        $this->load->model('DryCleaning_model');
-
-        $data = [
-            'vendor_name'     => $this->input->post('vendor_name'),
-            'vendor_mobile'   => $this->input->post('vendor_mobile'),
-            'product_name'    => $this->input->post('product_name'),
-            'product_status'  => $this->input->post('product_status'),
-            'forward_date'    => $this->input->post('forward_date'),
-            'return_date'     => $this->input->post('return_date') ?: null,
-            'status'          => 'In Cleaning', // default
-            'expected_return' => $this->input->post('expected_return'),
-            'cleaning_notes'  => $this->input->post('cleaning_notes'),
-            'created_at'      => date('Y-m-d H:i:s'),
-            'updated_at'      => date('Y-m-d H:i:s')
-        ];
-
-        if ($this->DryCleaning_model->insert($data)) {
-            $this->session->set_flashdata('success', 'Dry cleaning forwarded successfully.');
-        } else {
-            $this->session->set_flashdata('error', 'Failed to forward dry cleaning.');
-        }
-
-        redirect('AdminController/DryCleaning_Forward');
-    }
-
+    
     public function saveSignature()
     {
         // Check if it's an AJAX request
@@ -143,7 +101,27 @@ class AdminController extends CI_Controller
         }
     }
 
+// -----------------------------------------------------------------------------------------------------------------
+// In your AdminController
+public function DryCleaning_Forward($invoice_item_id)
+{
+    $this->load->model('DryCleaning_model');
+    $this->load->model('Vendor_model');
 
+    // Fetch product info for this invoice item
+    $product = $this->DryCleaning_model->get_product_by_invoice_item($invoice_item_id);
+    $vendors = $this->Vendor_model->get_all_vendors();
+
+    $data = [
+        'product' => $product,
+        'vendors' => $vendors,
+        'invoice_item_id' => $invoice_item_id // Make sure this is passed correctly
+    ];
+
+    $this->load->view('Admin/DryCleaning_Forward', $data);
+}
+
+// -----------------------------------------------------------------------------------------------------------------
     // Status page
     public function DryCleaning_Status()
     {
@@ -984,5 +962,12 @@ class AdminController extends CI_Controller
 
         // OR if it's in application/views/Admin/vendors.php
         $this->load->view('Admin/Vendors', $data);
+    }
+    // Tailor Management
+    public function tailors()
+    {
+        $this->load->model('Tailor_model');
+        $data['tailors'] = $this->Tailor_model->get_all_tailors();
+        $this->load->view('Admin/Tailors', $data);
     }
 }
