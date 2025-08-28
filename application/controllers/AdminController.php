@@ -15,6 +15,7 @@ class AdminController extends CI_Controller
         $this->load->model('Report_model');
         $this->load->model('DryCleaning_model');
         $this->load->model('Invoice_model');
+        $this->load->model('User_model');
         $this->load->model('OrdersModel');
         $this->load->model('DryCleaning_model');
         $this->load->model('Billing_model');
@@ -753,7 +754,9 @@ class AdminController extends CI_Controller
             'invoice_no'      => $this->input->post('invoiceNo'),
             'customer_name'   => $this->input->post('customerName'),
             'customer_mobile' => $this->input->post('customerMobile'),
+            'alternate_mobile'=> $this->input->post('alternateMobile'),
             'invoice_date'    => $this->input->post('date'),
+            'staff_name'      => $this->input->post('staffName'),
             'return_date'     => $this->input->post('returnDate'),
             'deposit_amount'  => $this->input->post('depositAmount') ?: 0,
             'discount_amount' => $this->input->post('discountAmount') ?: 0,
@@ -848,6 +851,18 @@ class AdminController extends CI_Controller
             }
         }
     }
+
+    public function create_form()
+{
+    $this->load->model('User_model'); // Make sure this is loaded
+    $data['staffList'] = $this->User_model->get_all_staff();
+
+    $this->load->view('Admin/BillSection', $data);
+}
+
+
+    
+
     public function return_item($invoice_item_id)
     {
         $item = $this->db->get_where('invoice_items', ['id' => $invoice_item_id])->row();

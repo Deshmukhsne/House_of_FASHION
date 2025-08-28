@@ -197,4 +197,6 @@ class Admin_Model extends CI_Model
         $this->db->limit($limit);
         return $this->db->get()->result();
     }
+
+  
 }
