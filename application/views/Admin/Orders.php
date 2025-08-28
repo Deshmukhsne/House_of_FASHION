@@ -362,12 +362,13 @@
                             Dry Clean
                           </button>
                           <button class="btn btn-info btn-sm btn-action"
-                            onclick="forwardToTailor('<?= $order['invoice_id'] ?>')">
+                            onclick="forwardToTailor('<?= $order['invoice_id'] ?>') ">
                             Tailor
                           </button>
+
                         </div>
                       <?php elseif ($order['status'] == 'Returned' && $order['main_category'] != 'Cloths'): ?>
-                        <button class="btn btn-success btn-sm btn-action"
+                        <button class=" btn btn-success btn-sm btn-action"
                           onclick="addToStock('<?= $order['invoice_id'] ?>', '<?= $order['item_name'] ?>')">
                           Add to Stock
                         </button>
@@ -609,6 +610,12 @@
       });
     }
   </script>
+  <script>
+    function forwardToTailor(itemId) {
+      window.location.href = "<?= base_url('AdminController/SendTailor/') ?>" + itemId;
+    }
+  </script>
+
 </body>
 
 </html>

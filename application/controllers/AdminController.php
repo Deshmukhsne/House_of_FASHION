@@ -976,10 +976,24 @@ class AdminController extends CI_Controller
         $data['tailors'] = $this->Tailor_model->get_all_tailors();
         $this->load->view('Admin/Tailors', $data);
     }
-    public function SendTailor()
+    public function Tailor_Forward($invoice_item_id = null)
     {
-        $this->load->model('TailorModel'); // Load model
-        $data['tailors'] = $this->TailorModel->getAllTailors(); // Fetch tailors
-        $this->load->view("Admin/Tailor_Forward", $data); // Pass to view
+        $this->load->model('TailorModel');
+
+        // Get all tailors
+        $data['tailors'] = $this->TailorModel->getAllTailors();
+
+        // Get selected product
+        if ($invoice_item_id) {
+            $this->db->where('id', $invoice_item_id);
+            $query = $this->db->get('invoice_items');
+            $data['product'] = $query->row_array();
+            $data['invoice_item_id'] = $invoice_item_id;
+        } else {
+            $data['product'] = [];
+            $data['invoice_item_id'] = '';
+        }
+
+        $this->load->view("Admin/Tailor_Forward", $data);
     }
 }
