@@ -174,17 +174,31 @@
                                                     <option value="Forwarded" <?= $item->status == 'Forwarded' ? 'selected' : '' ?>>Forwarded</option>
                                                     <option value="In Cleaning" <?= $item->status == 'In Cleaning' ? 'selected' : '' ?>>In Cleaning</option>
                                                     <option value="Returned" <?= $item->status == 'Returned' ? 'selected' : '' ?>>Returned</option>
+                                                    <option value="Completed" <?= $item->status == 'Completed' ? 'selected' : '' ?>>Completed</option>
                                                 </select>
                                             </form>
                                         </td>
 
                                         <td class="action-buttons">
-                                            <button class="btn btn-stock btn-sm" <?= $item->status !== 'Returned' ? 'disabled' : '' ?>>Add in Stock</button>
+                                            <?php if ($item->status === 'Returned'): ?>
+                                                <form method="post" action="<?= base_url('DrycleaningController/add_to_stock') ?>" style="display:inline;">
+                                                    <input type="hidden" name="id" value="<?= $item->id ?>">
+                                                    <button type="submit" class="btn btn-stock btn-sm">Add in Stock</button>
+                                                </form>
+                                            <?php elseif ($item->status === 'Completed'): ?>
+                                                <span class="badge bg-success">Completed</span>
+                                            <?php else: ?>
+                                                <button class="btn btn-stock btn-sm" disabled>Add in Stock</button>
+                                            <?php endif; ?>
+
+
                                             <form method="post" action="<?= base_url('drycleaning/delete_drycleaning') ?>" style="display:inline;">
                                                 <input type="hidden" name="id" value="<?= $item->id ?>">
                                                 <button type="submit" class="btn btn-delete btn-sm">Delete</button>
                                             </form>
                                         </td>
+
+
                                     </tr>
                                 <?php endforeach; ?>
                             </tbody>

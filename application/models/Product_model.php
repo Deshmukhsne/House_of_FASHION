@@ -212,4 +212,10 @@ class Product_model extends CI_Model
         $this->db->update('products', array('stock' => $stock));
         return $this->db->affected_rows() > 0;
     }
+    public function increase_stock($product_name, $qty = 1)
+    {
+        $this->db->set('stock', 'stock+' . (int)$qty, FALSE);
+        $this->db->where('name', $product_name);
+        return $this->db->update('products');
+    }
 }

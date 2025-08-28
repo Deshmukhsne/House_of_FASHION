@@ -37,6 +37,10 @@ class DryCleaning_model extends CI_Model
         $query = $this->db->get();
         return $query->row_array();
     }
+    public function get_by_id($id)
+    {
+        return $this->db->where('id', $id)->get('drycleaning')->row_array();
+    }
 
     // Get all dry cleaning records
     public function get_all_drycleaning()
