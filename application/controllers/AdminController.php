@@ -970,10 +970,16 @@ class AdminController extends CI_Controller
         $this->load->view('Admin/Vendors', $data);
     }
     // Tailor Management
-    public function tailors()
+    public function Tailors()
     {
         $this->load->model('Tailor_model');
         $data['tailors'] = $this->Tailor_model->get_all_tailors();
         $this->load->view('Admin/Tailors', $data);
+    }
+    public function SendTailor()
+    {
+        $this->load->model('TailorModel'); // Load model
+        $data['tailors'] = $this->TailorModel->getAllTailors(); // Fetch tailors
+        $this->load->view("Admin/Tailor_Forward", $data); // Pass to view
     }
 }
