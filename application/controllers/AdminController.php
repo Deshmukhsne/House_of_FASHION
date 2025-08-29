@@ -360,6 +360,7 @@ class AdminController extends CI_Controller
         $this->load->model('Category_model');
         $data['categories'] = $this->Category_model->get_all_categories();
         $data['products'] = $this->Product_model->get_products_with_category();
+    $data['staffList'] = $this->User_model->get_all_staff();
 
         // Generate a temporary invoice number for display
         $date = date('Ymd');
@@ -578,6 +579,8 @@ class AdminController extends CI_Controller
             foreach ($invoice['items'] as &$item) {
                 $item['category'] = isset($item['category']) ? $item['category'] : '';
                 $item['item_name'] = isset($item['item_name']) ? $item['item_name'] : '';
+                $item['rental_date'] = isset($item['rental_date']) ? $item['rental_date'] : '';
+                $item['return_date'] = isset($item['return_date']) ? $item['return_date'] : '';
                 $item['price'] = isset($item['price']) ? (float)$item['price'] : 0.0;
                 $item['quantity'] = isset($item['quantity']) ? (int)$item['quantity'] : 0;
                 $item['total'] = isset($item['total']) ? (float)$item['total'] : 0.0;
@@ -750,22 +753,23 @@ class AdminController extends CI_Controller
         $this->load->model('Product_model');
 
         // Save main invoice
-        $invoiceData = [
-            'invoice_no'      => $this->input->post('invoiceNo'),
-            'customer_name'   => $this->input->post('customerName'),
-            'customer_mobile' => $this->input->post('customerMobile'),
-            'alternate_mobile'=> $this->input->post('alternateMobile'),
-            'invoice_date'    => $this->input->post('date'),
-            'staff_name'      => $this->input->post('staffName'),
-            'return_date'     => $this->input->post('returnDate'),
-            'deposit_amount'  => $this->input->post('depositAmount') ?: 0,
-            'discount_amount' => $this->input->post('discountAmount') ?: 0,
-            'total_amount'    => $this->input->post('totalAmount') ?: 0,
-            'total_payable'   => $this->input->post('totalPayable') ?: 0,
-            'paid_amount'     => $this->input->post('paidAmount') ?: 0,
-            'due_amount'      => $this->input->post('dueAmount') ?: 0,
-            'payment_mode'    => $this->input->post('paymentMode'),
-        ];
+       $invoiceData = [
+        'invoice_no'      => $this->input->post('invoiceNo'),
+        'customer_name'   => $this->input->post('customerName'),
+        'customer_mobile' => $this->input->post('customerMobile'),
+        'alternate_mobile'=> $this->input->post('alternateMobile'),
+        'invoice_date' => is_array($this->input->post('date'))? ($this->input->post('date')[0] ?: date('Y-m-d')): ($this->input->post('date') ?: date('Y-m-d')),        
+        'staff_name' => $this->input->post('staff_name') ?: 'Not Assigned',
+        'return_date'     => is_array($this->input->post('returnDate')) ? $this->input->post('returnDate')[0] : $this->input->post('returnDate'),
+        'deposit_amount'  => $this->input->post('depositAmount') ?: 0,
+        'discount_amount' => $this->input->post('discountAmount') ?: 0,
+        'total_amount'    => $this->input->post('totalAmount') ?: 0,
+        'total_payable'   => $this->input->post('totalPayable') ?: 0,
+        'paid_amount'     => $this->input->post('paidAmount') ?: 0,
+        'due_amount'      => $this->input->post('dueAmount') ?: 0,
+        'payment_mode'    => $this->input->post('paymentMode'),
+    ];
+
 
         // Start transaction for data integrity
         $this->db->trans_start();
@@ -799,6 +803,8 @@ class AdminController extends CI_Controller
                         'item_name'  => $item['item_name'],
                         'category'   => $item['category'] ?? '',
                         'category_name'  => $category_name, // Now populated
+                        'rental_date' => $item['rental_date'] ,
+                        'return_date' => $item['return_date'] ,
                         'price'      => $item['price'] ?? 0,
                         'quantity'   => $item['quantity'],
                         'total'      => $item['total'] ?? 0,
@@ -858,6 +864,7 @@ class AdminController extends CI_Controller
     $data['staffList'] = $this->User_model->get_all_staff();
 
     $this->load->view('Admin/BillSection', $data);
+
 }
 
 

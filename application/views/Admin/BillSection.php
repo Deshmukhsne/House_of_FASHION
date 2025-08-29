@@ -199,28 +199,6 @@
                                     <input type="text" name="alternateMobile" id="alternateMobile" class="form-control" maxlength="15" required />
                                 </div>
 
-                                <div class="col-md-3 mt-3">
-                                    <label for="staff_id">Select Staff</label>
-                                    <select name="staff_id" id="staff_id" class="form-control" required>
-                                        <option value="">Select Staff</option>
-                                        <?php if (!empty($staffList)) : ?>
-                                            <?php foreach ($staffList as $staff) : ?>
-                                                <option value="<?= $staff->id ?>">
-                                                    <?= $staff->name ?>
-                                                </option>
-                                            <?php endforeach; ?>
-                                        <?php else: ?>
-                                            <option value="">No staff found</option>
-                                        <?php endif; ?>
-                                    </select>
-                                </div>
-                                
-                                <div class="col-md-3 mt-3">
-                                    <label>Deposit Amount (₹):</label>
-                                    <input type="number" name="depositAmount" id="depositAmount" class="form-control" min="0" step="0.01" value="0" oninput="updateBalance()" />
-                                </div>
-                            </div>
-                            
                             <div class="row mb-4">
                                 <div class="col-md-3">
                                     <label>Rental Date</label>
@@ -241,9 +219,28 @@
                                     <input type="number" name="rentalDays" id="rentalDays" class="form-control" readonly />
                                 </div>
                             </div>
+                             <div class="col-md-3 mt-3">
+                                    <label for="staff_id">Select Staff</label>
+                                    <select name="staff_name" id="staff_id" class="form-control" required>
+                                        <option value="">Select Staff</option>
+                                        <?php if (!empty($staffList)) : ?>
+                                            <?php foreach ($staffList as $staff) : ?>
+                                                <option value="<?= $staff->name ?>">
+                                                    <?= $staff->name ?>
+                                                </option>
+                                            <?php endforeach; ?>
+                                        <?php else: ?>
+                                            <option value="">No staff found</option>
+                                        <?php endif; ?>
+                                    </select>
+                                </div>
+                                
+                                <div class="col-md-3 mt-3">
+                                    <label>Deposit Amount (₹):</label>
+                                    <input type="number" name="depositAmount" id="depositAmount" class="form-control" min="0" step="0.01" value="0" oninput="updateBalance()" />
+                                </div>
                             
-                            <div class="row mb-4">
-                                <div class="col-md-3">
+                                <div class="col-md-3  mt-3">
                                     <label>Payment Mode:</label>
                                     <select name="paymentMode" id="paymentMode" class="form-select">
                                         <option value="">Select</option>
