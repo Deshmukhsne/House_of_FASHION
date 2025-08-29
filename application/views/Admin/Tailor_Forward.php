@@ -3,9 +3,10 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Forward Tailoring</title>
+    <title>Forward To Tailor</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
+    <?php $this->load->view('CommonLinks'); ?>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="icon" type="image/png" href="<?= base_url('assets/images/favicon.png') ?>">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -53,7 +54,7 @@
         }
 
         .btn-submit {
-            background: linear-gradient(90deg, #007bff, #0056b3);
+            background: linear-gradient(90deg, #28a745, #218838);
             color: white;
             font-weight: 500;
             border: none;
@@ -63,7 +64,7 @@
         }
 
         .btn-submit:hover {
-            background: linear-gradient(90deg, #0056b3, #004a9c);
+            background: linear-gradient(90deg, #218838, #1e7e34);
             transform: scale(1.03);
         }
     </style>
@@ -72,13 +73,13 @@
 <body>
 
     <div class="d-flex">
-        <!-- Sidebar would be included here -->
+        <?php $this->load->view('include/sidebar'); ?>
         <div class="main">
-            <!-- Navbar would be included here -->
+            <?php $this->load->view('include/navbar'); ?>
 
             <div class="container-fluid p-4">
                 <div class="container form-container">
-                    <h2 class="section-heading mb-4">Forward Tailoring Record</h2>
+                    <h2 class="section-heading mb-4">Forward Dry Cleaning Record</h2>
 
                     <?php if ($this->session->flashdata('success')): ?>
                         <script>
@@ -98,18 +99,18 @@
                         </script>
                     <?php endif; ?>
 
-                    <form action="<?= base_url('TailoringController/save') ?>" method="post" id="tailoringForm">
+                    <form action="<?= base_url('DrycleaningController/save') ?>" method="post" id="drycleaningForm">
                         <div class="row mb-3">
                             <!-- Tailor Name Dropdown -->
                             <div class="col-md-6">
                                 <label class="form-label">Tailor Name</label>
-                                <select name="tailor_id" id="tailorSelect" class="form-control" required>
+                                <select name="Tailor_id" id="TailorSelect" class="form-control" required>
                                     <option value="">Select Tailor</option>
-                                    <?php foreach ($tailors as $tailor): ?>
-                                        <option value="<?= $tailor['id'] ?>"
-                                            data-name="<?= $tailor['name'] ?>"
-                                            data-mobile="<?= $tailor['mobile'] ?>">
-                                            <?= $tailor['name'] ?>
+                                    <?php foreach ($Tailors as $Tailor): ?>
+                                        <option value="<?= $Tailor['id'] ?>"
+                                            data-name="<?= $Tailor['name'] ?>"
+                                            data-mobile="<?= $Tailor['mobile'] ?>">
+                                            <?= $Tailor['name'] ?>
                                         </option>
                                     <?php endforeach; ?>
                                 </select>
@@ -118,14 +119,14 @@
                             <!-- Tailor Mobile Autofill -->
                             <div class="col-md-6">
                                 <label class="form-label">Tailor Mobile</label>
-                                <input type="text" name="tailor_mobile" id="tailorMobile" class="form-control" readonly required>
+                                <input type="text" name="Tailor_mobile" id="TailorMobile" class="form-control" readonly required>
                             </div>
                         </div>
 
                         <!-- Hidden fields -->
-                        <input type="hidden" name="tailor_name" id="tailorName">
+                        <input type="hidden" name="Tailor_name" id="TailorName">
                         <input type="hidden" name="invoice_item_id" value="<?= isset($invoice_item_id) ? $invoice_item_id : '' ?>">
-                        <input type="hidden" name="product_status" value="In Tailoring">
+                        <input type="hidden" name="product_status" value="In Cleaning">
 
                         <!-- Product Info (pre-filled) -->
                         <div class="row mb-3">
@@ -136,7 +137,7 @@
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label">Product Status</label>
-                                <input type="text" class="form-control" value="In Tailoring" readonly>
+                                <input type="text" class="form-control" value="In Cleaning" readonly>
                             </div>
                         </div>
 
@@ -153,31 +154,13 @@
                             </div>
                         </div>
 
-                        <!-- Tailoring Details -->
-                        <div class="row mb-3">
-                            <div class="col-md-6">
-                                <label class="form-label">Tailoring Type</label>
-                                <select name="tailoring_type" class="form-control">
-                                    <option value="">Select Type</option>
-                                    <option value="Alteration">Alteration</option>
-                                    <option value="Repair">Repair</option>
-                                    <option value="Custom Stitching">Custom Stitching</option>
-                                    <option value="Resizing">Resizing</option>
-                                </select>
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label">Measurements</label>
-                                <input type="text" name="measurements" class="form-control" placeholder="e.g., Length: 40, Waist: 32">
-                            </div>
-                        </div>
-
                         <div class="mb-3">
-                            <label class="form-label">Tailoring Instructions</label>
-                            <textarea name="tailoring_instructions" class="form-control" rows="3" placeholder="Enter specific tailoring instructions..."></textarea>
+                            <label class="form-label">Cleaning Notes</label>
+                            <textarea name="cleaning_notes" class="form-control" rows="3" placeholder="Enter any specific cleaning instructions..."></textarea>
                         </div>
 
                         <div class="text-center">
-                            <button type="submit" class="btn btn-submit">Forward to Tailor</button>
+                            <button type="submit" class="btn btn-submit">Forward to Dry Cleaning</button>
                         </div>
                     </form>
                 </div>
@@ -187,11 +170,11 @@
 
     <script>
         $(document).ready(function() {
-            // Set tailor info when selection changes
-            $('#tailorSelect').change(function() {
+            // Set Tailor info when selection changes
+            $('#TailorSelect').change(function() {
                 var selected = this.options[this.selectedIndex];
-                $('#tailorMobile').val(selected.getAttribute('data-mobile') || '');
-                $('#tailorName').val(selected.getAttribute('data-name') || '');
+                $('#TailorMobile').val(selected.getAttribute('data-mobile') || '');
+                $('#TailorName').val(selected.getAttribute('data-name') || '');
             });
         });
     </script>

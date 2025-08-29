@@ -991,4 +991,9 @@ class AdminController extends CI_Controller
         $data['tailors'] = $this->Tailor_model->get_all_tailors();
         $this->load->view('Admin/Tailors', $data);
     }
+    public function Tailor_Forward()
+    {
+        $this->load->view('Admin/Tailor_Forward', $data);
+    }
+
 }
