@@ -1031,9 +1031,9 @@ class AdminController extends CI_Controller
     public function consent_form($invoice_no)
     {
         // Load invoice and items
-        $this->load->model('InvoiceModel');
-        $invoice = $this->InvoiceModel->getInvoiceByNumber($invoice_no);
-        $items = $this->InvoiceModel->getInvoiceItems($invoice_no);
+        $this->load->model('Invoice_model');
+        $invoice = $this->Invoice_model->getInvoiceByNumber($invoice_no);
+        $items = $this->Invoice_model->getInvoiceItems($invoice_no);
 
         // Load signature if exists
         $this->load->model('SignatureModel');
