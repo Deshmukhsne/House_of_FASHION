@@ -32,7 +32,7 @@ class TailorController extends CI_Controller
             $this->session->set_flashdata('tailor_error', 'Failed to forward product to tailor.');
         }
 
-        redirect('TailorController/form'); // adjust as per your route
+        redirect('AdminController/tailor_history'); // adjust as per your route
     }
 
     public function form()

@@ -11,7 +11,6 @@
     <link rel="stylesheet" href="<?= base_url('assets/style.css') ?>">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="icon" type="image/png" href="<?= base_url('assets/images/favicon.png') ?>">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
         h2 {
@@ -23,8 +22,7 @@
 
         .form-control:focus,
         .form-select:focus {
-            box-shadow: 0 0 0 3px rgba(168, 109, 1, 0.2);
-            border-color: #a86d01ff;
+            box-shadow: none;
             color: #a86d01ff;
         }
 
@@ -39,7 +37,6 @@
         .btn-gold:hover {
             background: linear-gradient(90deg, #FFD27F, #B37B16);
             box-shadow: 0 4px 8px rgba(0, 0, 0, .1);
-            transform: translateY(-2px);
         }
 
         .btn-black {
@@ -58,66 +55,6 @@
 
         .table th {
             color: #a86d01ff;
-            background: linear-gradient(90deg, #FFD27F, #B37B16);
-        }
-
-        .search-container {
-            position: relative;
-            margin-bottom: 1rem;
-        }
-
-        .search-container i {
-            position: absolute;
-            left: 12px;
-            top: 10px;
-            color: #a86d01ff;
-        }
-
-        .search-container input {
-            padding-left: 35px;
-        }
-
-        .filter-card {
-            background-color: #f8f9fa;
-            border-radius: 8px;
-            padding: 15px;
-            margin-bottom: 20px;
-            border: 1px solid #e9ecef;
-        }
-
-        .filter-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-            cursor: pointer;
-        }
-
-        .highlight {
-            background-color: rgba(255, 210, 127, 0.2) !important;
-        }
-
-        .no-results {
-            text-align: center;
-            padding: 20px;
-            color: #6c757d;
-            font-style: italic;
-        }
-
-        .export-buttons {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-
-        @media (max-width: 768px) {
-            .export-buttons {
-                flex-direction: column;
-            }
-
-            .export-buttons a {
-                width: 100%;
-            }
         }
     </style>
 </head>
@@ -131,25 +68,27 @@
             <div class="container-fluid p-4">
                 <h2 class="text-dark">Bill & Invoices</h2>
 
-                <!-- Search Box -->
-                <div class="row mb-4">
-                    <div class="col-md-6">
-                        <div class="search-container">
-                            <i class="fas fa-search"></i>
-                            <input type="text" id="searchInput" class="form-control" placeholder="Search by invoice, customer, mobile...">
-                        </div>
+                <!-- Filter Form -->
+                <form action="<?= base_url('AdminController/filter_billing_history') ?>" method="get" class="row mb-3">
+                    <div class="col-md-4 mb-2">
+                        <label class="form-label">From Date:</label>
+                        <input type="date" name="from" class="form-control" value="<?= $this->input->get('from') ?>">
                     </div>
-
-                </div>
-
-
+                    <div class="col-md-4 mb-2">
+                        <label class="form-label">To Date:</label>
+                        <input type="date" name="to" class="form-control" value="<?= $this->input->get('to') ?>">
+                    </div>
+                    <div class="col-md-4 d-flex align-items-end">
+                        <button type="submit" class="btn btn-primary w-100">Generate Request</button>
+                    </div>
+                </form>
 
                 <!-- Billing Table -->
                 <div class="table-responsive">
-                    <table class="table table-bordered bg-white shadow-sm align-middle" id="billingTable">
-                        <thead>
-                            <tr>
-                                <th>Invoice</th>
+                    <table class="table table-bordered bg-white shadow-sm align-middle">
+                        <thead class="table-light">
+                            <tr style="background:linear-gradient(90deg,#FFD27F,#B37B16);color:#a86d01ff;">
+                                <th>Invoice </th>
                                 <th>Date</th>
                                 <th>Customer</th>
                                 <th>Mobile</th>
@@ -158,6 +97,7 @@
                                 <th>Paid (₹)</th>
                                 <th>Due (₹)</th>
                                 <th>Payment</th>
+
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -173,11 +113,15 @@
                                         <td class="text-end">₹<?= number_format($inv['paid_amount'], 2) ?></td>
                                         <td class="text-end">₹<?= number_format($inv['due_amount'], 2) ?></td>
                                         <td><?= htmlspecialchars($inv['payment_mode']) ?></td>
+
                                         <td>
-                                            <button class="btn btn-gold btn-sm view-invoice-btn" data-id="<?= $inv['id'] ?>">View</button>
+                                            <button type="button" class="btn btn-gold btn-sm me-1"
+                                                onclick="goToConsent('<?= $inv['invoice_no'] ?>')">Print Consent</button>
+
                                             <a href="<?= base_url('AdminController/delete_invoice/' . $inv['id']) ?>"
                                                 onclick="return confirm('Delete this invoice?')"
-                                                class="btn btn-gold btn-sm">Delete</a>
+                                                class="btn btn-gold btn-sm me-1">Delete</a>
+
                                             <?php if ($inv['due_amount'] > 0): ?>
                                                 <button class="btn btn-warning btn-sm pay-due-btn"
                                                     data-id="<?= $inv['id'] ?>"
@@ -189,16 +133,20 @@
                                                 </button>
                                             <?php endif; ?>
                                         </td>
+
+
+                                        </td>
                                     </tr>
                                 <?php endforeach;
                             else: ?>
                                 <tr>
-                                    <td colspan="10" class="no-results">No records found.</td>
+                                    <td colspan="11">No records found.</td>
                                 </tr>
                             <?php endif; ?>
                         </tbody>
                     </table>
                 </div>
+
 
                 <!-- Pay Due Modal -->
                 <div class="modal fade" id="payDueModal" tabindex="-1" aria-hidden="true">
@@ -247,14 +195,65 @@
                         </div>
                     </div>
                 </div>
+                <script>
+                    function goToConsent(invoiceNo) {
+                        if (!invoiceNo) {
+                            alert("Invoice number not provided!");
+                            return;
+                        }
+                        // Open the consent form page in a new tab/window
+                        window.open("<?= base_url('AdminController/consent_form/') ?>" + invoiceNo, "_blank");
+                    }
+                </script>
+                <script>
+                    document.addEventListener('DOMContentLoaded', () => {
+                        // Open Pay Due Modal
+                        document.querySelectorAll('.pay-due-btn').forEach(btn => {
+                            btn.addEventListener('click', function() {
+                                document.getElementById('invoiceId').value = this.dataset.id;
+                                document.getElementById('totalAmount').value = this.dataset.total;
+                                document.getElementById('paidAmount').value = this.dataset.paid;
+                                document.getElementById('dueAmount').value = this.dataset.due;
+                                document.getElementById('paymentMode').value = this.dataset.payment;
 
-                <!-- <div class="d-flex justify-content-end gap-2 mt-3 export-buttons">
-                    <a href="<?= base_url('AdminController/export_pdf') ?>" class="btn btn-success">
-                        <i class="fas fa-file-pdf me-1"></i> Export PDF
-                    </a>
-                    <a href="<?= base_url('AdminController/export_excel') ?>" class="btn btn-warning">
-                        <i class="fas fa-file-excel me-1"></i> Export Excel
-                    </a>
+                                bootstrap.Modal.getOrCreateInstance(document.getElementById('payDueModal')).show();
+                            });
+                        });
+
+                        // Auto-update due amount
+                        document.getElementById('paidAmount').addEventListener('input', function() {
+                            let total = parseFloat(document.getElementById('totalAmount').value) || 0;
+                            let paid = parseFloat(this.value) || 0;
+                            let due = total - paid;
+                            document.getElementById('dueAmount').value = due >= 0 ? due.toFixed(2) : 0;
+                        });
+
+                        // Submit form via AJAX
+                        document.getElementById('payDueForm').addEventListener('submit', e => {
+                            e.preventDefault();
+                            let formData = new FormData(e.target);
+
+                            fetch("<?= base_url('AdminController/update_due_manual') ?>", {
+                                    method: "POST",
+                                    body: formData
+                                })
+                                .then(r => r.json())
+                                .then(res => {
+                                    if (res.success) {
+                                        alert(res.message);
+                                        location.reload();
+                                    } else {
+                                        alert(res.message);
+                                    }
+                                })
+                                .catch(() => alert("Error updating payment"));
+                        });
+                    });
+                </script>
+
+                <!-- <div class="d-flex justify-content-end gap-2 mt-3">
+                    <a href="<?= base_url('AdminController/export_pdf') ?>" class="btn btn-success">Export PDF</a>
+                    <a href="<?= base_url('AdminController/export_excel') ?>" class="btn btn-warning">Export Excel</a>
                 </div> -->
             </div>
         </div>
@@ -263,98 +262,22 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // Search functionality
-            const searchInput = document.getElementById('searchInput');
-            const table = document.getElementById('billingTable');
-            const rows = table.getElementsByTagName('tbody')[0].getElementsByTagName('tr');
-
-            searchInput.addEventListener('keyup', function() {
-                const searchText = this.value.toLowerCase();
-
-                for (let i = 0; i < rows.length; i++) {
-                    const cells = rows[i].getElementsByTagName('td');
-                    let found = false;
-
-                    for (let j = 0; j < cells.length; j++) {
-                        const cellText = cells[j].textContent.toLowerCase();
-                        if (cellText.includes(searchText)) {
-                            found = true;
-                            break;
-                        }
-                    }
-
-                    if (found) {
-                        rows[i].style.display = '';
-                        // Highlight matching text
-                        if (searchText) {
-                            rows[i].classList.add('highlight');
-                        } else {
-                            rows[i].classList.remove('highlight');
-                        }
-                    } else {
-                        rows[i].style.display = 'none';
-                        rows[i].classList.remove('highlight');
-                    }
-                }
-            });
-
-            // Clear filters button
-            document.getElementById('clearFilters').addEventListener('click', function() {
-                document.getElementById('fromDate').value = '';
-                document.getElementById('toDate').value = '';
-                document.getElementById('statusFilter').value = '';
-                document.getElementById('searchInput').value = '';
-
-                // Show all rows
-                for (let i = 0; i < rows.length; i++) {
-                    rows[i].style.display = '';
-                    rows[i].classList.remove('highlight');
-                }
-
-                // Submit the form to reset URL parameters
-                window.location.href = "<?= base_url('AdminController/billing_history') ?>";
-            });
-
-            // Date validation for filter form
-            const filterForm = document.querySelector('form[action="<?= base_url('AdminController/filter_billing_history') ?>"]');
-            filterForm.addEventListener('submit', function(e) {
-                const fromDate = new Date(document.getElementById('fromDate').value);
-                const toDate = new Date(document.getElementById('toDate').value);
-
-                if (document.getElementById('fromDate').value && document.getElementById('toDate').value && fromDate > toDate) {
-                    e.preventDefault();
-                    alert('To date must be after From date');
-                    return false;
-                }
-            });
 
             // Open Pay Due Modal
             document.querySelectorAll('.pay-due-btn').forEach(btn => {
                 btn.addEventListener('click', function() {
                     document.getElementById('invoiceId').value = this.dataset.id;
-                    document.getElementById('totalAmount').value = this.dataset.total;
                     document.getElementById('paidAmount').value = this.dataset.paid;
                     document.getElementById('dueAmount').value = this.dataset.due;
-                    document.getElementById('paymentMode').value = this.dataset.payment;
-
                     bootstrap.Modal.getOrCreateInstance(document.getElementById('payDueModal')).show();
                 });
             });
 
-            // Auto-update due amount
-            document.getElementById('paidAmount').addEventListener('input', function() {
-                let total = parseFloat(document.getElementById('totalAmount').value) || 0;
-                let paid = parseFloat(this.value) || 0;
-                let due = total - paid;
-                document.getElementById('dueAmount').value = due >= 0 ? due.toFixed(2) : 0;
-            });
-
-            // Submit form via AJAX
+            // Submit Pay Due Form
             document.getElementById('payDueForm').addEventListener('submit', e => {
                 e.preventDefault();
                 let formData = new FormData(e.target);
-
-                fetch("<?= base_url('AdminController/update_due_manual') ?>", {
+                fetch("<?= base_url('index.php/AdminController/update_due_manual') ?>", {
                         method: "POST",
                         body: formData
                     })
@@ -369,34 +292,30 @@
                     })
                     .catch(() => alert("Error updating payment"));
             });
-
-            // Collapsible filter section icon toggle
-            const filterCollapse = document.getElementById('filterCollapse');
-            filterCollapse.addEventListener('show.bs.collapse', function() {
-                document.querySelector('.filter-header i.fa-chevron-down').classList.replace('fa-chevron-down', 'fa-chevron-up');
-            });
-
-            filterCollapse.addEventListener('hide.bs.collapse', function() {
-                document.querySelector('.filter-header i.fa-chevron-up').classList.replace('fa-chevron-up', 'fa-chevron-down');
-            });
         });
 
-        // Navbar toggler
-        const toggler = document.querySelector(".toggler-btn");
-        const closeBtn = document.querySelector(".close-sidebar");
-        const sidebar = document.querySelector("#sidebar");
+        // update pay due payment
+        $(document).on("click", ".pay-due-btn", function() {
+            let id = $(this).data("invoice-id");
+            let paid = $(this).data("paid");
+            let due = $(this).data("due");
 
-        if (toggler && sidebar) {
-            toggler.addEventListener("click", function() {
-                sidebar.classList.toggle("collapsed");
-            });
-        }
+            $("#invoiceId").val(id);
+            $("#dueAmount").val(due);
 
-        if (closeBtn && sidebar) {
-            closeBtn.addEventListener("click", function() {
-                sidebar.classList.remove("collapsed");
-            });
-        }
+            $("#payDueModal").modal("show");
+        });
+        $(document).on("click", ".pay-due-btn", function() {
+            let id = $(this).data("invoice-id");
+            let paid = $(this).data("paid");
+            let due = $(this).data("due");
+
+            $("#invoiceId").val(id);
+            $("#paidAmount").val(paid);
+            $("#dueAmount").val(due);
+
+            $("#payDueModal").modal("show");
+        });
     </script>
 </body>
 
