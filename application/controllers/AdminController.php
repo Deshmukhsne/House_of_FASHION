@@ -892,27 +892,27 @@ class AdminController extends CI_Controller
 
         return false;
     }
-    public function consent_form($invoice_no)
-    {
-        // Fetch invoice data
-        $this->load->database();
-        $invoice = $this->db->get_where('invoices', ['invoice_no' => $invoice_no])->row_array();
+    // public function consent_form($invoice_no)
+    // {
+    //     // Fetch invoice data
+    //     $this->load->database();
+    //     $invoice = $this->db->get_where('invoices', ['invoice_no' => $invoice_no])->row_array();
 
-        // Check if invoice exists
-        if (!$invoice) {
-            show_error('Invoice not found', 404);
-        }
+    //     // Check if invoice exists
+    //     if (!$invoice) {
+    //         show_error('Invoice not found', 404);
+    //     }
 
-        // Fetch invoice items
-        $invoice_id = $invoice['id'];
-        $items = $this->db->get_where('invoice_items', ['invoice_id' => $invoice_id])->result_array();
+    //     // Fetch invoice items
+    //     $invoice_id = $invoice['id'];
+    //     $items = $this->db->get_where('invoice_items', ['invoice_id' => $invoice_id])->result_array();
 
-        // Pass data to view
-        $data['invoice'] = $invoice;
-        $data['items'] = $items;
+    //     // Pass data to view
+    //     $data['invoice'] = $invoice;
+    //     $data['items'] = $items;
 
-        $this->load->view('admin/consent', $data); // Load your consent view
-    }
+    //     $this->load->view('admin/consent', $data); // Load your consent view
+    // }
 
     public function increaseStock()
     {
@@ -1027,5 +1027,24 @@ class AdminController extends CI_Controller
         $this->load->model('TailorModel');
         $data['tailor_data'] = $this->TailorModel->getAllTailorHistory();
         $this->load->view('Admin/Tailor_History', $data);
+    }
+    public function consent_form($invoice_no)
+    {
+        // Load invoice and items
+        $this->load->model('InvoiceModel');
+        $invoice = $this->InvoiceModel->getInvoiceByNumber($invoice_no);
+        $items = $this->InvoiceModel->getInvoiceItems($invoice_no);
+
+        // Load signature if exists
+        $this->load->model('SignatureModel');
+        $signature = $this->SignatureModel->getByInvoiceId($invoice['id']); // returns row or null
+
+        $data = [
+            'invoice' => $invoice,
+            'items' => $items,
+            'signature' => $signature
+        ];
+
+        $this->load->view('Admin/consent', $data);
     }
 }
