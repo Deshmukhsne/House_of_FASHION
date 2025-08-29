@@ -976,14 +976,12 @@ class AdminController extends CI_Controller
         $data['tailors'] = $this->Tailor_model->get_all_tailors();
         $this->load->view('Admin/Tailors', $data);
     }
-    public function Tailor_Forward($invoice_item_id = null)
+    public function SendTailor($invoice_item_id = null)
     {
         $this->load->model('TailorModel');
 
-        // Get all tailors
         $data['tailors'] = $this->TailorModel->getAllTailors();
 
-        // Get selected product
         if ($invoice_item_id) {
             $this->db->where('id', $invoice_item_id);
             $query = $this->db->get('invoice_items');
@@ -995,5 +993,17 @@ class AdminController extends CI_Controller
         }
 
         $this->load->view("Admin/Tailor_Forward", $data);
+    }
+    public function ProductTailorHistory()
+    {
+        $this->load->model('TailorModel');
+        $data['tailor_data'] = $this->TailorModel->get_tailor_data();
+        $this->load->view('TailoringStatus', $data);
+    }
+    public function tailor_history()
+    {
+        $this->load->model('TailorModel');
+        $data['tailor_data'] = $this->TailorModel->getAllTailorHistory();
+        $this->load->view('Admin/Tailor_History', $data);
     }
 }

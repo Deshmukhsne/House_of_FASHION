@@ -60,7 +60,7 @@ class DrycleaningController extends CI_Controller
             $this->session->set_flashdata('error', 'Failed to forward dry cleaning.');
         }
 
-        redirect('admin/orders');
+        redirect('AdminController/drycleaning_status');
     }
 
     // View all dry cleaning records

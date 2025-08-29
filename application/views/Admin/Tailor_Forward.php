@@ -127,6 +127,7 @@
 
                             <!-- Hidden fields -->
                             <input type="hidden" name="tailor_name" id="tailorName">
+
                             <input type="hidden" name="invoice_item_id" value="<?= isset($invoice_item_id) ? $invoice_item_id : '' ?>">
                             <input type="hidden" name="product_status" value="At Tailor">
 
@@ -172,7 +173,7 @@
                             </div>
 
                             <div class="text-center">
-                                <button type="submit" class="btn btn-submit">Forward to Tailor</button>
+                                <button type="submit" class="btn btn-submit">Save</button>
                             </div>
                     </form>
                 </div>
