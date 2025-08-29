@@ -1006,23 +1006,21 @@ class AdminController extends CI_Controller
         $data['tailor_data'] = $this->TailorModel->getAllTailorHistory();
         $this->load->view('Admin/Tailor_History', $data);
     }
-    public function consent_form($invoice_no)
+    public function consent_form($invoiceNo = null)
     {
-        // Load invoice and items
-        $this->load->model('InvoiceModel');
-        $invoice = $this->InvoiceModel->getInvoiceByNumber($invoice_no);
-        $items = $this->InvoiceModel->getInvoiceItems($invoice_no);
+        if (!$invoiceNo) {
+            show_404();
+        }
 
-        // Load signature if exists
-        $this->load->model('SignatureModel');
-        $signature = $this->SignatureModel->getByInvoiceId($invoice['id']); // returns row or null
+        // Example: Load invoice details
+        $this->load->model('Invoice_model');
+        $invoice = $this->Invoice_model->get_invoice_by_no($invoiceNo);
 
-        $data = [
-            'invoice' => $invoice,
-            'items' => $items,
-            'signature' => $signature
-        ];
+        if (!$invoice) {
+            show_404();
+        }
 
+        $data['invoice'] = $invoice;
         $this->load->view('Admin/consent', $data);
     }
 }

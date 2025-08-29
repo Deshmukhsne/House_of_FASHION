@@ -111,4 +111,11 @@ class Invoice_model extends CI_Model
         $this->db->or_like('customer_mobile', $search_term);
         return $this->db->get('invoices')->result_array();
     }
+    public function get_invoice_by_no($invoiceNo)
+    {
+        return $this->db
+            ->where('invoice_no', $invoiceNo)
+            ->get('invoices')   // make sure table name is correct
+            ->row_array();
+    }
 }
