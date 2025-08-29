@@ -195,24 +195,52 @@
                                     <input type="text" name="customerMobile" id="customerMobile" class="form-control" maxlength="15" required />
                                 </div>
                                 <div class="col-md-3">
-                                    <label>Deposit Amount (₹):</label>
-                                    <input type="number" name="depositAmount" id="depositAmount" class="form-control" min="0" step="0.01" value="0" oninput="updateBalance()" />
+                                    <label>Alternate Mobile No:</label>
+                                    <input type="text" name="alternateMobile" id="alternateMobile" class="form-control" maxlength="15" required />
                                 </div>
-                            </div>
+
                             <div class="row mb-4">
                                 <div class="col-md-3">
                                     <label>Rental Date</label>
-                                    <input type="date" name="date" id="date" class="form-control date-highlight" required />
+                                    <input type="date" id="commonRentalDate" class="form-control date-highlight" value="<?= date('Y-m-d') ?>">
                                 </div>
                                 <div class="col-md-3">
                                     <label>Return Date</label>
-                                    <input type="date" name="returnDate" id="returnDate" class="form-control date-highlight" required />
+                                    <input type="date" id="commonReturnDate" class="form-control date-highlight" value="<?= date('Y-m-d', strtotime('+1 day')) ?>">
+                                </div>
+                                <div class="col-md-3 d-flex align-items-end">
+                                    <div class="form-check mt-3">
+                                        <input type="checkbox" id="applyCommonDates" class="form-check-input" />
+                                        <label class="form-check-label" for="applyCommonDates">Apply to all rows</label>
+                                    </div>
                                 </div>
                                 <div class="col-md-3">
                                     <label>Rental Days</label>
                                     <input type="number" name="rentalDays" id="rentalDays" class="form-control" readonly />
                                 </div>
-                                <div class="col-md-3">
+                            </div>
+                             <div class="col-md-3 mt-3">
+                                    <label for="staff_id">Select Staff</label>
+                                    <select name="staff_name" id="staff_id" class="form-control" required>
+                                        <option value="">Select Staff</option>
+                                        <?php if (!empty($staffList)) : ?>
+                                            <?php foreach ($staffList as $staff) : ?>
+                                                <option value="<?= $staff->name ?>">
+                                                    <?= $staff->name ?>
+                                                </option>
+                                            <?php endforeach; ?>
+                                        <?php else: ?>
+                                            <option value="">No staff found</option>
+                                        <?php endif; ?>
+                                    </select>
+                                </div>
+                                
+                                <div class="col-md-3 mt-3">
+                                    <label>Deposit Amount (₹):</label>
+                                    <input type="number" name="depositAmount" id="depositAmount" class="form-control" min="0" step="0.01" value="0" oninput="updateBalance()" />
+                                </div>
+                            
+                                <div class="col-md-3  mt-3">
                                     <label>Payment Mode:</label>
                                     <select name="paymentMode" id="paymentMode" class="form-select">
                                         <option value="">Select</option>
@@ -222,8 +250,9 @@
                                     </select>
                                 </div>
                             </div>
+                            
                             <!-- Items Table -->
-                                                        <div class="table-responsive-container">
+                            <div class="table-responsive-container">
                                 <table class="table table-bordered align-middle">
                                     <thead class="table-light">
                                         <tr>
@@ -231,6 +260,8 @@
                                             <th>Item</th>
                                             <th>Daily Price (₹)</th>
                                             <th>Qty</th>
+                                            <th>Rental Date</th>
+                                            <th>Return Date</th>
                                             <th>Days</th>
                                             <th>Total (₹)</th>
                                             <th>Action</th>
@@ -252,26 +283,19 @@
                                                     <option value="">Select Item</option>
                                                 </select>
                                             </td>
-                                            <td>
-                                                <input type="number" name="price[]" class="form-control price" readonly />
-                                            </td>
-                                            <td>
-                                                <input type="number" name="qty[]" class="form-control qty" min="1" value="1" oninput="updateRowTotal(this)" />
-                                            </td>
-                                            <td>
-                                                <input type="number" name="days[]" class="form-control days" min="1" value="1" oninput="updateRowTotal(this)" />
-                                            </td>
-                                            <td>
-                                                <input type="number" name="total[]" class="form-control total" readonly />
-                                            </td>
-                                            <td>
-                                                <button type="button" class="btn btn-sm btn-danger" onclick="removeRow(this)" disabled>Remove</button>
-                                            </td>
+                                            <td><input type="number" name="price[]" class="form-control price" readonly /></td>
+                                            <td><input type="number" name="qty[]" class="form-control qty" min="1" value="1" oninput="updateRowTotal(this)" /></td>
+                                            <td><input type="date" name="rentalDate[]" class="form-control rental-date" onchange="updateRowDays(this)" value="<?= date('Y-m-d') ?>" /></td>
+                                            <td><input type="date" name="returnDate[]" class="form-control return-date" onchange="updateRowDays(this)" value="<?= date('Y-m-d', strtotime('+1 day')) ?>" /></td>
+                                            <td><input type="number" name="days[]" class="form-control days" min="1" value="1" oninput="updateRowTotal(this)" /></td>
+                                            <td><input type="number" name="total[]" class="form-control total" readonly /></td>
+                                            <td><button type="button" class="btn btn-sm btn-danger" onclick="removeRow(this)">Remove</button></td>
                                         </tr>
                                     </tbody>
                                 </table>
                                 <button class="btn btn-sm btn-gold" type="button" onclick="addRow()">+ Add Item</button>
                             </div>
+                            
                             <!-- Summary -->
                             <div class="row summary-section">
                                 <div class="col-md-6 offset-md-6">
@@ -297,12 +321,14 @@
                                     </div>
                                 </div>
                             </div>
+                            
                             <!-- Hidden totals -->
                             <input type="hidden" name="totalAmount" id="totalAmountInput">
                             <input type="hidden" name="totalPayable" id="totalPayableInput">
+                            
                             <div class="text-center mt-4">
-                                <button class="btn btn-gold px-4 py-2" type="submit" onclick="goToConsent()">Save & Next</button>
-                                <button class="btn btn-outline-secondary px-4 py-2" type="reset" onclick="resetForm()">Clear</button>
+                                <button class="btn btn-gold px-4 py-2" type="submit">Save Invoice</button>
+                                <button class="btn btn-outline-secondary px-4 py-2" type="button" onclick="resetForm()">Clear</button>
                             </div>
                         </form>
                     </div>
@@ -310,12 +336,10 @@
             </div>
         </div>
     </div>
-    <script>
-        function goToConsent() {
-            const invoiceNo = document.getElementById('invoiceNo').value;
-            window.location.href = "<?= base_url('AdminController/consent_form/') ?>" + invoiceNo;
-        }
-    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
     <script>
         // Product data from PHP
         const PRODUCTS = <?php
@@ -343,25 +367,54 @@
             return diffDays > 0 ? diffDays : 1;
         }
 
-        // Update rental days when dates change
-        function updateRentalDays() {
-            const startDate = document.getElementById('date').value;
-            const endDate = document.getElementById('returnDate').value;
-            const days = calculateDays(startDate, endDate);
-            document.getElementById('rentalDays').value = days;
+        // Update rental days for a specific row
+        function updateRowDays(element) {
+            const tr = element.closest('tr');
+            const rentalDate = tr.querySelector('.rental-date').value;
+            const returnDate = tr.querySelector('.return-date').value;
+            const daysInput = tr.querySelector('.days');
+            
+            const days = calculateDays(rentalDate, returnDate);
+            daysInput.value = days;
+            
+            // Update the row total
+            updateRowTotal(daysInput);
+        }
 
-            // Update days for all rows
-            document.querySelectorAll('.days').forEach(dayInput => {
-                dayInput.value = days;
-                updateRowTotal(dayInput);
+        // Function to apply common dates to all rows
+        function applyDatesToAllRows() {
+            const applyCommon = document.getElementById('applyCommonDates').checked;
+            if (!applyCommon) return;
+            
+            const rentalDate = document.getElementById('commonRentalDate').value;
+            const returnDate = document.getElementById('commonReturnDate').value;
+
+            document.querySelectorAll('#itemTable tr').forEach(row => {
+                const rentalInput = row.querySelector('.rental-date');
+                const returnInput = row.querySelector('.return-date');
+                const daysInput = row.querySelector('.days');
+                
+                if (rentalInput && returnInput) {
+                    rentalInput.value = rentalDate;
+                    returnInput.value = returnDate;
+
+                    if (rentalDate && returnDate) {
+                        const diff = calculateDays(rentalDate, returnDate);
+                        daysInput.value = diff;
+                        updateRowTotal(daysInput);
+                    }
+                }
             });
+            
+            // Update the overall rental days display
+            document.getElementById('rentalDays').value = calculateDays(rentalDate, returnDate);
         }
 
         // Add new item row
         function addRow() {
             const tbody = document.getElementById('itemTable');
-            const tr = document.createElement('tr');
-            tr.innerHTML = `
+            const newRow = document.createElement('tr');
+            newRow.innerHTML = `
                 <td>
                     <select name="category[]" class="form-select category-select" onchange="onCategoryChange(this)">
                         <option value="">Select</option>
@@ -377,11 +430,16 @@
                 </td>
                 <td><input type="number" name="price[]" class="form-control price" readonly /></td>
                 <td><input type="number" name="qty[]" class="form-control qty" min="1" value="1" oninput="updateRowTotal(this)" /></td>
-                <td><input type="number" name="days[]" class="form-control days" min="1" value="${document.getElementById('rentalDays').value || 1}" oninput="updateRowTotal(this)" /></td>
+                <td><input type="date" name="rentalDate[]" class="form-control rental-date" onchange="updateRowDays(this)" /></td>
+                <td><input type="date" name="returnDate[]" class="form-control return-date" onchange="updateRowDays(this)" /></td>
+                <td><input type="number" name="days[]" class="form-control days" min="1" value="1" oninput="updateRowTotal(this)" /></td>
                 <td><input type="number" name="total[]" class="form-control total" readonly /></td>
                 <td><button type="button" class="btn btn-sm btn-danger" onclick="removeRow(this)">Remove</button></td>
             `;
-            tbody.appendChild(tr);
+            tbody.appendChild(newRow);
+            
+            // Apply common dates if the checkbox is checked
+            applyDatesToAllRows();
             
             // Enable remove buttons for all rows except the first one
             updateRemoveButtons();
@@ -514,70 +572,91 @@
 
         // Reset form to initial state
         function resetForm() {
-            document.getElementById('invoiceForm').reset();
-            const tbody = document.getElementById('itemTable');
-            tbody.innerHTML = `
-                <tr>
-                    <td>
-                        <select name="category[]" class="form-select category-select" onchange="onCategoryChange(this)">
-                            <option value="">Select</option>
-                            <?php foreach ($categories as $c): ?>
-                            <option value="<?= $c['id']; ?>"><?= htmlspecialchars($c['name']); ?></option>
-                            <?php endforeach; ?>
-                        </select>
-                    </td>
-                    <td>
-                        <select name="itemName[]" class="form-select product-select" onchange="onProductChange(this)">
-                            <option value="">Select Item</option>
-                        </select>
-                    </td>
-                    <td>
-                        <input type="number" name="price[]" class="form-control price" readonly />
-                    </td>
-                    <td>
-                        <input type="number" name="qty[]" class="form-control qty" min="1" value="1" oninput="updateRowTotal(this)" />
-                    </td>
-                    <td>
-                        <input type="number" name="days[]" class="form-control days" min="1" value="1" oninput="updateRowTotal(this)" />
-                    </td>
-                    <td>
-                        <input type="number" name="total[]" class="form-control total" readonly />
-                    </td>
-                    <td>
-                        <button type="button" class="btn btn-sm btn-danger" onclick="removeRow(this)" disabled>Remove</button>
-                    </td>
-                </tr>
-            `;
-            updateAllTotals();
-            
-            // Set default dates
-            const today = new Date();
-            const tomorrow = new Date();
-            tomorrow.setDate(today.getDate() + 1);
-            
-            document.getElementById('date').valueAsDate = today;
-            document.getElementById('returnDate').valueAsDate = tomorrow;
-            updateRentalDays();
+            if (confirm('Are you sure you want to clear the form? All data will be lost.')) {
+                document.getElementById('invoiceForm').reset();
+                const tbody = document.getElementById('itemTable');
+                tbody.innerHTML = `
+                    <tr>
+                        <td>
+                            <select name="category[]" class="form-select category-select" onchange="onCategoryChange(this)">
+                                <option value="">Select</option>
+                                <?php foreach ($categories as $c): ?>
+                                <option value="<?= $c['id']; ?>"><?= htmlspecialchars($c['name']); ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                        </td>
+                        <td>
+                            <select name="itemName[]" class="form-select product-select" onchange="onProductChange(this)">
+                                <option value="">Select Item</option>
+                            </select>
+                        </td>
+                        <td>
+                            <input type="number" name="price[]" class="form-control price" readonly />
+                        </td>
+                        <td>
+                            <input type="number" name="qty[]" class="form-control qty" min="1" value="1" oninput="updateRowTotal(this)" />
+                        </td>
+                        <td>
+                            <input type="date" name="rentalDate[]" class="form-control rental-date" onchange="updateRowDays(this)" value="<?= date('Y-m-d') ?>" />
+                        </td>
+                        <td>
+                            <input type="date" name="returnDate[]" class="form-control return-date" onchange="updateRowDays(this)" value="<?= date('Y-m-d', strtotime('+1 day')) ?>" />
+                        </td>
+                        <td>
+                            <input type="number" name="days[]" class="form-control days" min="1" value="1" oninput="updateRowTotal(this)" />
+                        </td>
+                        <td>
+                            <input type="number" name="total[]" class="form-control total" readonly />
+                        </td>
+                        <td>
+                            <button type="button" class="btn btn-sm btn-danger" onclick="removeRow(this)" disabled>Remove</button>
+                        </td>
+                    </tr>
+                `;
+                
+                // Reset common dates
+                document.getElementById('commonRentalDate').value = '<?= date('Y-m-d') ?>';
+                document.getElementById('commonReturnDate').value = '<?= date('Y-m-d', strtotime('+1 day')) ?>';
+                document.getElementById('rentalDays').value = calculateDays(
+                    document.getElementById('commonRentalDate').value, 
+                    document.getElementById('commonReturnDate').value
+                );
+                
+                updateAllTotals();
+                updateRemoveButtons();
+            }
         }
 
         // Initialize form
         document.addEventListener('DOMContentLoaded', function() {
-            // Set default dates
-            const today = new Date();
-            const tomorrow = new Date();
-            tomorrow.setDate(today.getDate() + 1);
-
-            document.getElementById('date').valueAsDate = today;
-            document.getElementById('returnDate').valueAsDate = tomorrow;
-            updateRentalDays();
+            // Set up event listeners for common dates
+            document.getElementById('commonRentalDate').addEventListener('change', function() {
+                const rentalDate = this.value;
+                const returnDate = document.getElementById('commonReturnDate').value;
+                document.getElementById('rentalDays').value = calculateDays(rentalDate, returnDate);
+                applyDatesToAllRows();
+            });
+            
+            document.getElementById('commonReturnDate').addEventListener('change', function() {
+                const rentalDate = document.getElementById('commonRentalDate').value;
+                const returnDate = this.value;
+                document.getElementById('rentalDays').value = calculateDays(rentalDate, returnDate);
+                applyDatesToAllRows();
+            });
+            
+            document.getElementById('applyCommonDates').addEventListener('change', applyDatesToAllRows);
+            
+            // Set initial rental days
+            const rentalDate = document.getElementById('commonRentalDate').value;
+            const returnDate = document.getElementById('commonReturnDate').value;
+            document.getElementById('rentalDays').value = calculateDays(rentalDate, returnDate);
             
             // Initialize remove buttons state
             updateRemoveButtons();
+            
+            // Apply dates to all rows if checkbox is checked
+            applyDatesToAllRows();
         });
-
-        // Date change listeners
-        document.getElementById('date').addEventListener('change', updateRentalDays);
-        document.getElementById('returnDate').addEventListener('change', updateRentalDays);
 
         // Form submission
         document.getElementById('invoiceForm').addEventListener('submit', function(e) {
@@ -612,6 +691,8 @@
                 const productSelect = tr.querySelector('.product-select');
                 const priceInput = tr.querySelector('.price');
                 const qtyInput = tr.querySelector('.qty');
+                const rentalDateInput = tr.querySelector('.rental-date');
+                const returnDateInput = tr.querySelector('.return-date');
                 const daysInput = tr.querySelector('.days');
                 const totalInput = tr.querySelector('.total');
 
@@ -620,15 +701,20 @@
                 const itemName = productSelect.options[productSelect.selectedIndex]?.text || '';
                 const price = priceInput.value;
                 const qty = qtyInput.value;
+                const rentalDate = rentalDateInput.value;
+                const returnDate = returnDateInput.value;
                 const days = daysInput.value;
                 const total = totalInput.value;
 
                 if (itemId && itemName) {
                     itemsData.push({
                         category: category,
+                        item_id: itemId,
                         item_name: itemName,
                         price: price,
                         quantity: qty,
+                        rental_date: rentalDate,
+                        return_date: returnDate,
                         days: days,
                         total: total
                     });
@@ -644,29 +730,11 @@
             // Append to form
             this.appendChild(itemsInput);
 
-            // Store form data in session to handle redirection after submission
-            sessionStorage.setItem('invoiceRedirect', 'true');
-            sessionStorage.setItem('invoiceNo', document.getElementById('invoiceNo').value);
-
             // Submit form normally
             this.submit();
         });
     </script>
-    <script>
-        // Check if we need to redirect after form submission
-        document.addEventListener('DOMContentLoaded', function() {
-            const shouldRedirect = sessionStorage.getItem('invoiceRedirect');
-            const invoiceNo = sessionStorage.getItem('invoiceNo');
-
-            if (shouldRedirect && invoiceNo) {
-                sessionStorage.removeItem('invoiceRedirect');
-                sessionStorage.removeItem('invoiceNo');
-                window.location.href = "<?= base_url('AdminController/consent_form/') ?>" + invoiceNo;
-            }
-        });
-    </script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
     <script>
         // Sidebar toggle functionality
         const toggler = document.querySelector(".toggler-btn");

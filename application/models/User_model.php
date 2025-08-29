@@ -29,4 +29,15 @@ class User_model extends CI_Model
 
         return false;
     }
+
+      public function get_all_staff()
+    {
+        $this->db->select('id, name');
+        $this->db->from('users');
+        // Remove or keep this if you only want staff:
+        // $this->db->where('role', 'staff');
+        $query = $this->db->get();
+        return $query->result(); // returns an array of objects
+    }
+
 }

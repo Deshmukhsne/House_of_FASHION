@@ -283,6 +283,8 @@
                     <tr>
                         <th>Item Name</th>
                         <th>Quantity</th>
+                        <th>Rental Date</th>
+                        <th>Return date</th>
                         <th>Price</th>
                         <th>Total</th>
                     </tr>
@@ -292,6 +294,8 @@
                         <tr>
                             <td><?php echo htmlspecialchars($item['item_name']); ?></td>
                             <td><?php echo htmlspecialchars($item['quantity']); ?></td>
+                            <td><?php echo htmlspecialchars($item['rental_date']); ?></td>
+                            <td><?php echo htmlspecialchars($item['return_date']); ?></td>
                             <td>Rs<?php echo number_format($item['price'], 2); ?></td>
                             <td>Rs<?php echo number_format($item['total'], 2); ?></td>
                         </tr>
@@ -362,7 +366,7 @@
             <div class="col-md-6">
                 <p><strong>Invoice No:</strong> <?php echo $invoice['invoice_no']; ?></p>
                 <p><strong>Invoice Date:</strong> <?php echo date('F j, Y', strtotime($invoice['invoice_date'])); ?></p>
-                <p><strong>Return Date:</strong> <?php echo date('F j, Y', strtotime($invoice['return_date'])); ?></p>
+                <p><strong>Staff Name: </strong> <?php echo htmlspecialchars($invoice['staff_name']); ?></p>
             </div>
             <div class="col-md-6 text-end">
                 <p><strong>Customer Name:</strong> <?php echo htmlspecialchars($invoice['customer_name']); ?></p>
@@ -377,6 +381,8 @@
                 <tr>
                     <th>Item Name</th>
                     <th>Quantity</th>
+                    <th>Rental Date</th>
+                    <th>Return date</th>
                     <th>Price</th>
                     <th>Total</th>
                 </tr>
@@ -386,8 +392,10 @@
                     <tr>
                         <td><?php echo htmlspecialchars($item['item_name']); ?></td>
                         <td><?php echo htmlspecialchars($item['quantity']); ?></td>
-                        <td>Rs<?php echo number_format($item['price'], 2); ?></td>
-                        <td>Rs<?php echo number_format($item['total'], 2); ?></td>
+                        <td><?php echo htmlspecialchars($item['rental_date']); ?></td>
+                        <td><?php echo htmlspecialchars($item['return_date']); ?></td>
+                        <td>Rs <?php echo number_format($item['price'], 2); ?></td>
+                        <td>Rs <?php echo number_format($item['total'], 2); ?></td>
                     </tr>
                 <?php endforeach; ?>
             </tbody>
@@ -655,6 +663,8 @@
             generateDocumentHash();
         };
     </script>
+
+
 </body>
 
 </html>

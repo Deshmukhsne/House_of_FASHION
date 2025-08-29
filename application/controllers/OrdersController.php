@@ -83,4 +83,5 @@ class OrdersController extends CI_Controller
         $data['sales'] = $this->OrdersModel->get_product_sales();
         $this->load->view('product_sales', $data);
     }
+    
 }

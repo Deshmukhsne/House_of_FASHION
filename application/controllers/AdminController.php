@@ -15,6 +15,7 @@ class AdminController extends CI_Controller
         $this->load->model('Report_model');
         $this->load->model('DryCleaning_model');
         $this->load->model('Invoice_model');
+        $this->load->model('User_model');
         $this->load->model('OrdersModel');
         $this->load->model('DryCleaning_model');
         $this->load->model('Billing_model');
@@ -359,6 +360,7 @@ class AdminController extends CI_Controller
         $this->load->model('Category_model');
         $data['categories'] = $this->Category_model->get_all_categories();
         $data['products'] = $this->Product_model->get_products_with_category();
+        $data['staffList'] = $this->User_model->get_all_staff();
 
         // Generate a temporary invoice number for display
         $date = date('Ymd');
@@ -577,6 +579,8 @@ class AdminController extends CI_Controller
             foreach ($invoice['items'] as &$item) {
                 $item['category'] = isset($item['category']) ? $item['category'] : '';
                 $item['item_name'] = isset($item['item_name']) ? $item['item_name'] : '';
+                $item['rental_date'] = isset($item['rental_date']) ? $item['rental_date'] : '';
+                $item['return_date'] = isset($item['return_date']) ? $item['return_date'] : '';
                 $item['price'] = isset($item['price']) ? (float)$item['price'] : 0.0;
                 $item['quantity'] = isset($item['quantity']) ? (int)$item['quantity'] : 0;
                 $item['total'] = isset($item['total']) ? (float)$item['total'] : 0.0;
@@ -753,8 +757,10 @@ class AdminController extends CI_Controller
             'invoice_no'      => $this->input->post('invoiceNo'),
             'customer_name'   => $this->input->post('customerName'),
             'customer_mobile' => $this->input->post('customerMobile'),
-            'invoice_date'    => $this->input->post('date'),
-            'return_date'     => $this->input->post('returnDate'),
+            'alternate_mobile' => $this->input->post('alternateMobile'),
+            'invoice_date' => is_array($this->input->post('date')) ? ($this->input->post('date')[0] ?: date('Y-m-d')) : ($this->input->post('date') ?: date('Y-m-d')),
+            'staff_name' => $this->input->post('staff_name') ?: 'Not Assigned',
+            'return_date'     => is_array($this->input->post('returnDate')) ? $this->input->post('returnDate')[0] : $this->input->post('returnDate'),
             'deposit_amount'  => $this->input->post('depositAmount') ?: 0,
             'discount_amount' => $this->input->post('discountAmount') ?: 0,
             'total_amount'    => $this->input->post('totalAmount') ?: 0,
@@ -763,6 +769,7 @@ class AdminController extends CI_Controller
             'due_amount'      => $this->input->post('dueAmount') ?: 0,
             'payment_mode'    => $this->input->post('paymentMode'),
         ];
+
 
         // Start transaction for data integrity
         $this->db->trans_start();
@@ -796,6 +803,8 @@ class AdminController extends CI_Controller
                         'item_name'  => $item['item_name'],
                         'category'   => $item['category'] ?? '',
                         'category_name'  => $category_name, // Now populated
+                        'rental_date' => $item['rental_date'],
+                        'return_date' => $item['return_date'],
                         'price'      => $item['price'] ?? 0,
                         'quantity'   => $item['quantity'],
                         'total'      => $item['total'] ?? 0,
@@ -848,6 +857,18 @@ class AdminController extends CI_Controller
             }
         }
     }
+
+    public function create_form()
+    {
+        $this->load->model('User_model'); // Make sure this is loaded
+        $data['staffList'] = $this->User_model->get_all_staff();
+
+        $this->load->view('Admin/BillSection', $data);
+    }
+
+
+
+
     public function return_item($invoice_item_id)
     {
         $item = $this->db->get_where('invoice_items', ['id' => $invoice_item_id])->row();
@@ -870,27 +891,27 @@ class AdminController extends CI_Controller
 
         return false;
     }
-    // public function consent_form($invoice_no)
-    // {
-    //     // Fetch invoice data
-    //     $this->load->database();
-    //     $invoice = $this->db->get_where('invoices', ['invoice_no' => $invoice_no])->row_array();
+    public function consent_form($invoice_no)
+    {
+        // Fetch invoice data
+        $this->load->database();
+        $invoice = $this->db->get_where('invoices', ['invoice_no' => $invoice_no])->row_array();
 
-    //     // Check if invoice exists
-    //     if (!$invoice) {
-    //         show_error('Invoice not found', 404);
-    //     }
+        // Check if invoice exists
+        if (!$invoice) {
+            show_error('Invoice not found', 404);
+        }
 
-    //     // Fetch invoice items
-    //     $invoice_id = $invoice['id'];
-    //     $items = $this->db->get_where('invoice_items', ['invoice_id' => $invoice_id])->result_array();
+        // Fetch invoice items
+        $invoice_id = $invoice['id'];
+        $items = $this->db->get_where('invoice_items', ['invoice_id' => $invoice_id])->result_array();
 
-    //     // Pass data to view
-    //     $data['invoice'] = $invoice;
-    //     $data['items'] = $items;
+        // Pass data to view
+        $data['invoice'] = $invoice;
+        $data['items'] = $items;
 
-    //     $this->load->view('admin/consent', $data); // Load your consent view
-    // }
+        $this->load->view('admin/consent', $data); // Load your consent view
+    }
 
     public function increaseStock()
     {
@@ -1005,22 +1026,5 @@ class AdminController extends CI_Controller
         $this->load->model('TailorModel');
         $data['tailor_data'] = $this->TailorModel->getAllTailorHistory();
         $this->load->view('Admin/Tailor_History', $data);
-    }
-    public function consent_form($invoiceNo = null)
-    {
-        if (!$invoiceNo) {
-            show_404();
-        }
-
-        // Example: Load invoice details
-        $this->load->model('Invoice_model');
-        $invoice = $this->Invoice_model->get_invoice_by_no($invoiceNo);
-
-        if (!$invoice) {
-            show_404();
-        }
-
-        $data['invoice'] = $invoice;
-        $this->load->view('Admin/consent', $data);
     }
 }

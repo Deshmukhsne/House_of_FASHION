@@ -313,7 +313,7 @@
                                     <span class="ms-1">Dry Cleaners</span>
                                 </a>
                             </li>
-                             <li class="nav-item">
+                            <li class="nav-item">
                                 <a href="<?= base_url('AdminController/Tailors') ?>" class="sidebar-link" style="font-size: 18px;">
                                     <i class="bi bi-file-earmark-plus"></i>
                                     <span class="ms-1">Tailors</span>
@@ -329,6 +329,12 @@
                                 <a href="<?= base_url('AdminController/DryCleaning_Status') ?>" class="sidebar-link" style="font-size: 18px;">
                                     <i class="bi bi-clock-history"></i>
                                     <span class="ms-1">Status</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="<?= base_url('AdminController/tailor_history') ?>" class="sidebar-link" style="font-size: 18px;">
+                                    <i class="bi bi-clock-history"></i>
+                                    <span class="ms-1">Tailor Status</span>
                                 </a>
                             </li>
                         </ul>
