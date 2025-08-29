@@ -985,15 +985,40 @@ class AdminController extends CI_Controller
         $this->load->view('Admin/Vendors', $data);
     }
     // Tailor Management
-    public function tailors()
+    public function Tailors()
     {
         $this->load->model('Tailor_model');
         $data['tailors'] = $this->Tailor_model->get_all_tailors();
         $this->load->view('Admin/Tailors', $data);
     }
-    public function Tailor_Forward()
+    public function SendTailor($invoice_item_id = null)
     {
-        $this->load->view('Admin/Tailor_Forward', $data);
-    }
+        $this->load->model('TailorModel');
 
+        $data['tailors'] = $this->TailorModel->getAllTailors();
+
+        if ($invoice_item_id) {
+            $this->db->where('id', $invoice_item_id);
+            $query = $this->db->get('invoice_items');
+            $data['product'] = $query->row_array();
+            $data['invoice_item_id'] = $invoice_item_id;
+        } else {
+            $data['product'] = [];
+            $data['invoice_item_id'] = '';
+        }
+
+        $this->load->view("Admin/Tailor_Forward", $data);
+    }
+    public function ProductTailorHistory()
+    {
+        $this->load->model('TailorModel');
+        $data['tailor_data'] = $this->TailorModel->get_tailor_data();
+        $this->load->view('TailoringStatus', $data);
+    }
+    public function tailor_history()
+    {
+        $this->load->model('TailorModel');
+        $data['tailor_data'] = $this->TailorModel->getAllTailorHistory();
+        $this->load->view('Admin/Tailor_History', $data);
+    }
 }

@@ -60,23 +60,23 @@
             color: #a86d01ff;
             background: linear-gradient(90deg, #FFD27F, #B37B16);
         }
-        
+
         .search-container {
             position: relative;
             margin-bottom: 1rem;
         }
-        
+
         .search-container i {
             position: absolute;
             left: 12px;
             top: 10px;
             color: #a86d01ff;
         }
-        
+
         .search-container input {
             padding-left: 35px;
         }
-        
+
         .filter-card {
             background-color: #f8f9fa;
             border-radius: 8px;
@@ -84,7 +84,7 @@
             margin-bottom: 20px;
             border: 1px solid #e9ecef;
         }
-        
+
         .filter-header {
             display: flex;
             justify-content: space-between;
@@ -92,29 +92,29 @@
             margin-bottom: 15px;
             cursor: pointer;
         }
-        
+
         .highlight {
             background-color: rgba(255, 210, 127, 0.2) !important;
         }
-        
+
         .no-results {
             text-align: center;
             padding: 20px;
             color: #6c757d;
             font-style: italic;
         }
-        
+
         .export-buttons {
             display: flex;
             gap: 10px;
             flex-wrap: wrap;
         }
-        
+
         @media (max-width: 768px) {
             .export-buttons {
                 flex-direction: column;
             }
-            
+
             .export-buttons a {
                 width: 100%;
             }
@@ -130,7 +130,7 @@
 
             <div class="container-fluid p-4">
                 <h2 class="text-dark">Bill & Invoices</h2>
-                
+
                 <!-- Search Box -->
                 <div class="row mb-4">
                     <div class="col-md-6">
@@ -139,10 +139,10 @@
                             <input type="text" id="searchInput" class="form-control" placeholder="Search by invoice, customer, mobile...">
                         </div>
                     </div>
-                   
+
                 </div>
 
-               
+
 
                 <!-- Billing Table -->
                 <div class="table-responsive">
@@ -248,14 +248,14 @@
                     </div>
                 </div>
 
-                <div class="d-flex justify-content-end gap-2 mt-3 export-buttons">
+                <!-- <div class="d-flex justify-content-end gap-2 mt-3 export-buttons">
                     <a href="<?= base_url('AdminController/export_pdf') ?>" class="btn btn-success">
                         <i class="fas fa-file-pdf me-1"></i> Export PDF
                     </a>
                     <a href="<?= base_url('AdminController/export_excel') ?>" class="btn btn-warning">
                         <i class="fas fa-file-excel me-1"></i> Export Excel
                     </a>
-                </div>
+                </div> -->
             </div>
         </div>
     </div>
@@ -267,14 +267,14 @@
             const searchInput = document.getElementById('searchInput');
             const table = document.getElementById('billingTable');
             const rows = table.getElementsByTagName('tbody')[0].getElementsByTagName('tr');
-            
+
             searchInput.addEventListener('keyup', function() {
                 const searchText = this.value.toLowerCase();
-                
+
                 for (let i = 0; i < rows.length; i++) {
                     const cells = rows[i].getElementsByTagName('td');
                     let found = false;
-                    
+
                     for (let j = 0; j < cells.length; j++) {
                         const cellText = cells[j].textContent.toLowerCase();
                         if (cellText.includes(searchText)) {
@@ -282,7 +282,7 @@
                             break;
                         }
                     }
-                    
+
                     if (found) {
                         rows[i].style.display = '';
                         // Highlight matching text
@@ -297,30 +297,30 @@
                     }
                 }
             });
-            
+
             // Clear filters button
             document.getElementById('clearFilters').addEventListener('click', function() {
                 document.getElementById('fromDate').value = '';
                 document.getElementById('toDate').value = '';
                 document.getElementById('statusFilter').value = '';
                 document.getElementById('searchInput').value = '';
-                
+
                 // Show all rows
                 for (let i = 0; i < rows.length; i++) {
                     rows[i].style.display = '';
                     rows[i].classList.remove('highlight');
                 }
-                
+
                 // Submit the form to reset URL parameters
                 window.location.href = "<?= base_url('AdminController/billing_history') ?>";
             });
-            
+
             // Date validation for filter form
             const filterForm = document.querySelector('form[action="<?= base_url('AdminController/filter_billing_history') ?>"]');
             filterForm.addEventListener('submit', function(e) {
                 const fromDate = new Date(document.getElementById('fromDate').value);
                 const toDate = new Date(document.getElementById('toDate').value);
-                
+
                 if (document.getElementById('fromDate').value && document.getElementById('toDate').value && fromDate > toDate) {
                     e.preventDefault();
                     alert('To date must be after From date');
@@ -369,13 +369,13 @@
                     })
                     .catch(() => alert("Error updating payment"));
             });
-            
+
             // Collapsible filter section icon toggle
             const filterCollapse = document.getElementById('filterCollapse');
             filterCollapse.addEventListener('show.bs.collapse', function() {
                 document.querySelector('.filter-header i.fa-chevron-down').classList.replace('fa-chevron-down', 'fa-chevron-up');
             });
-            
+
             filterCollapse.addEventListener('hide.bs.collapse', function() {
                 document.querySelector('.filter-header i.fa-chevron-up').classList.replace('fa-chevron-up', 'fa-chevron-down');
             });

@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Forward To Tailor</title>
+    <title>Forward to Tailor</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <?php $this->load->view('CommonLinks'); ?>
@@ -14,7 +14,7 @@
 
     <style>
         body {
-            background: linear-gradient(135deg, #f0f2f5 0%, #ffffff 100%);
+            background: black;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
@@ -54,7 +54,7 @@
         }
 
         .btn-submit {
-            background: linear-gradient(90deg, #28a745, #218838);
+            background: linear-gradient(90deg, #007bff, #0056b3);
             color: white;
             font-weight: 500;
             border: none;
@@ -64,8 +64,13 @@
         }
 
         .btn-submit:hover {
-            background: linear-gradient(90deg, #218838, #1e7e34);
+            background: linear-gradient(90deg, #0056b3, #004494);
             transform: scale(1.03);
+        }
+
+        /* Different color scheme for Tailor section */
+        .tailor-heading {
+            background: black !important;
         }
     </style>
 </head>
@@ -79,89 +84,97 @@
 
             <div class="container-fluid p-4">
                 <div class="container form-container">
-                    <h2 class="section-heading mb-4">Forward Dry Cleaning Record</h2>
+                    <h2 class="section-heading tailor-heading mb-4">Forward to Tailor</h2>
 
-                    <?php if ($this->session->flashdata('success')): ?>
+                    <?php if ($this->session->flashdata('tailor_success')): ?>
                         <script>
                             Swal.fire({
                                 icon: 'success',
                                 title: 'Success',
-                                text: "<?= $this->session->flashdata('success'); ?>"
+                                text: "<?= $this->session->flashdata('tailor_success'); ?>"
                             });
                         </script>
-                    <?php elseif ($this->session->flashdata('error')): ?>
+                    <?php elseif ($this->session->flashdata('tailor_error')): ?>
                         <script>
                             Swal.fire({
                                 icon: 'error',
                                 title: 'Error',
-                                text: "<?= $this->session->flashdata('error'); ?>"
+                                text: "<?= $this->session->flashdata('tailor_error'); ?>"
                             });
                         </script>
                     <?php endif; ?>
 
-                    <form action="<?= base_url('DrycleaningController/save') ?>" method="post" id="drycleaningForm">
+                    <form action="<?= base_url('TailorController/save') ?>" method="post" id="tailorForm">
                         <div class="row mb-3">
                             <!-- Tailor Name Dropdown -->
                             <div class="col-md-6">
                                 <label class="form-label">Tailor Name</label>
-                                <select name="Tailor_id" id="TailorSelect" class="form-control" required>
+                                <select name="tailor_id" id="tailorSelect" class="form-control" required>
                                     <option value="">Select Tailor</option>
-                                    <?php foreach ($Tailors as $Tailor): ?>
-                                        <option value="<?= $Tailor['id'] ?>"
-                                            data-name="<?= $Tailor['name'] ?>"
-                                            data-mobile="<?= $Tailor['mobile'] ?>">
-                                            <?= $Tailor['name'] ?>
+                                    <?php foreach ($tailors as $tailor): ?>
+                                        <option value="<?= $tailor['id'] ?>"
+                                            data-name="<?= $tailor['name'] ?>"
+                                            data-mobile="<?= $tailor['mobile'] ?>"
+                                            data-address="<?= $tailor['shop_address'] ?>">
+                                            <?= $tailor['name'] ?>
                                         </option>
                                     <?php endforeach; ?>
                                 </select>
+
                             </div>
 
-                            <!-- Tailor Mobile Autofill -->
-                            <div class="col-md-6">
-                                <label class="form-label">Tailor Mobile</label>
-                                <input type="text" name="Tailor_mobile" id="TailorMobile" class="form-control" readonly required>
-                            </div>
-                        </div>
 
-                        <!-- Hidden fields -->
-                        <input type="hidden" name="Tailor_name" id="TailorName">
-                        <input type="hidden" name="invoice_item_id" value="<?= isset($invoice_item_id) ? $invoice_item_id : '' ?>">
-                        <input type="hidden" name="product_status" value="In Cleaning">
 
-                        <!-- Product Info (pre-filled) -->
-                        <div class="row mb-3">
-                            <div class="col-md-6">
-                                <label class="form-label">Product Name</label>
-                                <input type="text" name="product_name" class="form-control"
-                                    value="<?= isset($product['item_name']) ? $product['item_name'] : '' ?>" readonly>
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label">Product Status</label>
-                                <input type="text" class="form-control" value="In Cleaning" readonly>
-                            </div>
-                        </div>
+                            <!-- Hidden fields -->
+                            <input type="hidden" name="tailor_name" id="tailorName">
 
-                        <!-- Forward and Return Dates -->
-                        <div class="row mb-3">
-                            <div class="col-md-6">
-                                <label class="form-label">Forward Date</label>
-                                <input type="date" name="forward_date" class="form-control" required
-                                    value="<?= date('Y-m-d') ?>">
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label">Expected Return Date</label>
-                                <input type="date" name="return_date" class="form-control">
-                            </div>
-                        </div>
+                            <input type="hidden" name="invoice_item_id" value="<?= isset($invoice_item_id) ? $invoice_item_id : '' ?>">
+                            <input type="hidden" name="product_status" value="At Tailor">
 
-                        <div class="mb-3">
-                            <label class="form-label">Cleaning Notes</label>
-                            <textarea name="cleaning_notes" class="form-control" rows="3" placeholder="Enter any specific cleaning instructions..."></textarea>
-                        </div>
+                            <!-- Product Info (pre-filled) -->
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label class="form-label">Product Name</label>
+                                    <input type="text" name="product_name" class="form-control"
+                                        value="<?= isset($product['item_name']) ? $product['item_name'] : '' ?>" readonly>
 
-                        <div class="text-center">
-                            <button type="submit" class="btn btn-submit">Forward to Dry Cleaning</button>
-                        </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Product Status</label>
+                                    <input type="text" class="form-control" value="At Tailor" readonly>
+                                </div>
+                            </div>
+
+                            <!-- Alteration Type -->
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label class="form-label">Alteration Type</label>
+                                    <select name="alteration_type" class="form-control" required>
+                                        <option value="">Select Alteration Type</option>
+                                        <option value="Resizing">Resizing</option>
+                                        <option value="Hemming">Hemming</option>
+                                        <option value="Taking In">Taking In</option>
+                                        <option value="Letting Out">Letting Out</option>
+                                        <option value="Repair">Repair</option>
+                                        <option value="Other">Other</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Expected Return Date</label>
+                                    <input type="date" name="return_date" class="form-control">
+                                </div>
+                            </div>
+
+
+
+                            <div class="mb-3">
+                                <label class="form-label">Tailor Instructions</label>
+                                <textarea name="tailor_instructions" class="form-control" rows="3" placeholder="Enter specific tailoring instructions..."></textarea>
+                            </div>
+
+                            <div class="text-center">
+                                <button type="submit" class="btn btn-submit">Save</button>
+                            </div>
                     </form>
                 </div>
             </div>
@@ -170,11 +183,12 @@
 
     <script>
         $(document).ready(function() {
-            // Set Tailor info when selection changes
-            $('#TailorSelect').change(function() {
+            // Set tailor info when selection changes
+            $('#tailorSelect').change(function() {
                 var selected = this.options[this.selectedIndex];
-                $('#TailorMobile').val(selected.getAttribute('data-mobile') || '');
-                $('#TailorName').val(selected.getAttribute('data-name') || '');
+                $('#tailorMobile').val(selected.getAttribute('data-mobile') || '');
+                $('#tailorName').val(selected.getAttribute('data-name') || '');
+                $('#tailorAddress').val(selected.getAttribute('data-address') || '');
             });
         });
     </script>
