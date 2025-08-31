@@ -260,10 +260,10 @@
                                 <input type="text" id="productName" name="name" class="form-control mb-2" placeholder="Product Name" required>
 
                                 <!-- Product Price -->
-                                <input type="number" name="price" class="form-control mb-2" placeholder="Product Price" step="0.01" required>
+                                <input type="number" name="price" class="form-control mb-2" placeholder="Product Rent" step="0.01" required>
 
                                 <!-- ✅ New MRP Field -->
-                                <input type="number" name="mrp" class="form-control mb-2" placeholder="MRP (Maximum Retail Price)" step="0.01" required>
+                                <input type="number" name="mrp" class="form-control mb-2" placeholder="Product MRP" step="0.01" required>
 
                                 <!-- Category -->
                                 <select name="category_id" class="form-select mb-2" required>
@@ -281,7 +281,7 @@
                                 </select>
 
                                 <!-- Stock -->
-                                <input type="number" name="stock" class="form-control mb-2" placeholder="Stock Quantity" required>
+                                <input type="number" name="stock" class="form-control mb-2" placeholder="Stock Quantity" value="1" required readonly>
 
                                 <!-- Status -->
                                 <select name="status" class="form-select mb-2">
@@ -380,7 +380,7 @@
                                     <!-- Stock -->
                                     <div class="mb-3">
                                         <label>Stock</label>
-                                        <input type="number" class="form-control" name="stock" id="edit_product_stock">
+                                        <input type="number" class="form-control" name="stock" id="edit_product_stock" readonly>
                                     </div>
 
                                     <!-- Status -->

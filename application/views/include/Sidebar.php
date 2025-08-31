@@ -289,52 +289,6 @@
                     </a>
                 </li>
 
-                <!-- Services -->
-                <li class="sidebar-item">
-                    </a>
-
-
-
-                    <a href="<?= base_url('AdminController/Orders') ?>" class="sidebar-link" id="orders-link" style="font-size: 20px;">
-                        <i class="bi bi-cart-check me-2"></i>
-                        <span class="ms-1">Orders</span>
-                    </a>
-                <li class="sidebar-item">
-                    <a class="sidebar-link collapsed" data-bs-toggle="collapse" href="#drySubmenu" role="button" aria-expanded="false" aria-controls="drySubmenu" style="font-size: 20px;">
-                        <i class="bi bi-droplet-half me-2"></i>
-                        <span class="ms-1">Vendor Management</span>
-                    </a>
-
-                    <div class="collapse" id="drySubmenu">
-                        <ul class="nav flex-column ms-3">
-                            <li class="nav-item">
-                                <a href="<?= base_url('AdminController/Vendors') ?>" class="sidebar-link" style="font-size: 18px;">
-                                    <i class="bi bi-file-earmark-plus"></i>
-                                    <span class="ms-1">Dry Cleaners</span>
-                                </a>
-                            </li>
-                             <li class="nav-item">
-                                <a href="<?= base_url('AdminController/Tailors') ?>" class="sidebar-link" style="font-size: 18px;">
-                                    <i class="bi bi-file-earmark-plus"></i>
-                                    <span class="ms-1">Tailors</span>
-                                </a>
-                            </li>
-                            <!-- <li class="nav-item">
-                                <a href="<?= base_url('AdminController/DryCleaning_Forward') ?>" class="sidebar-link" style="font-size: 18px;">
-                                    <i class="bi bi-file-earmark-plus"></i>
-                                    <span class="ms-1">Give to Drycleaning</span>
-                                </a>
-                            </li> -->
-                            <li class="nav-item">
-                                <a href="<?= base_url('AdminController/DryCleaning_Status') ?>" class="sidebar-link" style="font-size: 18px;">
-                                    <i class="bi bi-clock-history"></i>
-                                    <span class="ms-1">Status</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                </li>
-
                 <!-- Billing -->
                 <li class="sidebar-item">
                     <a href="#" class="sidebar-link dropdown-toggle collapsed" id="billing-dropdown" data-bs-toggle="collapse"
@@ -360,6 +314,57 @@
                     </div>
                 </li>
 
+                <!-- Services -->
+                <li class="sidebar-item">
+                    </a>
+
+                    <a href="<?= base_url('AdminController/Orders') ?>" class="sidebar-link" id="orders-link" style="font-size: 20px;">
+                        <i class="bi bi-cart-check me-2"></i>
+                        <span class="ms-1">Orders</span>
+                    </a>
+                <li class="sidebar-item">
+                    <a class="sidebar-link collapsed" data-bs-toggle="collapse" href="#drySubmenu" role="button" aria-expanded="false" aria-controls="drySubmenu" style="font-size: 20px;">
+                        <i class="bi bi-droplet-half me-2"></i>
+                        <span class="ms-1">Vendor Management</span>
+                    </a>
+
+                    <div class="collapse" id="drySubmenu">
+                        <ul class="nav flex-column ms-3">
+                            <li class="nav-item">
+                                <a href="<?= base_url('AdminController/Vendors') ?>" class="sidebar-link" style="font-size: 18px;">
+                                    <i class="bi bi-file-earmark-plus"></i>
+                                    <span class="ms-1">Dry Cleaners</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="<?= base_url('AdminController/Tailors') ?>" class="sidebar-link" style="font-size: 18px;">
+                                    <i class="bi bi-file-earmark-plus"></i>
+                                    <span class="ms-1">Tailors</span>
+                                </a>
+                            </li>
+                            <!-- <li class="nav-item">
+                                <a href="<?= base_url('AdminController/DryCleaning_Forward') ?>" class="sidebar-link" style="font-size: 18px;">
+                                    <i class="bi bi-file-earmark-plus"></i>
+                                    <span class="ms-1">Give to Drycleaning</span>
+                                </a>
+                            </li> -->
+                            <li class="nav-item">
+                                <a href="<?= base_url('AdminController/DryCleaning_Status') ?>" class="sidebar-link" style="font-size: 18px;">
+                                    <i class="bi bi-clock-history"></i>
+                                    <span class="ms-1">Dry Clean Status</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="<?= base_url('AdminController/tailor_history') ?>" class="sidebar-link" style="font-size: 18px;">
+                                    <i class="bi bi-clock-history"></i>
+                                    <span class="ms-1">Tailor Status</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+
+                
                 <!-- Reports -->
                 <li class="sidebar-item">
                     <a href="#" class="sidebar-link dropdown-toggle collapsed" id="reports-dropdown" data-bs-toggle="collapse"

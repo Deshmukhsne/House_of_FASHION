@@ -314,7 +314,7 @@
                                                                 <td><?= $s->mrp ?></td>
                                                                 <td>₹<?= $s->price ?></td>
                                                                 <td><?= $s->items_rented ?></td>
-                                                                <td>₹<?= number_format($s->revenue, 2) ?></td>
+                                                                <td>₹<?= number_format($s->revenue ?? 0, 2) ?></td>
                                                             </tr>
                                                         <?php endforeach; ?>
                                                     </tbody>

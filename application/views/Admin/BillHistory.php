@@ -118,6 +118,7 @@
                                             <button type="button" class="btn btn-gold btn-sm me-1"
                                                 onclick="goToConsent('<?= $inv['invoice_no'] ?>')">Print Consent</button>
 
+
                                             <a href="<?= base_url('AdminController/delete_invoice/' . $inv['id']) ?>"
                                                 onclick="return confirm('Delete this invoice?')"
                                                 class="btn btn-gold btn-sm me-1">Delete</a>
@@ -195,16 +196,7 @@
                         </div>
                     </div>
                 </div>
-                <script>
-                    function goToConsent(invoiceNo) {
-                        if (!invoiceNo) {
-                            alert("Invoice number not provided!");
-                            return;
-                        }
-                        // Open the consent form page in a new tab/window
-                        window.open("<?= base_url('AdminController/consent_form/') ?>" + invoiceNo, "_blank");
-                    }
-                </script>
+
                 <script>
                     document.addEventListener('DOMContentLoaded', () => {
                         // Open Pay Due Modal
@@ -258,6 +250,11 @@
             </div>
         </div>
     </div>
+    <script>
+        function goToConsent(invoiceNo) {
+            window.location.href = "<?= base_url('AdminController/consent_form/') ?>" + invoiceNo;
+        }
+    </script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>

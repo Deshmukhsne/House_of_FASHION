@@ -16,14 +16,14 @@ class Signature_model extends CI_Model
     public function saveSignature($data)
     {
         // Check if signature already exists for this invoice
-        $existing = $this->db->get_where('rental_signatures', ['invoice_id' => $data['invoice_id']])->row();
+        $existing = $this->db->get_where('invoice_signatures', ['invoice_id' => $data['invoice_id']])->row();
 
         if ($existing) {
             // Update existing signature
-            return $this->db->where('invoice_id', $data['invoice_id'])->update('rental_signatures', $data);
+            return $this->db->where('invoice_id', $data['invoice_id'])->update('invoice_signatures', $data);
         } else {
             // Insert new signature
-            return $this->db->insert('rental_signatures', $data);
+            return $this->db->insert('invoice_signatures', $data);
         }
     }
 
@@ -32,7 +32,7 @@ class Signature_model extends CI_Model
      */
     public function getSignatureByInvoice($invoice_id)
     {
-        return $this->db->get_where('rental_signatures', ['invoice_id' => $invoice_id])->row();
+        return $this->db->get_where('invoice_signatures', ['invoice_id' => $invoice_id])->row();
     }
 
     /**
