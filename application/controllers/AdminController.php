@@ -827,6 +827,7 @@ class AdminController extends CI_Controller
             'customer_name'   => $this->input->post('customerName'),
             'customer_mobile' => $this->input->post('customerMobile'),
             'alternate_mobile' => $this->input->post('alternateMobile'),
+            'aadhar_number'    => $this->input->post('aadhar_number'),
             'invoice_date' => is_array($this->input->post('date')) ? ($this->input->post('date')[0] ?: date('Y-m-d')) : ($this->input->post('date') ?: date('Y-m-d')),
             'staff_name' => $this->input->post('staff_name') ?: 'Not Assigned',
             'return_date'     => is_array($this->input->post('returnDate')) ? $this->input->post('returnDate')[0] : $this->input->post('returnDate'),

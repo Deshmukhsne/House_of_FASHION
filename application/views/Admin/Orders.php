@@ -299,8 +299,7 @@
                     try {
                       $returnDate = new DateTime($order['return_date']);
 
-                      // Check if return date is t
-                      // oday (red)
+                      // Check if return date is today (red)
                       if ($returnDate->format('Y-m-d') == $today->format('Y-m-d')) {
                         $highlight = "highlight-today";
                         $statusClass = "status-overdue";

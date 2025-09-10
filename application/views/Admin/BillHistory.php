@@ -56,6 +56,20 @@
         .table th {
             color: #a86d01ff;
         }
+
+        .btn-return {
+            background: linear-gradient(90deg, #16B37B, #7FFFD2);
+            /* Green gradient */
+            color: #000;
+            font-weight: 600;
+            border: none;
+            transition: all .3s ease;
+        }
+
+        .btn-return:hover {
+            background: linear-gradient(90deg, #7FFFD2, #16B37B);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, .2);
+        }
     </style>
 </head>
 
@@ -93,6 +107,7 @@
                                 <th>Date</th>
                                 <th>Customer</th>
                                 <th>Mobile</th>
+                                <th>Aadhar No</th>
                                 <th>Total (₹)</th>
                                 <th>Deposit (₹)</th>
                                 <th>Paid (₹)</th>
@@ -109,21 +124,29 @@
                                         <td><?= htmlspecialchars($inv['invoice_date']) ?></td>
                                         <td><?= htmlspecialchars($inv['customer_name']) ?></td>
                                         <td><?= htmlspecialchars($inv['customer_mobile'] ?? '-') ?></td>
+                                        <td><?= htmlspecialchars($inv['aadhar_number'] ?? '-') ?></td>
                                         <td class="text-end">₹<?= number_format($inv['total_payable'], 2) ?></td>
                                         <td class="text-end">₹<?= number_format($inv['deposit_amount'], 2) ?></td>
                                         <td class="text-end">₹<?= number_format($inv['paid_amount'], 2) ?></td>
                                         <td class="text-end">₹<?= number_format($inv['due_amount'], 2) ?></td>
                                         <td><?= htmlspecialchars($inv['payment_mode']) ?></td>
 
-                                        <td>
-                                            <button type="button" class="btn btn-gold btn-sm me-1"
-                                                onclick="goToConsent('<?= $inv['invoice_no'] ?>')">Print Consent</button>
+                                        <td class="d-flex flex-wrap gap-1">
+                                            <!-- Print Button -->
+                                            <button type="button"
+                                                class="btn btn-gold btn-sm"
+                                                onclick="goToConsent('<?= $inv['invoice_no'] ?>')">
+                                                Print
+                                            </button>
 
-
+                                            <!-- Delete Button -->
                                             <a href="javascript:void(0);"
                                                 onclick="confirmDelete('<?= base_url('AdminController/delete_invoice/' . $inv['id']) ?>')"
-                                                class="btn btn-gold btn-sm me-1">Delete</a>
+                                                class="btn btn-gold btn-sm">
+                                                Delete
+                                            </a>
 
+                                            <!-- Pay Due Button -->
                                             <?php if ($inv['due_amount'] > 0): ?>
                                                 <button class="btn btn-warning btn-sm pay-due-btn"
                                                     data-id="<?= $inv['id'] ?>"
@@ -134,7 +157,18 @@
                                                     Pay Due
                                                 </button>
                                             <?php endif; ?>
+
+                                            <!-- Return Deposit Button -->
+                                            <?php if ($inv['deposit_amount'] > 0): ?>
+                                                <button class="btn btn-return btn-sm"
+                                                    data-id="<?= $inv['id'] ?>"
+                                                    data-deposit="<?= $inv['deposit_amount'] ?>">
+                                                    Return Deposit
+                                                </button>
+                                            <?php endif; ?>
+
                                         </td>
+
 
 
                                         </td>
