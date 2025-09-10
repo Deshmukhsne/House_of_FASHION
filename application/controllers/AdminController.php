@@ -1097,4 +1097,15 @@ class AdminController extends CI_Controller
         $data['tailor_data'] = $this->TailorModel->getAllTailorHistory();
         $this->load->view('Admin/Tailor_History', $data);
     }
+    public function return_deposit()
+    {
+        $id = $this->input->post('id');
+        if ($id) {
+            $this->db->where('id', $id);
+            $updated = $this->db->update('invoices', ['deposit_amount' => 0]);
+            echo json_encode(['success' => $updated]);
+        } else {
+            echo json_encode(['success' => false]);
+        }
+    }
 }

@@ -126,7 +126,11 @@
                                         <td><?= htmlspecialchars($inv['customer_mobile'] ?? '-') ?></td>
                                         <td><?= htmlspecialchars($inv['aadhar_number'] ?? '-') ?></td>
                                         <td class="text-end">₹<?= number_format($inv['total_payable'], 2) ?></td>
-                                        <td class="text-end">₹<?= number_format($inv['deposit_amount'], 2) ?></td>
+                                        <!-- <td class="text-end">₹<?= number_format($inv['deposit_amount'], 2) ?></td> -->
+                                        <td class="text-end deposit-<?= $inv['id'] ?>">
+                                            ₹<?= number_format($inv['deposit_amount'], 2) ?>
+                                        </td>
+
                                         <td class="text-end">₹<?= number_format($inv['paid_amount'], 2) ?></td>
                                         <td class="text-end">₹<?= number_format($inv['due_amount'], 2) ?></td>
                                         <td><?= htmlspecialchars($inv['payment_mode']) ?></td>
@@ -166,6 +170,8 @@
                                                     Return Deposit
                                                 </button>
                                             <?php endif; ?>
+
+
 
                                         </td>
 
@@ -376,6 +382,57 @@
             });
         </script>
     <?php endif; ?>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('.btn-return').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    let id = this.dataset.id;
+                    let button = this;
+
+                    Swal.fire({
+                        title: "Are you sure?",
+                        text: "Are you sure you are returning the Deposit? This action cannot be undone.",
+                        icon: "warning",
+                        showCancelButton: true,
+                        confirmButtonColor: "#16B37B",
+                        cancelButtonColor: "#d33",
+                        confirmButtonText: "Yes, return it!"
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            fetch("<?= base_url('AdminController/return_deposit') ?>", {
+                                    method: "POST",
+                                    headers: {
+                                        "Content-Type": "application/x-www-form-urlencoded"
+                                    },
+                                    body: "id=" + id
+                                })
+                                .then(res => res.json())
+                                .then(data => {
+                                    if (data.success) {
+                                        // update UI
+                                        document.querySelector(".deposit-" + id).innerText = "₹0.00";
+                                        button.style.display = "none";
+
+                                        Swal.fire({
+                                            icon: "success",
+                                            title: "Deposit Returned!",
+                                            text: "Deposit has been returned. ",
+                                            timer: 1500,
+                                            showConfirmButton: false
+                                        });
+                                    } else {
+                                        Swal.fire("Error!", "Failed to return deposit.", "error");
+                                    }
+                                })
+                                .catch(() => {
+                                    Swal.fire("Error!", "Something went wrong.", "error");
+                                });
+                        }
+                    });
+                });
+            });
+        });
+    </script>
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
