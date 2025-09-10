@@ -271,8 +271,8 @@
             ownership rights over them.</p>
 
 
-        <p>- I hereby release the Rental Shop from any claims, liabilities, or damages arising from the use of the
-            rented item(s), except where caused by the Rental Shop's negligence.</p>
+        <!-- <p>- I hereby release the Rental Shop from any claims, liabilities, or damages arising from the use of the
+            rented item(s), except where caused by the Rental Shop's negligence.</p> -->
 
         <hr>
         <!-- Item Details -->
@@ -305,8 +305,8 @@
         </div>
 
         <p><strong>RENTAL DURATION:</strong> From <span class="filled-data"><?php echo date('F j, Y', strtotime($invoice['invoice_date'])); ?></span> to <span class="filled-data"><?php echo date('F j, Y', strtotime($invoice['return_date'])); ?></span></p>
-        <p><strong>TOTAL COST:</strong> Rs<span class="filled-data"><?php echo number_format($invoice['total_amount'], 2); ?></span>
-            (Deposit: Rs<span class="filled-data"><?php echo number_format($invoice['deposit_amount'], 2); ?></span>)</p>
+        <p><strong>TOTAL COST:</strong> Rs <span class="filled-data"><?php echo number_format($invoice['total_amount'], 2); ?></span>
+            (Deposit: Rs <span class="filled-data"><?php echo number_format($invoice['deposit_amount'], 2); ?></span>)</p>
         <hr>
 
         <!-- Signature Section -->
@@ -335,7 +335,7 @@
                     <canvas id="signatureCanvas"></canvas>
                     <div class="signature-actions">
                         <button id="clearSignature" class="btn btn-secondary">Clear Signature</button>
-
+                        <button id="undoSignature" class="btn btn-outline-secondary">Undo</button>
                     </div>
                     <div id="signatureStatus" class="signature-status">Please sign above</div>
                 </div>

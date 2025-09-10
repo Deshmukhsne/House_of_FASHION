@@ -8,6 +8,7 @@ class OrdersModel extends CI_Model
     public function get_orders()
     {
         $this->db->select('inv.id as invoice_id,
+                            itm.id as invoice_item_id,
                            inv.invoice_no,
                            inv.customer_name,
                            inv.customer_mobile,

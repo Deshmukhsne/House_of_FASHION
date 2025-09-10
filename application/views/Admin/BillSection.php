@@ -221,118 +221,132 @@
                                             <label class="form-check-label" for="applyCommonDates">Apply to all rows</label>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="col-md-3 mt-3">
-                                    <label for="staff_id">Select Staff</label>
-                                    <select name="staff_name" id="staff_id" class="form-control" required>
-                                        <option value="">Select Staff</option>
-                                        <?php if (!empty($staffList)) : ?>
-                                            <?php foreach ($staffList as $staff) : ?>
-                                                <option value="<?= $staff->name ?>">
-                                                    <?= $staff->name ?>
-                                                </option>
-                                            <?php endforeach; ?>
-                                        <?php else: ?>
-                                            <option value="">No staff found</option>
-                                        <?php endif; ?>
-                                    </select>
-                                </div>
-
-                                <div class="col-md-3 mt-3">
-                                    <label>Deposit Amount (₹):</label>
-                                    <input type="number" name="depositAmount" id="depositAmount" class="form-control" min="0" step="0.01" value="0" oninput="updateBalance()" />
-                                </div>
-
-                                <div class="col-md-3  mt-3">
-                                    <label>Payment Mode:</label>
-                                    <select name="paymentMode" id="paymentMode" class="form-select">
-                                        <option value="">Select</option>
-                                        <option value="Cash">Cash</option>
-                                        <option value="Online">Online</option>
-                                        <option value="Unpaid">Unpaid</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <!-- Items Table -->
-                            <div class="table-responsive-container">
-                                <table class="table table-bordered align-middle">
-                                    <thead class="table-light">
-                                        <tr>
-                                            <th>Category</th>
-                                            <th>Item</th>
-                                            <th>Daily Price (₹)</th>
-                                            <th>Qty</th>
-                                            <th>Rental Date</th>
-                                            <th>Return Date</th>
-                                            <th>Days</th>
-                                            <th>Total (₹)</th>
-                                            <th>Action</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="itemTable">
-                                        <!-- Single initial row -->
-                                        <tr>
-                                            <td>
-                                                <select name="category[]" class="form-select category-select" onchange="onCategoryChange(this)">
-                                                    <option value="">Select</option>
-                                                    <?php foreach ($categories as $c): ?>
-                                                        <option value="<?= $c['id']; ?>"><?= htmlspecialchars($c['name']); ?></option>
-                                                    <?php endforeach; ?>
-                                                </select>
-                                            </td>
-                                            <td>
-                                                <select name="itemName[]" class="form-select product-select" onchange="onProductChange(this)">
-                                                    <option value="">Select Item</option>
-                                                </select>
-                                            </td>
-                                            <td><input type="number" name="price[]" class="form-control price" readonly /></td>
-                                            <td><input type="number" name="qty[]" class="form-control qty" min="1" value="1" oninput="updateRowTotal(this)" /></td>
-                                            <td><input type="date" name="rentalDate[]" class="form-control rental-date" onchange="updateRowDays(this)" value="<?= date('Y-m-d') ?>" /></td>
-                                            <td><input type="date" name="returnDate[]" class="form-control return-date" onchange="updateRowDays(this)" value="<?= date('Y-m-d', strtotime('+1 day')) ?>" /></td>
-                                            <td><input type="number" name="days[]" class="form-control days" min="1" value="1" oninput="updateRowTotal(this)" /></td>
-                                            <td><input type="number" name="total[]" class="form-control total" readonly /></td>
-                                            <td><button type="button" class="btn btn-sm btn-danger" onclick="removeRow(this)">Remove</button></td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                                <button class="btn btn-sm btn-gold" type="button" onclick="addRow()">+ Add Item</button>
-                            </div>
-
-                            <!-- Summary -->
-                            <div class="row summary-section">
-                                <div class="col-md-6 offset-md-6">
-                                    <div class="mb-2 d-flex justify-content-between">
-                                        <span>Total Amount:</span>
-                                        <span class="value" id="totalAmount">₹0.00</span>
+                                    <div class="col-md-3 mt-3">
+                                        <label>Aadhaar Number:</label>
+                                        <input
+                                            type="text"
+                                            name="aadhar_number"
+                                            id="aadharno"
+                                            class="form-control"
+                                            placeholder="Enter Aadhaar Number"
+                                            maxlength="12"
+                                            inputmode="numeric"
+                                            pattern="\d{12}"
+                                            autocomplete="off"
+                                            required />
                                     </div>
-                                    <div class="mb-3">
-                                        <label>Discount (₹):</label>
-                                        <input type="number" name="discountAmount" id="discountAmount" min="0" step="0.01" class="form-control" value="0" oninput="updateAllTotals()" />
+                                    <div class="col-md-3 mt-3">
+                                        <label for="staff_id">Select Staff</label>
+                                        <select name="staff_name" id="staff_id" class="form-control" required>
+                                            <option value="">Select Staff</option>
+                                            <?php if (!empty($staffList)) : ?>
+                                                <?php foreach ($staffList as $staff) : ?>
+                                                    <option value="<?= $staff->name ?>">
+                                                        <?= $staff->name ?>
+                                                    </option>
+                                                <?php endforeach; ?>
+                                            <?php else: ?>
+                                                <option value="">No staff found</option>
+                                            <?php endif; ?>
+                                        </select>
                                     </div>
-                                    <div class="mb-2 d-flex justify-content-between">
-                                        <span>Total Payable:</span>
-                                        <span class="value" id="totalPayable">₹0.00</span>
+
+
+                                    <div class="col-md-3 mt-3">
+                                        <label>Deposit Amount (₹):</label>
+                                        <input type="number" name="depositAmount" id="depositAmount" class="form-control" min="0" step="0.01" value="0" oninput="updateBalance()" />
                                     </div>
-                                    <div class="mb-3">
-                                        <label>Paid Amount (₹):</label>
-                                        <input type="number" name="paidAmount" id="paidAmount" class="form-control" min="0" step="0.01" value="0" oninput="updateBalance()" />
-                                    </div>
-                                    <div class="mb-3">
-                                        <label>Due Amount (₹):</label>
-                                        <input type="number" name="dueAmount" id="dueAmount" class="form-control" readonly />
+
+                                    <div class="col-md-3  mt-3">
+                                        <label>Payment Mode:</label>
+                                        <select name="paymentMode" id="paymentMode" class="form-select">
+                                            <option value="">Select</option>
+                                            <option value="Cash">Cash</option>
+                                            <option value="Online">Online</option>
+                                            <option value="Unpaid">Unpaid</option>
+                                        </select>
                                     </div>
                                 </div>
-                            </div>
 
-                            <!-- Hidden totals -->
-                            <input type="hidden" name="totalAmount" id="totalAmountInput">
-                            <input type="hidden" name="totalPayable" id="totalPayableInput">
+                                <!-- Items Table -->
+                                <div class="table-responsive-container">
+                                    <table class="table table-bordered align-middle">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th>Category</th>
+                                                <th>Item</th>
+                                                <th>Daily Price (₹)</th>
+                                                <th>Qty</th>
+                                                <th>Rental Date</th>
+                                                <th>Return Date</th>
+                                                <th>Days</th>
+                                                <th>Total (₹)</th>
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="itemTable">
+                                            <!-- Single initial row -->
+                                            <tr>
+                                                <td>
+                                                    <select name="category[]" class="form-select category-select" onchange="onCategoryChange(this)">
+                                                        <option value="">Select</option>
+                                                        <?php foreach ($categories as $c): ?>
+                                                            <option value="<?= $c['id']; ?>"><?= htmlspecialchars($c['name']); ?></option>
+                                                        <?php endforeach; ?>
+                                                    </select>
+                                                </td>
+                                                <td>
+                                                    <select name="itemName[]" class="form-select product-select" onchange="onProductChange(this)">
+                                                        <option value="">Select Item</option>
+                                                    </select>
+                                                </td>
+                                                <td><input type="number" name="price[]" class="form-control price" readonly /></td>
+                                                <td><input type="number" name="qty[]" class="form-control qty" min="1" value="1" oninput="updateRowTotal(this)" /></td>
+                                                <td><input type="date" name="rentalDate[]" class="form-control rental-date" onchange="updateRowDays(this)" value="<?= date('Y-m-d') ?>" /></td>
+                                                <td><input type="date" name="returnDate[]" class="form-control return-date" onchange="updateRowDays(this)" value="<?= date('Y-m-d', strtotime('+1 day')) ?>" /></td>
+                                                <td><input type="number" name="days[]" class="form-control days" min="1" value="1" oninput="updateRowTotal(this)" /></td>
+                                                <td><input type="number" name="total[]" class="form-control total" readonly /></td>
+                                                <td><button type="button" class="btn btn-sm btn-danger" onclick="removeRow(this)">Remove</button></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    <button class="btn btn-sm btn-gold" type="button" onclick="addRow()">+ Add Item</button>
+                                </div>
 
-                            <div class="text-center mt-4">
-                                <button class="btn btn-gold px-4 py-2" type="submit">Save Invoice</button>
-                                <button class="btn btn-outline-secondary px-4 py-2" type="button" onclick="resetForm()">Clear</button>
-                            </div>
+                                <!-- Summary -->
+                                <div class="row summary-section">
+                                    <div class="col-md-6 offset-md-6">
+                                        <div class="mb-2 d-flex justify-content-between">
+                                            <span>Total Amount:</span>
+                                            <span class="value" id="totalAmount">₹0.00</span>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label>Discount (₹):</label>
+                                            <input type="number" name="discountAmount" id="discountAmount" min="0" step="0.01" class="form-control" value="0" oninput="updateAllTotals()" />
+                                        </div>
+                                        <div class="mb-2 d-flex justify-content-between">
+                                            <span>Total Payable:</span>
+                                            <span class="value" id="totalPayable">₹0.00</span>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label>Paid Amount (₹):</label>
+                                            <input type="number" name="paidAmount" id="paidAmount" class="form-control" min="0" step="0.01" value="0" oninput="updateBalance()" />
+                                        </div>
+                                        <div class="mb-3">
+                                            <label>Due Amount (₹):</label>
+                                            <input type="number" name="dueAmount" id="dueAmount" class="form-control" readonly />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Hidden totals -->
+                                <input type="hidden" name="totalAmount" id="totalAmountInput">
+                                <input type="hidden" name="totalPayable" id="totalPayableInput">
+
+                                <div class="text-center mt-4">
+                                    <button class="btn btn-gold px-4 py-2" type="submit">Save Invoice</button>
+                                    <button class="btn btn-outline-secondary px-4 py-2" type="button" onclick="resetForm()">Clear</button>
+                                </div>
                         </form>
                     </div>
                 </div>
@@ -572,6 +586,9 @@
             const dueAmount = totalPayable - paidAmount;
             document.getElementById('dueAmount').value = dueAmount > 0 ? dueAmount.toFixed(2) : '0.00';
         }
+        document.getElementById('aadharno').addEventListener('input', function() {
+            this.value = this.value.replace(/\D/g, '').slice(0, 12);
+        });
 
         // Reset form to initial state
         function resetForm() {

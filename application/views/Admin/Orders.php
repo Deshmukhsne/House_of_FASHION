@@ -361,11 +361,11 @@
                       <?php if ($order['status'] == 'Returned' && $order['main_category'] == 'Cloths'): ?>
                         <div class="d-flex flex-wrap">
                           <button class="btn btn-warning btn-sm btn-action"
-                            onclick="forwardToDryClean('<?= $order['invoice_id'] ?>')">
+                            onclick="forwardToDryClean('<?= $order['invoice_item_id'] ?>')">
                             Dry Clean
                           </button>
                           <button class="btn btn-info btn-sm btn-action"
-                            onclick="forwardToTailor('<?= $order['invoice_id'] ?>') ">
+                            onclick="forwardToTailor('<?= $order['invoice_item_id'] ?>') ">
                             Tailor
                           </button>
                         </div>
