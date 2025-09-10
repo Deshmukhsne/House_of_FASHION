@@ -5,6 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Monthly Sales Report</title>
+  <link rel="icon" type="image/png" href="<?= base_url('assets/images/favicon.png') ?>">
   <style>
     :root {
       --primary-color: #B37B16;
@@ -26,7 +27,7 @@
 
     .main {
       width: 100%;
-      padding: 2rem;
+
       transition: var(--transition);
     }
 
@@ -217,20 +218,20 @@
       .main {
         padding: 1rem;
       }
-      
+
       .report-header {
         height: auto;
         padding: 1.5rem;
       }
-      
+
       .report-header h2 {
         font-size: 1.8rem;
       }
-      
+
       .report-header p {
         font-size: 1rem;
       }
-      
+
       .chart-body {
         height: 350px;
       }
@@ -240,26 +241,26 @@
       .stats-container {
         grid-template-columns: 1fr;
       }
-      
+
       .report-controls .row {
         flex-direction: column;
         gap: 1rem;
       }
-      
+
       .report-controls .col-md-5,
       .report-controls .col-md-2 {
         width: 100%;
         max-width: 100%;
       }
-      
+
       .stat-card {
         padding: 1.5rem;
       }
-      
+
       .stat-value {
         font-size: 1.8rem;
       }
-      
+
       .chart-body {
         height: 300px;
       }
@@ -269,50 +270,50 @@
       .main {
         padding: 0.5rem;
       }
-      
+
       .container.my-5 {
         margin-top: 1rem !important;
         margin-bottom: 1rem !important;
       }
-      
+
       .report-header {
         padding: 1rem;
         border-radius: 8px;
       }
-      
+
       .report-header h2 {
         font-size: 1.5rem;
       }
-      
+
       .report-header p {
         font-size: 0.9rem;
       }
-      
+
       .report-controls {
         padding: 1rem;
       }
-      
+
       .stat-card {
         padding: 1.25rem;
       }
-      
+
       .stat-value {
         font-size: 1.6rem;
       }
-      
+
       .stat-label {
         font-size: 0.85rem;
       }
-      
+
       .chart-header {
         padding: 1rem;
       }
-      
+
       .chart-body {
         padding: 1rem;
         height: 250px;
       }
-      
+
       .btn-primary {
         padding: 0.6rem 1.2rem;
         font-size: 0.85rem;
@@ -522,7 +523,7 @@
 
       // Create new chart
       window.monthlySalesChart = new Chart(ctx, config);
-      
+
       // Adjust chart on window resize
       window.addEventListener('resize', function() {
         if (window.monthlySalesChart instanceof Chart) {
@@ -531,25 +532,25 @@
       });
     });
   </script>
-     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        // Navbar  toggler
-        const toggler = document.querySelector(".toggler-btn");
-        const closeBtn = document.querySelector(".close-sidebar");
-        const sidebar = document.querySelector("#sidebar");
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    // Navbar  toggler
+    const toggler = document.querySelector(".toggler-btn");
+    const closeBtn = document.querySelector(".close-sidebar");
+    const sidebar = document.querySelector("#sidebar");
 
-        if (toggler && sidebar) {
-            toggler.addEventListener("click", function() {
-                sidebar.classList.toggle("collapsed");
-            });
-        }
+    if (toggler && sidebar) {
+      toggler.addEventListener("click", function() {
+        sidebar.classList.toggle("collapsed");
+      });
+    }
 
-        if (closeBtn && sidebar) {
-            closeBtn.addEventListener("click", function() {
-                sidebar.classList.remove("collapsed");
-            });
-        }
-    </script>
+    if (closeBtn && sidebar) {
+      closeBtn.addEventListener("click", function() {
+        sidebar.classList.remove("collapsed");
+      });
+    }
+  </script>
 </body>
 
 </html>

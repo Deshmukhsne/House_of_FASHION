@@ -45,7 +45,7 @@ class OrdersModel extends CI_Model
             'invoice_no'      => $invoice['invoice_no'],
             'customer_name'   => $invoice['customer_name'],
             'customer_mobile' => $invoice['customer_mobile'],
-            'alternate_mobile'=> $invoice['alternate_mobile'],
+            'alternate_mobile' => $invoice['alternate_mobile'],
             'invoice_date'    => $invoice['invoice_date'],
             'return_date'     => $item['return_date'],
             'item_name'       => $item['item_name'],
@@ -87,7 +87,7 @@ class OrdersModel extends CI_Model
     // Sales report
     public function get_product_sales()
     {
-       $this->db->select('
+        $this->db->select('
     c.name as category_name,
     p.name as item_name,
     p.mrp,

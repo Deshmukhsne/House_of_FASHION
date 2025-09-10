@@ -68,7 +68,7 @@
             <div class="container-fluid p-4">
                 <h2 class="text-dark">Bill & Invoices</h2>
 
-                <!-- Filter Form -->
+                <!-- Filter Form
                 <form action="<?= base_url('AdminController/filter_billing_history') ?>" method="get" class="row mb-3">
                     <div class="col-md-4 mb-2">
                         <label class="form-label">From Date:</label>
@@ -81,7 +81,8 @@
                     <div class="col-md-4 d-flex align-items-end">
                         <button type="submit" class="btn btn-primary w-100">Generate Request</button>
                     </div>
-                </form>
+                </form> -->
+
 
                 <!-- Billing Table -->
                 <div class="table-responsive">
@@ -119,8 +120,8 @@
                                                 onclick="goToConsent('<?= $inv['invoice_no'] ?>')">Print Consent</button>
 
 
-                                            <a href="<?= base_url('AdminController/delete_invoice/' . $inv['id']) ?>"
-                                                onclick="return confirm('Delete this invoice?')"
+                                            <a href="javascript:void(0);"
+                                                onclick="confirmDelete('<?= base_url('AdminController/delete_invoice/' . $inv['id']) ?>')"
                                                 class="btn btn-gold btn-sm me-1">Delete</a>
 
                                             <?php if ($inv['due_amount'] > 0): ?>
@@ -180,10 +181,10 @@
                                     <div class="mb-3">
                                         <label class="form-label">Payment Mode</label>
                                         <select class="form-select" name="payment_mode" id="paymentMode" required>
+                                            <option value="" disabled selected>Select Payment Mode</option>
                                             <option value="Cash">Cash</option>
-                                            <option value="Card">Card</option>
-                                            <option value="UPI">UPI</option>
-                                            <option value="Bank">Bank</option>
+
+                                            <option value="Online">Online</option>
                                         </select>
                                     </div>
                                 </div>
@@ -314,6 +315,36 @@
             $("#payDueModal").modal("show");
         });
     </script>
+    <script>
+        function confirmDelete(url) {
+            Swal.fire({
+                title: "Are you sure?",
+                text: "This action cannot be undone!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#d33",
+                cancelButtonColor: "#3085d6",
+                confirmButtonText: "Yes, delete it!"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = url; // Redirect to delete
+                }
+            });
+        }
+    </script>
+    <?php if ($this->session->flashdata('success')): ?>
+        <script>
+            Swal.fire({
+                icon: "success",
+                title: "<?= $this->session->flashdata('success'); ?>",
+                showConfirmButton: false,
+                timer: 1500
+            });
+        </script>
+    <?php endif; ?>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 </body>
 
 </html>

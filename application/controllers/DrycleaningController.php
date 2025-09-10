@@ -43,7 +43,7 @@ class DrycleaningController extends CI_Controller
             'product_name'    => $post['product_name'],
             'product_status'  => $post['product_status'] ?? 'In Cleaning',
             'forward_date'    => $post['forward_date'],
-            'return_date'     => $post['return_date'], // Use return_date instead of expected_return
+            'return_date'     => $post['return_date'],
             'status'          => 'Forwarded',
             'cleaning_notes'  => $post['cleaning_notes'] ?? null,
             'created_at'      => date('Y-m-d H:i:s'),
@@ -51,9 +51,9 @@ class DrycleaningController extends CI_Controller
         ];
 
         if ($this->DryCleaning_model->insert_forwarding($data)) {
-            // Update the original invoice item status to "Dry Clean"
-            $this->load->model('OrdersModel');
-            $this->OrdersModel->update_order_status($post['invoice_item_id'], 'Dry Clean');
+            // ✅ Update the invoice_items table status to "Drycleaning"
+            $this->db->where('id', $post['invoice_item_id']);
+            $this->db->update('invoice_items', ['status' => 'Drycleaning']);
 
             $this->session->set_flashdata('success', 'Dry cleaning forwarded successfully.');
         } else {
@@ -62,6 +62,7 @@ class DrycleaningController extends CI_Controller
 
         redirect('AdminController/drycleaning_status');
     }
+
 
     // View all dry cleaning records
     public function index()

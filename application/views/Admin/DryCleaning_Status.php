@@ -185,6 +185,7 @@
                                             <?php else: ?>
                                                 <button class="btn btn-stock btn-sm" <?= $item->status !== 'Returned' ? 'disabled' : '' ?>>Add in Stock</button>
                                             <?php endif; ?>
+
                                             <form method="post" action="<?= base_url('drycleaning/delete_drycleaning') ?>" style="display:inline;">
                                                 <input type="hidden" name="id" value="<?= $item->id ?>">
                                                 <button type="submit" class="btn btn-delete btn-sm">Delete</button>
@@ -268,7 +269,22 @@
                                     title: 'Added to Stock',
                                     text: `${productName} added successfully! Stock updated.`
                                 }).then(() => {
-                                    row.remove();
+                                    if (res.success) {
+                                        Swal.fire({
+                                            icon: 'success',
+                                            title: 'Added to Stock',
+                                            text: `${productName} added successfully! Stock updated.`
+                                        }).then(() => {
+                                            // ✅ Update status dropdown to "Completed"
+                                            let statusDropdown = row.find("select[name='status']");
+                                            statusDropdown.val("Completed");
+                                            statusDropdown.prop("disabled", true);
+
+                                            // ✅ Replace button with badge
+                                            row.find(".action-buttons").html('<span class="badge bg-success">Stock Added</span>');
+                                        });
+                                    }
+
                                 });
                             } else {
                                 Swal.fire({
@@ -382,6 +398,66 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const table = document.getElementById("cleaningTable");
+            const tbody = table.querySelector("tbody");
+            const rows = tbody.querySelectorAll("tr");
+            const rowsPerPage = 10; // 👈 change this value for rows per page
+            const totalRows = rows.length;
+            const totalPages = Math.ceil(totalRows / rowsPerPage);
+
+            let currentPage = 1;
+
+            function showPage(page) {
+                const start = (page - 1) * rowsPerPage;
+                const end = start + rowsPerPage;
+
+                rows.forEach((row, index) => {
+                    row.style.display = (index >= start && index < end) ? "" : "none";
+                });
+            }
+
+            function setupPagination() {
+                const pagination = document.createElement("div");
+                pagination.className = "d-flex justify-content-center mt-3";
+
+                const ul = document.createElement("ul");
+                ul.className = "pagination";
+
+                for (let i = 1; i <= totalPages; i++) {
+                    const li = document.createElement("li");
+                    li.className = "page-item " + (i === 1 ? "active" : "");
+                    const a = document.createElement("a");
+                    a.className = "page-link";
+                    a.href = "#";
+                    a.innerText = i;
+
+                    a.addEventListener("click", function(e) {
+                        e.preventDefault();
+                        currentPage = i;
+
+                        document.querySelectorAll(".pagination .page-item").forEach(item => item.classList.remove("active"));
+                        li.classList.add("active");
+
+                        showPage(currentPage);
+                    });
+
+                    li.appendChild(a);
+                    ul.appendChild(li);
+                }
+
+                pagination.appendChild(ul);
+                table.parentNode.appendChild(pagination);
+            }
+
+            // Initialize
+            if (totalRows > 0) {
+                showPage(currentPage);
+                setupPagination();
+            }
+        });
+    </script>
 
 
 </body>

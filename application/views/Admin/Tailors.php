@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Tailor Management</title>
+    <title>Tailors </title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <?php $this->load->view('CommonLinks'); ?>
     <link rel="stylesheet" href="<?= base_url('assets/style.css') ?>">
@@ -282,6 +282,25 @@
         });
     </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // Navbar  toggler
+        const toggler = document.querySelector(".toggler-btn");
+        const closeBtn = document.querySelector(".close-sidebar");
+        const sidebar = document.querySelector("#sidebar");
+
+        if (toggler && sidebar) {
+            toggler.addEventListener("click", function() {
+                sidebar.classList.toggle("collapsed");
+            });
+        }
+
+        if (closeBtn && sidebar) {
+            closeBtn.addEventListener("click", function() {
+                sidebar.classList.remove("collapsed");
+            });
+        }
+    </script>
     <?php if ($this->session->flashdata('swal')): ?>
         <script>
             Swal.fire({
@@ -292,6 +311,7 @@
             });
         </script>
     <?php endif; ?>
+
 
 </body>
 

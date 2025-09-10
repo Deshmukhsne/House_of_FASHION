@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Vendor Management</title>
+    <title>Vendors</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <?php $this->load->view('CommonLinks'); ?>
     <link rel="stylesheet" href="<?= base_url('assets/style.css') ?>">
@@ -41,65 +41,65 @@
             background-color: #343a40;
             color: #FFD27F;
         }
-        
+
         /* Responsive styles */
         .main {
             width: 100%;
             overflow-x: auto;
         }
-        
+
         .table-container {
             overflow-x: auto;
             width: 100%;
         }
-        
+
         @media (max-width: 768px) {
             .card-header {
                 flex-direction: column;
                 align-items: flex-start;
                 gap: 10px;
             }
-            
+
             .card-header h4 {
                 font-size: 1.2rem;
             }
-            
+
             .search-form .col-md-4,
             .search-form .col-md-3 {
                 width: 100%;
                 max-width: 100%;
                 flex: 0 0 100%;
             }
-            
-            .table th, 
+
+            .table th,
             .table td {
                 white-space: nowrap;
                 font-size: 0.85rem;
                 padding: 0.5rem;
             }
-            
+
             .action-buttons {
                 display: flex;
                 flex-wrap: nowrap;
             }
         }
-        
+
         @media (max-width: 576px) {
             .modal-dialog {
                 margin: 0.5rem;
             }
-            
+
             .modal-body .col-md-6,
             .modal-body .col-md-12 {
                 flex: 0 0 100%;
                 max-width: 100%;
             }
-            
+
             .container-fluid {
                 padding-left: 0.5rem;
                 padding-right: 0.5rem;
             }
-            
+
             .container.py-4 {
                 padding-top: 1rem !important;
                 padding-bottom: 1rem !important;
@@ -138,7 +138,7 @@
                                             <th>Name</th>
                                             <th>Email</th>
                                             <th>Mobile</th>
-                                            <th>Company</th>
+                                            <th>Type(DryCleaner/Tailor)</th>
                                             <th>Address</th>
                                             <th>Actions</th>
                                         </tr>
@@ -202,7 +202,7 @@
                                     <input type="text" name="mobile" class="form-control" placeholder="Mobile" required>
                                 </div>
                                 <div class="col-12 col-md-6">
-                                    <input type="text" name="company" class="form-control" placeholder="Company" required>
+                                    <input type="text" name="company" class="form-control" placeholder="DryCleaner/Tailor" required>
                                 </div>
                                 <div class="col-12">
                                     <input type="text" name="address" class="form-control" placeholder="Address" required>
@@ -239,7 +239,7 @@
                                         <input type="text" class="form-control" name="mobile" id="edit_mobile" required>
                                     </div>
                                     <div class="col-12 col-md-6">
-                                        <label>Company</label>
+                                        <label>Type(DryCleaner/Vendor)</label>
                                         <input type="text" class="form-control" name="company" id="edit_company" required>
                                     </div>
                                     <div class="col-12">
@@ -316,7 +316,7 @@
             });
         });
     </script>
-     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         // Navbar  toggler
         const toggler = document.querySelector(".toggler-btn");

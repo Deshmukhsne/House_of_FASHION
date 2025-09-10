@@ -1,5 +1,5 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
+defined('BASEPATH') or exit('No direct script access allowed');
 
 class Billing_model extends CI_Model
 {
@@ -27,9 +27,9 @@ class Billing_model extends CI_Model
     public function get_payments_by_invoice($invoice_id)
     {
         return $this->db->where('invoice_id', $invoice_id)
-                        ->order_by('paid_at', 'ASC')
-                        ->get('invoice_payments')
-                        ->result_array();
+            ->order_by('paid_at', 'ASC')
+            ->get('invoice_payments')
+            ->result_array();
     }
 
     /**
@@ -61,8 +61,8 @@ class Billing_model extends CI_Model
     public function get_categories()
     {
         return $this->db->order_by('name', 'ASC')
-                        ->get('categories')
-                        ->result_array();
+            ->get('categories')
+            ->result_array();
     }
 
     public function get_categories_map()
@@ -103,10 +103,10 @@ class Billing_model extends CI_Model
     public function get_products_by_category($category_id)
     {
         return $this->db->select('id, name, price, stock, status')
-                        ->from('products')
-                        ->where('category_id', $category_id)
-                        ->order_by('name','ASC')
-                        ->get()->result_array();
+            ->from('products')
+            ->where('category_id', $category_id)
+            ->order_by('name', 'ASC')
+            ->get()->result_array();
     }
 
     /* -------- BILLING HISTORY / DETAILS -------- */
@@ -115,9 +115,9 @@ class Billing_model extends CI_Model
         if ($from) $this->db->where('invoice_date >=', $from);
         if ($to)   $this->db->where('invoice_date <=', $to);
 
-        return $this->db->order_by('id','DESC')
-                        ->get('invoices')
-                        ->result_array();
+        return $this->db->order_by('id', 'DESC')
+            ->get('invoices')
+            ->result_array();
     }
 
     public function get_invoice_by_id($id)
@@ -125,8 +125,8 @@ class Billing_model extends CI_Model
         $inv = $this->db->where('id', $id)->get('invoices')->row_array();
         if ($inv) {
             $inv['items'] = $this->db->where('invoice_id', $id)
-                                     ->get('invoice_items')
-                                     ->result_array();
+                ->get('invoice_items')
+                ->result_array();
         }
         return $inv;
     }

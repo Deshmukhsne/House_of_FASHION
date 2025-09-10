@@ -296,8 +296,8 @@
                             <td><?php echo htmlspecialchars($item['quantity']); ?></td>
                             <td><?php echo htmlspecialchars($item['rental_date']); ?></td>
                             <td><?php echo htmlspecialchars($item['return_date']); ?></td>
-                            <td>Rs<?php echo number_format($item['price'], 2); ?></td>
-                            <td>Rs<?php echo number_format($item['total'], 2); ?></td>
+                            <td>Rs <?php echo number_format($item['price'], 2); ?></td>
+                            <td>Rs <?php echo number_format($item['total'], 2); ?></td>
                         </tr>
                     <?php endforeach; ?>
                 </tbody>
@@ -335,7 +335,7 @@
                     <canvas id="signatureCanvas"></canvas>
                     <div class="signature-actions">
                         <button id="clearSignature" class="btn btn-secondary">Clear Signature</button>
-                        <button id="undoSignature" class="btn btn-outline-secondary">Undo</button>
+
                     </div>
                     <div id="signatureStatus" class="signature-status">Please sign above</div>
                 </div>

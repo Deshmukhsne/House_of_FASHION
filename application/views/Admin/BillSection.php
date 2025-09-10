@@ -3,11 +3,12 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Billing Dashboard</title>
+    <title>Bill Section</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <?php $this->load->view('CommonLinks'); ?>
     <link rel="stylesheet" href="<?= base_url('assets/style.css') ?>" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="icon" type="image/png" href="<?= base_url('assets/images/favicon.png') ?>">
     <style>
         :root {
             --primary-color: #D4AF37;
@@ -53,7 +54,7 @@
             font-weight: 600;
             color: var(--secondary-color);
             display: block;
-            margin-bottom: .3rem;
+            margin-bottom: .5rem;
         }
 
         .form-section-title {
@@ -101,51 +102,51 @@
     </style>
 
     <style>
-    /* Responsive table container */
-    .table-responsive-container {
-        width: 100%;
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-        margin-bottom: 1rem;
-        border-radius: 8px;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-    }
+        /* Responsive table container */
+        .table-responsive-container {
+            width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            margin-bottom: 1rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
 
-    /* Small devices (phones, 576px and down) */
-    @media (max-width: 576px) {
-        .table {
-            font-size: 0.8rem;
-        }
-        
-        .table th, 
-        .table td {
-            padding: 0.5rem;
-        }
-        
-        .btn-sm {
-            padding: 0.25rem 0.5rem;
-            font-size: 0.7rem;
-        }
-    }
+        /* Small devices (phones, 576px and down) */
+        @media (max-width: 576px) {
+            .table {
+                font-size: 0.8rem;
+            }
 
-    /* Extra small devices (phones, 400px and down) */
-    @media (max-width: 400px) {
-        .table {
-            font-size: 0.75rem;
+            .table th,
+            .table td {
+                padding: 0.5rem;
+            }
+
+            .btn-sm {
+                padding: 0.25rem 0.5rem;
+                font-size: 0.7rem;
+            }
         }
-        
-        .table th, 
-        .table td {
-            padding: 0.3rem;
+
+        /* Extra small devices (phones, 400px and down) */
+        @media (max-width: 400px) {
+            .table {
+                font-size: 0.75rem;
+            }
+
+            .table th,
+            .table td {
+                padding: 0.3rem;
+            }
+
+            .form-select,
+            .form-control {
+                padding: 0.25rem;
+                font-size: 0.75rem;
+            }
         }
-        
-        .form-select, 
-        .form-control {
-            padding: 0.25rem;
-            font-size: 0.75rem;
-        }
-    }
-</style>
+    </style>
 </head>
 
 <body>
@@ -155,8 +156,9 @@
             <?php $this->load->view('include/navbar'); ?>
             <div class="container-fluid p-4">
                 <div class="container my-5">
+                    <h4>RENTAL INVOICE</h4>
                     <div class="bill-card">
-                        <h4>RENTAL INVOICE</h4>
+
                         <?php if ($this->session->flashdata('error')): ?>
                             <script>
                                 Swal.fire({
@@ -188,38 +190,39 @@
                                 </div>
                                 <div class="col-md-3">
                                     <label>Customer Name:</label>
-                                    <input type="text" name="customerName" id="customerName" class="form-control" required />
+                                    <input type="text" name="customerName" id="customerName" class="form-control" placeholder="Enter Name" required />
                                 </div>
                                 <div class="col-md-3">
                                     <label>Customer Mobile No:</label>
-                                    <input type="text" name="customerMobile" id="customerMobile" class="form-control" maxlength="15" required />
+                                    <input type="text" name="customerMobile" id="customerMobile" class="form-control" maxlength="15" placeholder="Enter Mobile" required />
                                 </div>
                                 <div class="col-md-3">
                                     <label>Alternate Mobile No:</label>
-                                    <input type="text" name="alternateMobile" id="alternateMobile" class="form-control" maxlength="15" required />
+                                    <input type="text" name="alternateMobile" id="alternateMobile" class="form-control" placeholder="Enter Alternate Mobile" maxlength="15" required />
                                 </div>
 
-                            <div class="row mb-4">
-                                <div class="col-md-3">
-                                    <label>Rental Date</label>
-                                    <input type="date" id="commonRentalDate" class="form-control date-highlight" value="<?= date('Y-m-d') ?>">
-                                </div>
-                                <div class="col-md-3">
-                                    <label>Return Date</label>
-                                    <input type="date" id="commonReturnDate" class="form-control date-highlight" value="<?= date('Y-m-d', strtotime('+1 day')) ?>">
-                                </div>
-                                <div class="col-md-3 d-flex align-items-end">
-                                    <div class="form-check mt-3">
-                                        <input type="checkbox" id="applyCommonDates" class="form-check-input" />
-                                        <label class="form-check-label" for="applyCommonDates">Apply to all rows</label>
+                                <div class="row mb-4">
+                                    <div class="col-md-3">
+                                        <label>Rental Date</label>
+                                        <input type="date" id="commonRentalDate" class="form-control date-highlight" value="<?= date('Y-m-d') ?>">
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label>Return Date</label>
+                                        <input type="date" id="commonReturnDate" class="form-control date-highlight" value="<?= date('Y-m-d', strtotime('+1 day')) ?>">
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        <label>Rental Days</label>
+                                        <input type="number" name="rentalDays" id="rentalDays" class="form-control" readonly />
+                                    </div>
+                                    <div class="col-md-3 d-flex align-items-end">
+                                        <div class="form-check mt-3">
+                                            <input type="checkbox" id="applyCommonDates" class="form-check-input" />
+                                            <label class="form-check-label" for="applyCommonDates">Apply to all rows</label>
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="col-md-3">
-                                    <label>Rental Days</label>
-                                    <input type="number" name="rentalDays" id="rentalDays" class="form-control" readonly />
-                                </div>
-                            </div>
-                             <div class="col-md-3 mt-3">
+                                <div class="col-md-3 mt-3">
                                     <label for="staff_id">Select Staff</label>
                                     <select name="staff_name" id="staff_id" class="form-control" required>
                                         <option value="">Select Staff</option>
@@ -234,12 +237,12 @@
                                         <?php endif; ?>
                                     </select>
                                 </div>
-                                
+
                                 <div class="col-md-3 mt-3">
                                     <label>Deposit Amount (₹):</label>
                                     <input type="number" name="depositAmount" id="depositAmount" class="form-control" min="0" step="0.01" value="0" oninput="updateBalance()" />
                                 </div>
-                            
+
                                 <div class="col-md-3  mt-3">
                                     <label>Payment Mode:</label>
                                     <select name="paymentMode" id="paymentMode" class="form-select">
@@ -250,7 +253,7 @@
                                     </select>
                                 </div>
                             </div>
-                            
+
                             <!-- Items Table -->
                             <div class="table-responsive-container">
                                 <table class="table table-bordered align-middle">
@@ -295,7 +298,7 @@
                                 </table>
                                 <button class="btn btn-sm btn-gold" type="button" onclick="addRow()">+ Add Item</button>
                             </div>
-                            
+
                             <!-- Summary -->
                             <div class="row summary-section">
                                 <div class="col-md-6 offset-md-6">
@@ -321,11 +324,11 @@
                                     </div>
                                 </div>
                             </div>
-                            
+
                             <!-- Hidden totals -->
                             <input type="hidden" name="totalAmount" id="totalAmountInput">
                             <input type="hidden" name="totalPayable" id="totalPayableInput">
-                            
+
                             <div class="text-center mt-4">
                                 <button class="btn btn-gold px-4 py-2" type="submit">Save Invoice</button>
                                 <button class="btn btn-outline-secondary px-4 py-2" type="button" onclick="resetForm()">Clear</button>
@@ -339,7 +342,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    
+
     <script>
         // Product data from PHP
         const PRODUCTS = <?php
@@ -373,10 +376,10 @@
             const rentalDate = tr.querySelector('.rental-date').value;
             const returnDate = tr.querySelector('.return-date').value;
             const daysInput = tr.querySelector('.days');
-            
+
             const days = calculateDays(rentalDate, returnDate);
             daysInput.value = days;
-            
+
             // Update the row total
             updateRowTotal(daysInput);
         }
@@ -385,7 +388,7 @@
         function applyDatesToAllRows() {
             const applyCommon = document.getElementById('applyCommonDates').checked;
             if (!applyCommon) return;
-            
+
             const rentalDate = document.getElementById('commonRentalDate').value;
             const returnDate = document.getElementById('commonReturnDate').value;
 
@@ -393,7 +396,7 @@
                 const rentalInput = row.querySelector('.rental-date');
                 const returnInput = row.querySelector('.return-date');
                 const daysInput = row.querySelector('.days');
-                
+
                 if (rentalInput && returnInput) {
                     rentalInput.value = rentalDate;
                     returnInput.value = returnDate;
@@ -405,7 +408,7 @@
                     }
                 }
             });
-            
+
             // Update the overall rental days display
             document.getElementById('rentalDays').value = calculateDays(rentalDate, returnDate);
         }
@@ -437,10 +440,10 @@
                 <td><button type="button" class="btn btn-sm btn-danger" onclick="removeRow(this)">Remove</button></td>
             `;
             tbody.appendChild(newRow);
-            
+
             // Apply common dates if the checkbox is checked
             applyDatesToAllRows();
-            
+
             // Enable remove buttons for all rows except the first one
             updateRemoveButtons();
         }
@@ -459,7 +462,7 @@
         function updateRemoveButtons() {
             const tbody = document.getElementById('itemTable');
             const rows = tbody.children;
-            
+
             for (let i = 0; i < rows.length; i++) {
                 const removeBtn = rows[i].querySelector('.btn-danger');
                 if (removeBtn) {
@@ -613,15 +616,15 @@
                         </td>
                     </tr>
                 `;
-                
+
                 // Reset common dates
                 document.getElementById('commonRentalDate').value = '<?= date('Y-m-d') ?>';
                 document.getElementById('commonReturnDate').value = '<?= date('Y-m-d', strtotime('+1 day')) ?>';
                 document.getElementById('rentalDays').value = calculateDays(
-                    document.getElementById('commonRentalDate').value, 
+                    document.getElementById('commonRentalDate').value,
                     document.getElementById('commonReturnDate').value
                 );
-                
+
                 updateAllTotals();
                 updateRemoveButtons();
             }
@@ -636,24 +639,24 @@
                 document.getElementById('rentalDays').value = calculateDays(rentalDate, returnDate);
                 applyDatesToAllRows();
             });
-            
+
             document.getElementById('commonReturnDate').addEventListener('change', function() {
                 const rentalDate = document.getElementById('commonRentalDate').value;
                 const returnDate = this.value;
                 document.getElementById('rentalDays').value = calculateDays(rentalDate, returnDate);
                 applyDatesToAllRows();
             });
-            
+
             document.getElementById('applyCommonDates').addEventListener('change', applyDatesToAllRows);
-            
+
             // Set initial rental days
             const rentalDate = document.getElementById('commonRentalDate').value;
             const returnDate = document.getElementById('commonReturnDate').value;
             document.getElementById('rentalDays').value = calculateDays(rentalDate, returnDate);
-            
+
             // Initialize remove buttons state
             updateRemoveButtons();
-            
+
             // Apply dates to all rows if checkbox is checked
             applyDatesToAllRows();
         });
@@ -734,7 +737,7 @@
             this.submit();
         });
     </script>
-    
+
     <script>
         // Sidebar toggle functionality
         const toggler = document.querySelector(".toggler-btn");
@@ -743,6 +746,28 @@
         if (toggler && sidebar) toggler.addEventListener("click", () => sidebar.classList.toggle("collapsed"));
         if (closeBtn && sidebar) closeBtn.addEventListener("click", () => sidebar.classList.remove("collapsed"));
     </script>
+
+    <script>
+        // Allow only letters and spaces in Customer Name
+        document.getElementById("customerName").addEventListener("input", function() {
+            this.value = this.value.replace(/[^A-Za-z\s]/g, "");
+        });
+
+        // Allow only digits in Customer Mobile No
+        document.getElementById("customerMobile").addEventListener("input", function() {
+            this.value = this.value.replace(/[^0-9]/g, "");
+        });
+
+        // Allow only digits in Alternate Mobile No
+        document.getElementById("alternateMobile").addEventListener("input", function() {
+            this.value = this.value.replace(/[^0-9]/g, "");
+        });
+    </script>
+
+
+
+
+
 </body>
 
 </html>
