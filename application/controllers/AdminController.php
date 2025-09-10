@@ -20,6 +20,7 @@ class AdminController extends CI_Controller
         $this->load->model('DryCleaning_model');
         $this->load->model('Billing_model');
         $this->load->model('Tailor_model');
+        $this->load->model('Staff_model');
     }
 
     public function index()
@@ -100,6 +101,13 @@ class AdminController extends CI_Controller
                 'message' => 'Failed to save signature'
             ]);
         }
+    }
+    public function updateToDryClean($invoiceId)
+    {
+        $this->db->where('invoice_id', $invoiceId);
+        $updated = $this->db->update('invoice_items', ['status' => 'Drycleaning']);
+
+        echo json_encode(['success' => $updated]);
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -286,14 +294,75 @@ class AdminController extends CI_Controller
         $this->load->view('Admin/StaffManagement');
     }
 
+
+    // Show Staff Management Page
     public function StaffManagement()
     {
         $search = $this->input->get('search');
-        $role   = $this->input->get('role');
-        $data['staffs'] = $this->Admin_Model->get_all_staffs($search, $role);
+
+        if (!empty($search)) {
+            $this->db->like('name', $search);
+            $data['staffs'] = $this->db->get('staff')->result();
+        } else {
+            $data['staffs'] = $this->Staff_model->getAll();
+        }
+
         $this->load->view('Admin/StaffManagement', $data);
     }
 
+    // Insert Staff
+    public function add_staff()
+    {
+        $data = [
+            'name'         => $this->input->post('name'),
+            'email'        => $this->input->post('email'),
+            'phone'        => $this->input->post('phone'),
+            'address'      => $this->input->post('address'),
+            'joining_date' => $this->input->post('joining_date'),
+        ];
+
+        if ($this->Staff_model->insert($data)) {
+            $this->session->set_flashdata('success', 'Staff added successfully.');
+        } else {
+            $this->session->set_flashdata('error', 'Failed to add staff.');
+        }
+
+        redirect('AdminController/StaffManagement');
+    }
+
+    // Update Staff
+    public function update_staff()
+    {
+        $id = $this->input->post('id');
+
+        $data = [
+            'name'         => $this->input->post('name'),
+            'email'        => $this->input->post('email'),
+            'phone'        => $this->input->post('phone'),
+            'address'      => $this->input->post('address'),
+            'joining_date' => $this->input->post('joining_date'),
+        ];
+
+        if ($this->Staff_model->update($id, $data)) {
+            $this->session->set_flashdata('success', 'Staff updated successfully.');
+        } else {
+            $this->session->set_flashdata('error', 'Failed to update staff.');
+        }
+
+        redirect('AdminController/StaffManagement');
+    }
+
+    // Delete Staff
+    public function delete_staff($id)
+    {
+        if ($this->Staff_model->delete($id)) {
+            $this->session->set_flashdata('success', 'Staff deleted successfully.');
+        } else {
+            $this->session->set_flashdata('error', 'Failed to delete staff.');
+        }
+
+        redirect('AdminController/StaffManagement');
+    }
     public function saveStaff()
     {
         $data = [
@@ -595,7 +664,7 @@ class AdminController extends CI_Controller
     public function delete_invoice($id)
     {
         $this->Billing_model->delete_invoice((int)$id);
-        $this->session->set_flashdata('success', 'Invoice deleted.');
+        $this->session->set_flashdata('success', 'Invoice deleted successfully!');
         // Redirect to BillHistory (case-sensitive, matches route)
         redirect('AdminController/BillHistory');
     }

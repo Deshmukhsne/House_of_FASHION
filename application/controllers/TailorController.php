@@ -14,19 +14,25 @@ class TailorController extends CI_Controller
 
     public function save()
     {
+        $post = $this->input->post();
+
         $data = array(
-            'product_id'         => $this->input->post('invoice_item_id'),
-            'tailor_id'          => $this->input->post('tailor_id'),
-            'tailor_name'        => $this->input->post('tailor_name'),
-            'alteration_type'    => $this->input->post('alteration_type'),
-            'return_date'        => $this->input->post('return_date'),
-            'tailor_instructions' => $this->input->post('tailor_instructions'),
-            'status'             => $this->input->post('product_status')
+            'product_id'          => $post['invoice_item_id'],
+            'tailor_id'           => $post['tailor_id'],
+            'tailor_name'         => $post['tailor_name'],
+            'alteration_type'     => $post['alteration_type'],
+            'return_date'         => $post['return_date'],
+            'tailor_instructions' => $post['tailor_instructions'],
+            'status'              => $post['product_status'] ?? 'Tailoring'
         );
 
         $result = $this->TailorModel->saveTailorHistory($data);
 
         if ($result) {
+            // ✅ Update invoice_items.status to "Tailoring"
+            $this->db->where('id', $post['invoice_item_id']);
+            $this->db->update('invoice_items', ['status' => 'Tailoring']);
+
             $this->session->set_flashdata('tailor_success', 'Product forwarded to tailor successfully!');
         } else {
             $this->session->set_flashdata('tailor_error', 'Failed to forward product to tailor.');
@@ -34,6 +40,7 @@ class TailorController extends CI_Controller
 
         redirect('AdminController/tailor_history'); // adjust as per your route
     }
+
 
     public function form()
     {

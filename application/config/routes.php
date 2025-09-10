@@ -1,5 +1,5 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
+defined('BASEPATH') or exit('No direct script access allowed');
 
 /*
 | -------------------------------------------------------------------------
@@ -52,7 +52,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 $route['default_controller'] = 'index';
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;
-$route['dashboard'] ='AdminController/dashboard';
+$route['dashboard'] = 'AdminController/dashboard';
 $route['customers'] = 'AdminController/customers';
 
 $route['customers/add'] = 'AdminController/add_customer';
@@ -65,8 +65,35 @@ $route['customers/export_pdf'] = 'AdminController/export_pdf_view';
 $route['AdminController/view_invoice/(:num)'] = 'AdminController/view_invoice/$1';
 $route['AdminController/pay_due_amount'] = 'AdminController/pay_due_amount';
 $route['updateOrderStatus'] = 'AdminController/updateOrderStatus';
+$route['Login'] = 'index.php/AdminController/dashboard';
+// Dashboard
+$route['dashboard'] = 'AdminController/Dashboard';
 
+// Stock
+$route['stock'] = 'AdminController/ProductInventory';
 
+// Billing
+$route['billing'] = 'AdminController/Billing';
+$route['billing-history'] = 'AdminController/BillHistory';
 
+// Orders
+$route['orders'] = 'AdminController/Orders';
 
+// Vendor Management
+$route['vendors'] = 'AdminController/Vendors';
+$route['tailors'] = 'AdminController/Tailors';
+$route['dry-status'] = 'AdminController/DryCleaning_Status';
+$route['tailor-status'] = 'AdminController/tailor_history';
 
+// Reports
+$route['daily-report'] = 'AdminController/DailyReport';
+$route['monthly-report'] = 'AdminController/MonthlyReport';
+
+// Staff Management
+$route['staff'] = 'AdminController/StaffManagement';
+
+// Profile
+$route['profile'] = 'AdminController/Profile';
+
+// Login / Logout
+$route['login'] = 'AdminController/login';

@@ -256,94 +256,95 @@
         <!-- Orders Table -->
         <div class="table-responsive">
           <table class="table table-hover table-bordered align-middle mt-3" id="ordersTableContainer">
-    <thead class="table-dark">
-        <tr>
-            <th>Sr. No</th>
-            <th>Invoice ID</th>
-            <th>Customer</th>
-            <th>Mobile</th>
-            <th>Product</th>
-            <th>Category</th>
-            <th>Qty</th>
-            <th>Issue Date</th>
-            <th>Return Date</th>
-            <th>Price</th>
-            <th>Status</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        <?php
-        // Initialize variables
-        $sr = 1; // Serial number starts from 1
-        $today = isset($today) ? $today : new DateTime();
-        $tomorrow = clone $today;
-        $tomorrow->modify('+1 day');
-        $reminderCustomers = isset($reminderCustomers) ? $reminderCustomers : [];
+            <thead class="table-dark">
+              <tr>
+                <th>Sr. No</th>
+                <th>Invoice ID</th>
+                <th>Customer</th>
+                <th>Mobile</th>
+                <th>Product</th>
+                <th>Category</th>
+                <th>Qty</th>
+                <th>Issue Date</th>
+                <th>Return Date</th>
+                <th>Price</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <?php
+              // Initialize variables
+              $sr = 1; // Serial number starts from 1
+              $today = isset($today) ? $today : new DateTime();
+              $tomorrow = clone $today;
+              $tomorrow->modify('+1 day');
+              $reminderCustomers = isset($reminderCustomers) ? $reminderCustomers : [];
 
-        if (!empty($orders)) :
-            foreach ($orders as $order) :
-                $highlight = "";
-                $statusClass = "";
-                $statusText = $order['status'];
+              if (!empty($orders)) :
+                foreach ($orders as $order) :
+                  $highlight = "";
+                  $statusClass = "";
+                  $statusText = $order['status'];
 
-                // Check if return date is valid and not empty
-                $isValidReturnDate = (!empty($order['return_date']) && $order['return_date'] != "0000-00-00");
+                  // Check if return date is valid and not empty
+                  $isValidReturnDate = (!empty($order['return_date']) && $order['return_date'] != "0000-00-00");
 
-                // Highlight available items in green
-                if ($order['status'] == 'Available') {
+                  // Highlight available items in green
+                  if ($order['status'] == 'Available') {
                     $highlight = "highlight-available";
-                }
-                // Check for due dates if rented
-                elseif ($order['status'] == "Rented" && $isValidReturnDate) {
+                  }
+                  // Check for due dates if rented
+                  elseif ($order['status'] == "Rented" && $isValidReturnDate) {
                     try {
-                        $returnDate = new DateTime($order['return_date']);
+                      $returnDate = new DateTime($order['return_date']);
 
-                        // Check if return date is today (red)
-                        if ($returnDate->format('Y-m-d') == $today->format('Y-m-d')) {
-                            $highlight = "highlight-today";
-                            $statusClass = "status-overdue";
-                            $statusText = "Due Today";
-                            $reminderCustomers[] = $order['customer_name'];
-                        }
-                        // Check if return date is tomorrow (yellow)
-                        elseif ($returnDate->format('Y-m-d') == $tomorrow->format('Y-m-d')) {
-                            $highlight = "highlight-tomorrow";
-                            $statusClass = "status-rented";
-                            $statusText = "Due Tomorrow";
-                            $reminderCustomers[] = $order['customer_name'];
-                        }
-                        // Check if return date is in the past (overdue)
-                        elseif ($returnDate < $today) {
-                            $highlight = "highlight-overdue";
-                            $statusClass = "status-overdue";
-                            $statusText = "Overdue";
-                            $reminderCustomers[] = $order['customer_name'];
-                        }
+                      // Check if return date is t
+                      // oday (red)
+                      if ($returnDate->format('Y-m-d') == $today->format('Y-m-d')) {
+                        $highlight = "highlight-today";
+                        $statusClass = "status-overdue";
+                        $statusText = "Due Today";
+                        $reminderCustomers[] = $order['customer_name'];
+                      }
+                      // Check if return date is tomorrow (yellow)
+                      elseif ($returnDate->format('Y-m-d') == $tomorrow->format('Y-m-d')) {
+                        $highlight = "highlight-tomorrow";
+                        $statusClass = "status-rented";
+                        $statusText = "Due Tomorrow";
+                        $reminderCustomers[] = $order['customer_name'];
+                      }
+                      // Check if return date is in the past (overdue)
+                      elseif ($returnDate < $today) {
+                        $highlight = "highlight-overdue";
+                        $statusClass = "status-overdue";
+                        $statusText = "Overdue";
+                        $reminderCustomers[] = $order['customer_name'];
+                      }
                     } catch (Exception $e) {
-                        // Handle invalid date format
-                        $highlight = "";
+                      // Handle invalid date format
+                      $highlight = "";
                     }
-                } else {
+                  } else {
                     switch ($order['status']) {
-                        case 'Available':
-                            $statusClass = 'status-available';
-                            break;
-                        case 'Rented':
-                            $statusClass = 'status-rented';
-                            break;
-                        case 'Dry Clean':
-                            $statusClass = 'status-dryclean';
-                            break;
-                        case 'Returned':
-                            $statusClass = 'status-returned';
-                            break;
-                        default:
-                            $statusClass = 'status-available';
+                      case 'Available':
+                        $statusClass = 'status-available';
+                        break;
+                      case 'Rented':
+                        $statusClass = 'status-rented';
+                        break;
+                      case 'Dry Clean':
+                        $statusClass = 'status-dryclean';
+                        break;
+                      case 'Returned':
+                        $statusClass = 'status-returned';
+                        break;
+                      default:
+                        $statusClass = 'status-available';
                     }
-                }
-                ?>
-                <tr class="<?= $highlight ?>">
+                  }
+              ?>
+                  <tr class="<?= $highlight ?>">
                     <td><?= $sr++; ?></td>
                     <td data-label="Order ID"><?= $order['invoice_id'] ?></td>
                     <td data-label="Customer"><?= $order['customer_name'] ?></td>
@@ -355,50 +356,50 @@
                     <td data-label="Return Date"><?= $isValidReturnDate ? $order['return_date'] : 'N/A' ?></td>
                     <td data-label="Price">₹<?= $order['price'] ?></td>
                     <td data-label="Status">
-                        <span class="status-badge <?= $statusClass ?>"><?= $statusText ?></span>
+                      <span class="status-badge <?= $statusClass ?>"><?= $statusText ?></span>
                     </td>
                     <td data-label="Actions">
-                        <?php if ($order['status'] == 'Returned' && $order['main_category'] == 'Cloths'): ?>
-                            <div class="d-flex flex-wrap">
-                                <button class="btn btn-warning btn-sm btn-action"
-                                    onclick="forwardToDryClean('<?= $order['invoice_id'] ?>')">
-                                    Dry Clean
-                                </button>
-                                <button class="btn btn-info btn-sm btn-action"
-                                    onclick="forwardToTailor('<?= $order['invoice_id'] ?>') ">
-                                    Tailor
-                                </button>
-                            </div>
-                        <?php elseif ($order['status'] == 'Returned' && $order['main_category'] != 'Cloths'): ?>
-                            <button class="btn btn-success btn-sm btn-action"
-                                onclick="addToStock('<?= $order['invoice_id'] ?>', '<?= $order['item_name'] ?>')">
-                                Add to Stock
-                            </button>
-                        <?php else: ?>
-                            <select name="status" class="form-select form-select-sm"
-                                onchange="updateStatus(this.value, '<?= $order['invoice_id'] ?>', '<?= $order['item_name'] ?>')">
-                                <option value="Available" <?= ($order['status'] == 'Available') ? 'selected' : '' ?>>Available</option>
-                                <option value="Rented" <?= ($order['status'] == 'Rented') ? 'selected' : '' ?>>Rented</option>
-                                <option value="Dry Clean" <?= ($order['status'] == 'Dry Clean') ? 'selected' : '' ?>>Dry Clean</option>
-                                <option value="Returned" <?= ($order['status'] == 'Returned') ? 'selected' : '' ?>>Returned</option>
-                            </select>
-                        <?php endif; ?>
-
-                        <div class="mt-2 d-flex flex-wrap">
-                            <button class="btn btn-primary btn-sm btn-action">Edit</button>
-                            <button class="btn btn-danger btn-sm btn-action">Delete</button>
+                      <?php if ($order['status'] == 'Returned' && $order['main_category'] == 'Cloths'): ?>
+                        <div class="d-flex flex-wrap">
+                          <button class="btn btn-warning btn-sm btn-action"
+                            onclick="forwardToDryClean('<?= $order['invoice_item_id'] ?>')">
+                            Dry Clean
+                          </button>
+                          <button class="btn btn-info btn-sm btn-action"
+                            onclick="forwardToTailor('<?= $order['invoice_item_id'] ?>') ">
+                            Tailor
+                          </button>
                         </div>
+                      <?php elseif ($order['status'] == 'Returned' && $order['main_category'] != 'Cloths'): ?>
+                        <button class="btn btn-success btn-sm btn-action"
+                          onclick="addToStock('<?= $order['invoice_id'] ?>', '<?= $order['item_name'] ?>')">
+                          Add to Stock
+                        </button>
+                      <?php else: ?>
+                        <select name="status" class="form-select form-select-sm"
+                          onchange="updateStatus(this.value, '<?= $order['invoice_id'] ?>', '<?= $order['item_name'] ?>')">
+                          <option value="Available" <?= ($order['status'] == 'Available') ? 'selected' : '' ?>>Available</option>
+                          <option value="Rented" <?= ($order['status'] == 'Rented') ? 'selected' : '' ?>>Rented</option>
+                          <option value="Dry Clean" <?= ($order['status'] == 'Dry Clean') ? 'selected' : '' ?>>Dry Clean</option>
+                          <option value="Returned" <?= ($order['status'] == 'Returned') ? 'selected' : '' ?>>Returned</option>
+                        </select>
+                      <?php endif; ?>
+
+                      <!-- <div class="mt-2 d-flex flex-wrap">
+                        <button class="btn btn-primary btn-sm btn-action">Edit</button>
+                        <button class="btn btn-danger btn-sm btn-action">Delete</button>
+                      </div> -->
                     </td>
+                  </tr>
+                <?php
+                endforeach;
+              else: ?>
+                <tr>
+                  <td colspan="12" class="text-center py-4">No Orders Found</td>
                 </tr>
-            <?php
-            endforeach;
-        else: ?>
-            <tr>
-                <td colspan="12" class="text-center py-4">No Orders Found</td>
-            </tr>
-        <?php endif; ?>
-    </tbody>
-</table>
+              <?php endif; ?>
+            </tbody>
+          </table>
 
         </div>
 

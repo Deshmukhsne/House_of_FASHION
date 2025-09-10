@@ -85,7 +85,7 @@
                     <div class="row justify-content-center">
                         <div class="col-md-6 col-sm-12">
                             <div class="card p-4">
-                                <h4 class="text-center mb-4">Change Password</h4>
+                                <h4 class="text-center mb-4">Change Admin Password</h4>
 
                                 <!-- Flash Messages -->
                                 <?php if ($this->session->flashdata('success')): ?>

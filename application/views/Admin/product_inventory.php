@@ -182,7 +182,7 @@
                                             <th>Image</th>
                                             <th>Name</th>
                                             <th>Rent(Rs)</th>
-                                            <th>MRP(Rs)</th> 
+                                            <th>MRP(Rs)</th>
                                             <th>Category</th>
                                             <th>Main Category</th>
                                             <th>Stock</th>
@@ -242,6 +242,12 @@
                                         <?php endforeach; ?>
                                     </tbody>
                                 </table>
+                                <div class="d-flex justify-content-center mt-3">
+                                    <nav>
+                                        <ul class="pagination" id="pagination"></ul>
+                                    </nav>
+                                </div>
+
                             </div>
                         </div>
                     </div>
@@ -587,6 +593,50 @@
                         if (name !== "" && !existingNames.includes(name)) {
                             existingNames.push(name);
                         }
+                    });
+                </script>
+                <script>
+                    document.addEventListener("DOMContentLoaded", function() {
+                        const rows = document.querySelectorAll("tbody tr");
+                        const rowsPerPage = 10;
+                        const pagination = document.getElementById("pagination");
+
+                        function showPage(page) {
+                            const start = (page - 1) * rowsPerPage;
+                            const end = start + rowsPerPage;
+
+                            rows.forEach((row, index) => {
+                                row.style.display = (index >= start && index < end) ? "" : "none";
+                            });
+
+                            // highlight active page
+                            const pageLinks = pagination.querySelectorAll("li");
+                            pageLinks.forEach(li => li.classList.remove("active"));
+                            if (pagination.querySelector(`li[data-page="${page}"]`)) {
+                                pagination.querySelector(`li[data-page="${page}"]`).classList.add("active");
+                            }
+                        }
+
+                        function setupPagination() {
+                            pagination.innerHTML = "";
+                            const pageCount = Math.ceil(rows.length / rowsPerPage);
+
+                            for (let i = 1; i <= pageCount; i++) {
+                                const li = document.createElement("li");
+                                li.classList.add("page-item");
+                                li.dataset.page = i;
+
+                                li.innerHTML = `<a class="page-link" href="#">${i}</a>`;
+                                li.addEventListener("click", function(e) {
+                                    e.preventDefault();
+                                    showPage(i);
+                                });
+                                pagination.appendChild(li);
+                            }
+                        }
+
+                        setupPagination();
+                        showPage(1);
                     });
                 </script>
 

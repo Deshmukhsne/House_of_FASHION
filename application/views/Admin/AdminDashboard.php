@@ -19,7 +19,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet" />
-
+    <link rel="icon" type="image/png" href="<?= base_url('assets/images/favicon.png') ?>">
     <style>
         body {
             font-family: 'Poppins', sans-serif;
@@ -192,6 +192,25 @@
                 display: flex;
             }
         }
+
+        /* Fix card layout for tablets (768px – 991px) */
+        /* 📱 iPad / Apple Tablets (Portrait & Landscape) */
+        @media (min-width: 768px) and (max-width: 1366px) {
+            .card {
+                min-height: 100%;
+                /* make all cards equal height */
+            }
+
+            .row.g-4>[class*="col-"] {
+                display: flex;
+            }
+
+            .row.g-4>[class*="col-"]>.card {
+                flex: 1;
+            }
+
+
+        }
     </style>
 </head>
 
@@ -225,7 +244,7 @@
                                     <div class="card-body d-flex justify-content-between align-items-center">
                                         <div>
                                             <h6 class="stat-label">TOTAL STOCK</h6>
-                                            <h3 class="stat-number"><?php echo $total_stock_quantity; ?> items</h3>
+                                            <h3 class="stat-number"><?php echo $total_stock_quantity; ?> Items</h3>
 
                                         </div>
                                         <i class="bi bi-graph-up-arrow fs-1 text-info"></i>
@@ -297,7 +316,7 @@
                                             <div class="card-body">
                                                 <table class="table table-bordered" id="salesTable">
                                                     <thead>
-                                                        <tr>
+                                                        <tr><th>Sr No</th>
                                                             <th>Category</th>
                                                             <th>Product</th>
                                                             <th>MRP</th>
@@ -309,6 +328,7 @@
                                                     <tbody>
                                                         <?php foreach ($sales as $s): ?>
                                                             <tr>
+                                                                <td></td>
                                                                 <td><?= $s->category_name ?></td>
                                                                 <td><?= $s->item_name ?></td>
                                                                 <td><?= $s->mrp ?></td>
@@ -423,6 +443,14 @@
                                                     scales: {
                                                         y: {
                                                             beginAtZero: true,
+                                                            title: {
+                                                                display: true,
+                                                                text: 'Revenue (₹)', // ✅ Y-axis name
+                                                                font: {
+                                                                    weight: '700',
+                                                                    size: 14
+                                                                }
+                                                            },
                                                             ticks: {
                                                                 callback: val => '₹' + val.toLocaleString('en-IN'),
                                                                 font: {
@@ -434,6 +462,14 @@
                                                             }
                                                         },
                                                         x: {
+                                                            title: {
+                                                                display: true,
+                                                                text: 'Date', // ✅ X-axis name
+                                                                font: {
+                                                                    weight: '700',
+                                                                    size: 14
+                                                                }
+                                                            },
                                                             ticks: {
                                                                 font: {
                                                                     weight: '600'
@@ -444,10 +480,10 @@
                                                             }
                                                         }
                                                     }
+
                                                 }
                                             });
 
-                                            // Payment Chart
                                             // Payment Chart
                                             const paymentCtx = document.getElementById('paymentChart').getContext('2d');
                                             const paymentChart = new Chart(paymentCtx, {
@@ -456,7 +492,7 @@
                                                     labels: <?php echo json_encode($payment_stats['labels']); ?>,
                                                     datasets: [{
                                                         data: <?php echo json_encode($payment_stats['amounts']); ?>,
-                                                        backgroundColor: ['#f3ac29', '#8d6213'],
+                                                        backgroundColor: ['#f3ac29', '#8d6213','#000000'],
                                                         borderWidth: 0
                                                     }]
                                                 },
@@ -489,6 +525,11 @@
                                             });
                                         });
                                     </script>
+                                    <script>
+
+                                        
+                                        </script>
+
 
                                     <script>
                                         // Sidebar toggler
@@ -517,6 +558,15 @@
                                             });
                                         </script>
                                     <?php endif; ?>
+                                    <script>
+document.addEventListener("DOMContentLoaded", function () {
+    const rows = document.querySelectorAll("#salesTable tbody tr");
+    rows.forEach((row, index) => {
+        row.querySelector("td").textContent = index + 1;
+    });
+});
+</script>
+
 </body>
 
 </html>

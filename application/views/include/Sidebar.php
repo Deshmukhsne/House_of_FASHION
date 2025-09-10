@@ -93,7 +93,7 @@
             top: 50%;
             transform: translateY(-50%);
             font-size: 1.5rem;
-            color: #333;
+            color: #fac852ff;
             cursor: pointer;
         }
 
@@ -275,7 +275,7 @@
                 <!-- Profile Image & Name -->
                 <!-- Dashboard -->
                 <li class="sidebar-item">
-                    <a href="<?= base_url('AdminController/Dashboard') ?>" class="sidebar-link" id="dashboard-link" style="font-size: 20px;">
+                    <a href=" <?= base_url('dashboard') ?>" class="sidebar-link" id="dashboard-link" style="font-size: 20px;">
                         <i class="bi bi-house-fill"></i>
                         <span class="ms-1">Dashboard</span>
                     </a>
@@ -283,7 +283,7 @@
 
                 <!-- Stock -->
                 <li class="sidebar-item">
-                    <a href="<?= base_url('AdminController/ProductInventory') ?>" class="sidebar-link" style="font-size: 20px;">
+                    <a href="<?= base_url('stock') ?>" class="sidebar-link" style="font-size: 20px;">
                         <i class="bi bi-box me-2"></i>
                         <span class="ms-1">Stock</span>
                     </a>
@@ -299,13 +299,13 @@
                     <div class="collapse" id="billingSubmenu">
                         <ul class="nav flex-column ms-3">
                             <li class="nav-item">
-                                <a href="<?= base_url('AdminController/Billing') ?>" class="sidebar-link" id="billsection-link" style="font-size: 18px;">
+                                <a href="<?= base_url('billing') ?>" class="sidebar-link" id="billsection-link" style="font-size: 18px;">
                                     <i class="bi bi-file-earmark-plus"></i>
                                     <span class="ms-1">Bill Section</span>
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a href="<?= base_url('AdminController/BillHistory') ?>" class="sidebar-link" id="billhistory-link" style="font-size: 18px;">
+                                <a href="<?= base_url('billing-history') ?>" class="sidebar-link" id="billhistory-link" style="font-size: 18px;">
                                     <i class="bi bi-clock-history"></i>
                                     <span class="ms-1">Bill History</span>
                                 </a>
@@ -318,7 +318,7 @@
                 <li class="sidebar-item">
                     </a>
 
-                    <a href="<?= base_url('AdminController/Orders') ?>" class="sidebar-link" id="orders-link" style="font-size: 20px;">
+                    <a href="<?= base_url('orders') ?>" class="sidebar-link" id="orders-link" style="font-size: 20px;">
                         <i class="bi bi-cart-check me-2"></i>
                         <span class="ms-1">Orders</span>
                     </a>
@@ -331,13 +331,13 @@
                     <div class="collapse" id="drySubmenu">
                         <ul class="nav flex-column ms-3">
                             <li class="nav-item">
-                                <a href="<?= base_url('AdminController/Vendors') ?>" class="sidebar-link" style="font-size: 18px;">
+                                <a href="<?= base_url('vendors') ?>" class="sidebar-link" style="font-size: 18px;">
                                     <i class="bi bi-file-earmark-plus"></i>
-                                    <span class="ms-1">Dry Cleaners</span>
+                                    <span class="ms-1">Vendors</span>
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a href="<?= base_url('AdminController/Tailors') ?>" class="sidebar-link" style="font-size: 18px;">
+                                <a href="<?= base_url('tailors') ?>" class="sidebar-link" style="font-size: 18px;">
                                     <i class="bi bi-file-earmark-plus"></i>
                                     <span class="ms-1">Tailors</span>
                                 </a>
@@ -349,13 +349,13 @@
                                 </a>
                             </li> -->
                             <li class="nav-item">
-                                <a href="<?= base_url('AdminController/DryCleaning_Status') ?>" class="sidebar-link" style="font-size: 18px;">
+                                <a href="<?= base_url('dry-status') ?>" class="sidebar-link" style="font-size: 18px;">
                                     <i class="bi bi-clock-history"></i>
                                     <span class="ms-1">Dry Clean Status</span>
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a href="<?= base_url('AdminController/tailor_history') ?>" class="sidebar-link" style="font-size: 18px;">
+                                <a href="<?= base_url('tailor-status') ?>" class="sidebar-link" style="font-size: 18px;">
                                     <i class="bi bi-clock-history"></i>
                                     <span class="ms-1">Tailor Status</span>
                                 </a>
@@ -364,7 +364,7 @@
                     </div>
                 </li>
 
-                
+
                 <!-- Reports -->
                 <li class="sidebar-item">
                     <a href="#" class="sidebar-link dropdown-toggle collapsed" id="reports-dropdown" data-bs-toggle="collapse"
@@ -375,13 +375,13 @@
                     <div class="collapse" id="reportsSubmenu">
                         <ul class="nav flex-column ms-3">
                             <li class="nav-item">
-                                <a href="<?= base_url('AdminController/DailyReport') ?>" class="sidebar-link" id="dailyreport-link" style="font-size: 18px;">
+                                <a href="<?= base_url('daily-report') ?>" class="sidebar-link" id="dailyreport-link" style="font-size: 18px;">
                                     <i class="bi bi-calendar-day"></i>
                                     <span class="ms-1">Daily Report</span>
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a href="<?= base_url('AdminController/MonthlyReport') ?>" class="sidebar-link" id="monthlyreport-link" style="font-size: 18px;">
+                                <a href="<?= base_url('monthly-report') ?>" class="sidebar-link" id="monthlyreport-link" style="font-size: 18px;">
                                     <i class="bi bi-calendar2-month"></i>
                                     <span class="ms-1">Monthly Report</span>
                                 </a>
@@ -391,14 +391,14 @@
                         </ul>
                     </div>
                 </li>
-                <a href="<?= base_url('AdminController/StaffManagement') ?>" class="sidebar-link" id="dashboard-link" style="font-size: 20px;">
+                <a href="<?= base_url('staff') ?>" class="sidebar-link" id="dashboard-link" style="font-size: 20px;">
                     <i class="bi-person-lines-fill"></i>
                     <span class="ms-1">Staff Management</span>
                 </a>
                 <!-- Profile -->
                 <li class="sidebar-item">
 
-                    <a href="<?= base_url('AdminController/Profile') ?>" class="sidebar-link" id="profile-link" style="font-size: 20px;">
+                    <a href="<?= base_url('profile') ?>" class="sidebar-link" id="profile-link" style="font-size: 20px;">
 
 
                         <i class="bi bi-person-fill"></i>

@@ -10,6 +10,11 @@ class User_model extends CI_Model
         $query = $this->db->get_where('users', ['id' => $id]);
         return $query->row();  // returns object
     }
+    public function get_all_staff()
+    {
+        $query = $this->db->get('staff'); // SELECT * FROM staff
+        return $query->result();
+    }
 
     // Update user's password
     public function update_password($id, $hashedPassword)
@@ -30,14 +35,13 @@ class User_model extends CI_Model
         return false;
     }
 
-      public function get_all_staff()
-    {
-        $this->db->select('id, name');
-        $this->db->from('users');
-        // Remove or keep this if you only want staff:
-        // $this->db->where('role', 'staff');
-        $query = $this->db->get();
-        return $query->result(); // returns an array of objects
-    }
-
+    // public function get_all_staff()
+    // {
+    //     $this->db->select('id, name');
+    //     $this->db->from('users');
+    //     // Remove or keep this if you only want staff:
+    //     // $this->db->where('role', 'staff');
+    //     $query = $this->db->get();
+    //     return $query->result(); // returns an array of objects
+    // }
 }
