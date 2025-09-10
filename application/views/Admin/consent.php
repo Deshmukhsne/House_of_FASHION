@@ -328,7 +328,7 @@
                 </p>
 
                 <!-- Signature Pad (screen only) -->
-                <div class="signature-instructions">
+                <!-- <div class="signature-instructions">
                     Sign in the box below using your mouse, finger, or stylus
                 </div>
                 <div class="signature-pad-container">
@@ -338,7 +338,7 @@
 
                     </div>
                     <div id="signatureStatus" class="signature-status">Please sign above</div>
-                </div>
+                </div> -->
                 <textarea id="signatureData" name="signature_data" class="signature-data"></textarea>
                 <textarea id="documentHash" name="document_hash" class="signature-data"></textarea>
 
@@ -455,7 +455,7 @@
     <!-- Action Buttons -->
     <div class="text-center mt-4 no-print action-buttons" style="max-width: 900px; margin: auto;">
         <button onclick="validateAndPrint()" class="btn btn-success px-4">Print Consent & Invoice</button>
-        <button onclick="saveSignature()" class="btn btn-primary px-4">Save Signature</button>
+        <!-- <button onclick="saveSignature()" class="btn btn-primary px-4">Save Signature</button> -->
         <a href="<?php echo site_url('AdminController/BillHistory'); ?>" class="btn btn-secondary px-4">Back to Invoices</a>
     </div>
 
