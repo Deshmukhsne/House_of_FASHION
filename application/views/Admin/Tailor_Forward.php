@@ -84,7 +84,7 @@
 
             <div class="container-fluid p-4">
                 <div class="container form-container">
-                    <h2 class="section-heading tailor-heading mb-4">Forward to Tailor</h2>
+                    <h2 class="section-heading tailor-heading mb-4">Forward To Tailor</h2>
 
                     <?php if ($this->session->flashdata('tailor_success')): ?>
                         <script>
@@ -111,6 +111,7 @@
                                 <label class="form-label">Tailor Name</label>
                                 <select name="tailor_id" id="tailorSelect" class="form-control" required>
                                     <option value="">Select Tailor</option>
+                                    
                                     <?php foreach ($tailors as $tailor): ?>
                                         <option value="<?= $tailor['id'] ?>"
                                             data-name="<?= $tailor['name'] ?>"
@@ -120,9 +121,8 @@
                                         </option>
                                     <?php endforeach; ?>
                                 </select>
-
                             </div>
-
+                            </div> 
 
 
                             <!-- Hidden fields -->

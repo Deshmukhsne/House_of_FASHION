@@ -183,8 +183,8 @@
 
                         <form action="<?= base_url('AdminController/save_invoice') ?>" method="post" id="invoiceForm">
                             <!-- Invoice Info -->
-                            <div class="row mb-4">
-                                <div class="col-md-3">
+                            <div class="row mb-4 ">
+                                <div class="col-md-3 ">
                                     <label>Invoice No:</label>
                                     <input type="text" name="invoiceNo" id="invoiceNo" class="form-control" readonly value="<?= isset($temp_invoice_no) ? $temp_invoice_no : '' ?>" />
                                 </div>
@@ -194,14 +194,14 @@
                                 </div>
                                 <div class="col-md-3">
                                     <label>Customer Mobile No:</label>
-                                    <input type="text" name="customerMobile" id="customerMobile" class="form-control" maxlength="15" placeholder="Enter Mobile" required />
+                                    <input type="text" name="customerMobile" id="customerMobile" class="form-control" maxlength="10" placeholder="Enter Mobile" required />
                                 </div>
                                 <div class="col-md-3">
                                     <label>Alternate Mobile No:</label>
-                                    <input type="text" name="alternateMobile" id="alternateMobile" class="form-control" placeholder="Enter Alternate Mobile" maxlength="15" required />
+                                    <input type="text" name="alternateMobile" id="alternateMobile" class="form-control" placeholder="Enter Alternate Mobile" maxlength="10" required />
                                 </div>
 
-                                <div class="row mb-4">
+                                <div class="row mb-4 my-4">
                                     <div class="col-md-3">
                                         <label>Rental Date</label>
                                         <input type="date" id="commonRentalDate" class="form-control date-highlight" value="<?= date('Y-m-d') ?>">
@@ -269,13 +269,15 @@
                                 </div>
 
                                 <!-- Items Table -->
-                                <div class="table-responsive-container">
-                                    <table class="table table-bordered align-middle">
+                                 <div class="table-responsive-container">
+                              <table class="table table-bordered table-striped table-hover align-middle">
+                                <!-- <div class="table-responsive-container"> -->
+                                    <!-- <table class="table table-bordered align-middle"> -->
                                         <thead class="table-light">
                                             <tr>
                                                 <th>Category</th>
                                                 <th>Item</th>
-                                                <th>Daily Price (₹)</th>
+                                                <th>Daily Rent (₹)</th>
                                                 <th>Qty</th>
                                                 <th>Rental Date</th>
                                                 <th>Return Date</th>

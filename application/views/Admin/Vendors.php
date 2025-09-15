@@ -104,6 +104,9 @@
                 padding-top: 1rem !important;
                 padding-bottom: 1rem !important;
             }
+            .is-invalid {
+    border: 1px solid red;
+}
         }
     </style>
 </head>
@@ -199,10 +202,12 @@
                                     <input type="email" name="email" class="form-control" placeholder="Email" required>
                                 </div>
                                 <div class="col-12 col-md-6">
-                                    <input type="text" name="mobile" class="form-control" placeholder="Mobile" required>
+                                    
+                                    <input type="text" name="mobile" class="form-control" placeholder="Mobile" required maxlength="10">
+
                                 </div>
                                 <div class="col-12 col-md-6">
-                                    <input type="text" name="company" class="form-control" placeholder="DryCleaner/Tailor" required>
+                                    <input type="text" name="company" class="form-control" placeholder="Dry Cleaner/Tailor to Dry Cleaner" required>
                                 </div>
                                 <div class="col-12">
                                     <input type="text" name="address" class="form-control" placeholder="Address" required>
@@ -214,6 +219,86 @@
                         </form>
                     </div>
                 </div>
+                <script>
+document.addEventListener("DOMContentLoaded", function () {
+    const form = document.querySelector("#addVendorModal form");
+
+    form.addEventListener("submit", function (event) {
+        let isValid = true;
+        let inputs = form.querySelectorAll("input[required]");
+
+        // remove old error messages
+        form.querySelectorAll(".error-msg").forEach(el => el.remove());
+
+        inputs.forEach(input => {
+            input.classList.remove("is-invalid"); 
+
+            if (input.value.trim() === "") {
+                isValid = false;
+                showError(input, "This field is required");
+            } else {
+                // Name field (only letters & spaces)
+                if (input.name === "name") {
+                    let namePattern = /^[A-Za-z\s]+$/;
+                    if (!namePattern.test(input.value)) {
+                        isValid = false;
+                        showError(input, "Please enter a valid name (letters only)");
+                    }
+                }
+
+                // Email field
+                if (input.name === "email") {
+                    let emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                    if (!emailPattern.test(input.value)) {
+                        isValid = false;
+                        showError(input, "Please enter a valid email address");
+                    }
+                }
+
+                // Mobile field (10 digits only)
+                if (input.name === "mobile") {
+                    let mobilePattern = /^[0-9]{10}$/;
+                    if (!mobilePattern.test(input.value)) {
+                        isValid = false;
+                        showError(input, "Please enter  10-digit mobile number");
+                    }
+                }
+
+                // Company field (letters & spaces only)
+                if (input.name === "company") {
+                    let companyPattern = /^[A-Za-z\s]+$/;
+                    if (!companyPattern.test(input.value)) {
+                        isValid = false;
+                        showError(input, "Please enter a valid company name ");
+                    }
+                }
+
+                // Address field (at least 5 chars)
+                if (input.name === "address") {
+                    if (input.value.length < 5) {
+                        isValid = false;
+                        showError(input, "Address must be at least 5 characters long");
+                    }
+                }
+            }
+        });
+
+        if (!isValid) {
+            event.preventDefault();
+        }
+    });
+
+    // helper to show error message
+    function showError(input, message) {
+        input.classList.add("is-invalid");
+        let error = document.createElement("div");
+        error.className = "error-msg text-danger small mt-1";
+        error.innerText = message;
+        input.insertAdjacentElement("afterend", error);
+    }
+});
+</script>
+
 
                 <!-- Edit Vendor Modal -->
                 <div class="modal fade" id="editVendorModal" tabindex="-1" aria-hidden="true">

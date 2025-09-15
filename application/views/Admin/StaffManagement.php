@@ -203,7 +203,7 @@
                             <div class="modal-body row g-2">
                                 <div class="col-md-6"><input type="text" name="name" class="form-control" placeholder="Name" required></div>
                                 <div class="col-md-6"><input type="email" name="email" class="form-control" placeholder="Email" required></div>
-                                <div class="col-md-6"><input type="text" name="phone" class="form-control" placeholder="Phone" required></div>
+                                <div class="col-md-6"><input type="text" name="phone" class="form-control" placeholder="Phone" required maxlength="10"></div>
                                 <div class="col-md-6"><input type="text" name="address" class="form-control" placeholder="Address" required></div>
                                 <div class="col-md-6"><input type="date" name="joining_date" class="form-control" required></div>
                             </div>
@@ -213,6 +213,94 @@
                         </form>
                     </div>
                 </div>
+
+                <script>
+                    document.addEventListener('DOMContentLoaded', function() {
+    const form = document.querySelector('#addStaffModal form');
+    
+    // Validation patterns
+    const patterns = {
+        name: /^[A-Za-z\s]+$/, // Letters and spaces only
+        email: /^[^\s@]+@[^\s@]+\.[^\s@]+$/, // Basic email format
+        phone: /^\d{10}$/, // Exactly 10 digits
+        address: /^[\w\s,.-]+$/, // Alphanumeric, spaces, commas, periods, hyphens
+        joining_date: /^\d{4}-\d{2}-\d{2}$/, // Date in YYYY-MM-DD format
+    };
+
+    // Validation messages
+    const messages = {
+        name: 'Name should contain only letters and spaces',
+        email: 'Please enter a valid email address',
+        phone: 'Phone number must be exactly 10 digits',
+        address: 'Please enter a valid address',
+        joining_date: 'Please select a valid joining date',
+    };
+
+    // Validate input field
+    function validateInput(input) {
+        const field = input.name;
+        const value = input.value.trim();
+        const errorId = `${field}Error`;
+        
+        // Remove existing error message if any
+        const existingError = input.parentElement.querySelector(`#${errorId}`);
+        if (existingError) existingError.remove();
+
+        // Special handling for date input
+        if (field === 'joining_date') {
+            const date = new Date(value);
+            if (!value || isNaN(date.getTime())) {
+                input.classList.add('is-invalid');
+                const errorDiv = document.createElement('div');
+                errorDiv.id = errorId;
+                errorDiv.className = 'invalid-feedback';
+                errorDiv.textContent = messages[field];
+                input.parentElement.appendChild(errorDiv);
+                return false;
+            }
+        } else if (!patterns[field].test(value)) {
+            input.classList.add('is-invalid');
+            const errorDiv = document.createElement('div');
+            errorDiv.id = errorId;
+            errorDiv.className = 'invalid-feedback';
+            errorDiv.textContent = messages[field];
+            input.parentElement.appendChild(errorDiv);
+            return false;
+        }
+
+        input.classList.remove('is-invalid');
+        input.classList.add('is-valid');
+        return true;
+    }
+
+    // Validate all inputs on form submit
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        let isValid = true;
+
+        // Validate each input
+        ['name', 'email', 'phone', 'address', 'joining_date'].forEach(field => {
+            const input = form.querySelector(`[name="${field}"]`);
+            if (!validateInput(input)) {
+                isValid = false;
+            }
+        });
+
+        // Submit form if all validations pass
+        if (isValid) {
+            form.submit();
+        }
+    });
+
+    // Real-time validation on input
+    form.querySelectorAll('input').forEach(input => {
+        input.addEventListener('input', function() {
+            validateInput(this);
+        });
+    });
+});
+
+                    </script>
 
                 <!-- Edit Staff Modal -->
                 <div class="modal fade" id="editStaffModal" tabindex="-1" aria-hidden="true">
@@ -254,6 +342,20 @@
             });
         });
     </script>
+    <script>
+                                        // Sidebar toggler
+                                        const toggler = document.querySelector(".toggler-btn");
+                                        const closeBtn = document.querySelector(".close-sidebar");
+                                        const sidebar = document.querySelector("#sidebar");
+
+                                        if (toggler && sidebar) {
+                                            toggler.addEventListener("click", () => sidebar.classList.toggle("collapsed"));
+                                        }
+                                        if (closeBtn && sidebar) {
+                                            closeBtn.addEventListener("click", () => sidebar.classList.remove("collapsed"));
+                                        }
+                                    </script>
+
 
 </body>
 

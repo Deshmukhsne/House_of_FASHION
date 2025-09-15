@@ -154,7 +154,8 @@
                 <div class="container mt-5">
                     <div class="card shadow">
                         <div class="card-header d-flex justify-content-between align-items-center">
-                            <h5>Product Inventory</h5>
+                            <!-- <h5>Product Inventory</h5> -->
+                            <h5 style="font-weight: bold;">Product Inventory</h5>
                             <div>
                                 <button class="btn btn-gold me-2" data-bs-toggle="modal" data-bs-target="#addCategoryModal">Add Category</button>
                                 <button class="btn btn-gold" data-bs-toggle="modal" data-bs-target="#addProductModal">Add Product</button>

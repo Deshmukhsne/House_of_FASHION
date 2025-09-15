@@ -215,7 +215,7 @@
 
         <form action="<?= base_url('AdminController/AfterLogin') ?>" method="post">
           <label for="username">Username</label>
-          <input type="text" id="username" name="username" placeholder="Enter your username" required>
+          <input type="text" id="username" name="username" class="form-control" placeholder="Enter your username" required>
 
           <label for="password">Password</label>
           <div class="input-group">

@@ -196,7 +196,7 @@
                             <div class="modal-body row g-2">
                                 <div class="col-12 col-md-6"><input type="text" name="name" class="form-control" placeholder="Name" required></div>
                                 <div class="col-12 col-md-6"><input type="email" name="email" class="form-control" placeholder="Email" required></div>
-                                <div class="col-12 col-md-6"><input type="text" name="mobile" class="form-control" placeholder="Mobile" required></div>
+                                <div class="col-12 col-md-6"><input type="text" name="mobile" class="form-control" placeholder="Mobile" required  maxlength="10"></div>
 
                                 <div class="col-12 col-md-6"><input type="text" name="specialization" class="form-control" placeholder="Specialization" required></div>
                                 <div class="col-12"><input type="text" name="shop_address" class="form-control" placeholder="Shop Address" required></div>
@@ -207,6 +207,82 @@
                         </form>
                     </div>
                 </div>
+                <script>
+                    document.addEventListener('DOMContentLoaded', function() {
+    const form = document.querySelector('#addTailorModal form');
+    
+    // Validation patterns
+    const patterns = {
+        name: /^[A-Za-z\s]+$/, // Letters and spaces only
+        email: /^[^\s@]+@[^\s@]+\.[^\s@]+$/, // Basic email format
+        mobile: /^\d{10}$/, // Exactly 10 digits
+        specialization: /^[A-Za-z\s]+$/, // Letters and spaces only
+        shop_address: /^[\w\s,.-]+$/, // Alphanumeric, spaces, commas, periods, hyphens
+    };
+
+    // Validation messages
+    const messages = {
+        name: 'Name should contain only letters and spaces',
+        email: 'Please enter a valid email address',
+        mobile: 'Mobile number must be exactly 10 digits',
+        specialization: 'Specialization should contain only letters and spaces',
+        shop_address: 'Please enter a valid shop address',
+    };
+
+    // Validate input field
+    function validateInput(input) {
+        const field = input.name;
+        const value = input.value.trim();
+        const errorId = `${field}Error`;
+        
+        // Remove existing error message if any
+        const existingError = input.parentElement.querySelector(`#${errorId}`);
+        if (existingError) existingError.remove();
+
+        if (!patterns[field].test(value)) {
+            input.classList.add('is-invalid');
+            const errorDiv = document.createElement('div');
+            errorDiv.id = errorId;
+            errorDiv.className = 'invalid-feedback';
+            errorDiv.textContent = messages[field];
+            input.parentElement.appendChild(errorDiv);
+            return false;
+        } else {
+            input.classList.remove('is-invalid');
+            input.classList.add('is-valid');
+            return true;
+        }
+    }
+
+    // Validate all inputs on form submit
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        let isValid = true;
+
+        // Validate each input
+        ['name', 'email', 'mobile', 'specialization', 'shop_address'].forEach(field => {
+            const input = form.querySelector(`[name="${field}"]`);
+            if (!validateInput(input)) {
+                isValid = false;
+            }
+        });
+
+        // Submit form if all validations pass
+        if (isValid) {
+            form.submit();
+        }
+    });
+
+    // Real-time validation on input
+    form.querySelectorAll('input').forEach(input => {
+        input.addEventListener('input', function() {
+            validateInput(this);
+        });
+    });
+});
+                </script>
+                                            
+                
 
                 <!-- Edit Tailor Modal -->
                 <div class="modal fade" id="editTailorModal" tabindex="-1" aria-hidden="true">
