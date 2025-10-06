@@ -188,7 +188,7 @@
 
                                             <form method="post" action="<?= base_url('drycleaning/delete_drycleaning') ?>" style="display:inline;">
                                                 <input type="hidden" name="id" value="<?= $item->id ?>">
-                                                <button type="submit" class="btn btn-delete btn-sm">Delete</button>
+                                                <button type="submit" class="btn btn-secondary btn-sm">Delete</button>
                                             </form>
                                         </td>
                                     </tr>

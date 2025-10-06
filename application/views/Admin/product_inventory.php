@@ -134,6 +134,44 @@
             .table img {
                 max-width: 40px;
             }
+
+#addCategoryModal .modal-footer {
+    flex-direction: row;
+    gap: 10px;
+}
+
+#addCategoryModal .modal-footer .btn {
+    width: 50%;
+}
+#addProductModal .modal-footer{
+    flex-direction: row;
+    gap: 10px;
+    
+}
+#addProductModal .modal-footer .btn {
+    width: 50%;
+}
+/* Apply styles only on mobile screens */
+@media (max-width: 576px) {
+    .btn.btn-sm {
+        display: block;         /* stack buttons vertically */
+        width: 100%;            /* make them full width */
+        margin-bottom: 10px;    /* add vertical gap */
+    }
+
+    /* optional: align text center */
+    .btn {
+        text-align: center;
+    }
+}
+
+
+
+
+
+
+
+
         }
     </style>
 
@@ -200,7 +238,7 @@
                                                         <img src="<?= base_url($product->image) ?>" height="60"
                                                             onclick="openImageModal('<?= base_url($product->image) ?>')" style="cursor:pointer;" />
                                                     <?php else: ?>
-                                                        <span>No Image</span>
+                                                        <span> No Image</span>
                                                     <?php endif; ?>
                                                 </td>
                                                 <td><?= htmlspecialchars($product->name) ?></td>
@@ -223,7 +261,7 @@
                                                     </span>
                                                 </td>
                                                 <td>
-                                                    <button type="button" class="btn btn-sm btn-outline-primary"
+                                                    <button type="button" class="btn btn-sm btn-outline-primary me-md-2"
                                                         onclick='openEditModal(<?= json_encode([
                                                                                     "id" => $product->id,
                                                                                     "name" => $product->name,
@@ -302,7 +340,7 @@
                                 <input type="file" name="image" class="form-control mb-2" required>
                             </div>
 
-                            <div class="modal-footer">
+                            <div class="modal-footer gap-2">
                                 <button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                                 <button class="btn btn-gold" type="submit">Save</button>
                             </div>
@@ -322,7 +360,7 @@
                             <div class="modal-body">
                                 <input type="text" name="name" class="form-control mb-2" placeholder="Category Name" required>
                             </div>
-                            <div class="modal-footer">
+                            <div class="modal-footer gap-2">
                                 <button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                                 <button class="btn btn-gold" type="submit">Add Category</button>
                             </div>
