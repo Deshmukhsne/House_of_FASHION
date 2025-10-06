@@ -369,6 +369,10 @@
                             Tailor
                           </button>
                         </div>
+                        <!-- <button class="btn btn-danger btn-sm btn-action"
+                          onclick="deleteOrder('<?= $order['invoice_id'] ?>', '<?= $order['item_name'] ?>')">
+                          Delete
+                        </button> -->
                       <?php elseif ($order['status'] == 'Returned' && $order['main_category'] != 'Cloths'): ?>
                         <button class="btn btn-success btn-sm btn-action"
                           onclick="addToStock('<?= $order['invoice_id'] ?>', '<?= $order['item_name'] ?>')">
@@ -619,7 +623,70 @@
       window.location.href = "<?= base_url('AdminController/SendTailor/') ?>" + itemId;
     }
   </script>
+  <script>
+    function deleteOrder(invoiceId, itemName) {
+      Swal.fire({
+        title: 'Are you sure?',
+        text: `You are about to delete order for "${itemName}" (Invoice: ${invoiceId}). This action cannot be undone!`,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Yes, delete it!',
+        cancelButtonText: 'Cancel'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          // Send delete request to server
+          fetch("<?= base_url('deleteOrder') ?>", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+              },
+              body: "invoice_id=" + invoiceId + "&item_name=" + encodeURIComponent(itemName)
+            })
+            .then(res => res.json())
+            .then(data => {
+              if (data.success) {
+                Swal.fire({
+                  icon: 'success',
+                  title: 'Deleted!',
+                  text: 'Order has been deleted successfully.',
+                  timer: 1500,
+                  showConfirmButton: false
+                }).then(() => {
+                  // Remove the row from the table
+                  let rows = document.querySelectorAll("#ordersTableContainer tbody tr");
+                  let row = Array.from(rows).find(r => r.querySelector("td[data-label='Order ID']").innerText == invoiceId);
 
+                  if (row) {
+                    row.remove();
+                  }
+
+                  // Optional: Reload the page after a short delay to refresh the data
+                  setTimeout(() => {
+                    location.reload();
+                  }, 1000);
+                });
+              } else {
+                Swal.fire({
+                  icon: 'error',
+                  title: 'Failed!',
+                  text: data.msg || 'Failed to delete order. Please try again.'
+                });
+              }
+            })
+            .catch(err => {
+              console.error('Error:', err);
+              Swal.fire({
+                icon: 'error',
+                title: 'Error!',
+                text: 'An error occurred while deleting the order.'
+              });
+            });
+        }
+      });
+    }
+  </script>
 </body>
 
 </html>

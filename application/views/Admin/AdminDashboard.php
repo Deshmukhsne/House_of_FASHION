@@ -316,7 +316,8 @@
                                             <div class="card-body">
                                                 <table class="table table-bordered" id="salesTable">
                                                     <thead>
-                                                        <tr><th>Sr No</th>
+                                                        <tr>
+                                                            <th>Sr No</th>
                                                             <th>Category</th>
                                                             <th>Product</th>
                                                             <th>MRP</th>
@@ -492,7 +493,7 @@
                                                     labels: <?php echo json_encode($payment_stats['labels']); ?>,
                                                     datasets: [{
                                                         data: <?php echo json_encode($payment_stats['amounts']); ?>,
-                                                        backgroundColor: ['#f3ac29', '#8d6213','#000000'],
+                                                        backgroundColor: ['#f3ac29', '#8d6213', '#000000'],
                                                         borderWidth: 0
                                                     }]
                                                 },
@@ -527,8 +528,8 @@
                                     </script>
                                     <script>
 
-                                        
-                                        </script>
+
+                                    </script>
 
 
                                     <script>
@@ -559,13 +560,65 @@
                                         </script>
                                     <?php endif; ?>
                                     <script>
-document.addEventListener("DOMContentLoaded", function () {
-    const rows = document.querySelectorAll("#salesTable tbody tr");
-    rows.forEach((row, index) => {
-        row.querySelector("td").textContent = index + 1;
-    });
-});
-</script>
+                                        document.addEventListener("DOMContentLoaded", function() {
+                                            const rows = document.querySelectorAll("#salesTable tbody tr");
+                                            rows.forEach((row, index) => {
+                                                row.querySelector("td").textContent = index + 1;
+                                            });
+                                        });
+                                    </script>
+
+                                    <script>
+                                        function formatIndianNumber(num) {
+                                            return num.toLocaleString('en-IN', {
+                                                minimumFractionDigits: 2,
+                                                maximumFractionDigits: 2
+                                            });
+                                        }
+
+                                        document.addEventListener("DOMContentLoaded", function() {
+                                            let elements = document.querySelectorAll(".stat-number");
+                                            elements.forEach(el => {
+                                                let value = parseFloat(el.textContent.replace(/[^0-9.-]/g, ""));
+                                                if (!isNaN(value)) {
+                                                    el.textContent = "₹" + formatIndianNumber(value);
+                                                }
+                                            });
+                                        });
+                                    </script>
+                                    <script>
+                                        function formatIndianNumber(num, withRupee = false) {
+                                            if (isNaN(num)) return num;
+                                            let formatted = num.toLocaleString('en-IN', {
+                                                minimumFractionDigits: 2,
+                                                maximumFractionDigits: 2
+                                            });
+                                            return withRupee ? "₹" + formatted : formatted;
+                                        }
+
+                                        document.addEventListener("DOMContentLoaded", function() {
+                                            let elements = document.querySelectorAll(".stat-number");
+                                            elements.forEach(el => {
+                                                let text = el.textContent.trim();
+
+                                                // Check if it has "Items"
+                                                if (text.includes("Items")) {
+                                                    let value = parseFloat(text.replace(/[^0-9]/g, ""));
+                                                    if (!isNaN(value)) {
+                                                        el.textContent = formatIndianNumber(value, false) + " Items";
+                                                    }
+                                                }
+                                                // Check if it has "₹"
+                                                else if (text.includes("₹")) {
+                                                    let value = parseFloat(text.replace(/[^0-9.-]/g, ""));
+                                                    if (!isNaN(value)) {
+                                                        el.textContent = formatIndianNumber(value, true);
+                                                    }
+                                                }
+                                            });
+                                        });
+                                    </script>
+
 
 </body>
 

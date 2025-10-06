@@ -434,18 +434,18 @@
         });
     </script>
     <script>
-                                        // Sidebar toggler
-                                        const toggler = document.querySelector(".toggler-btn");
-                                        const closeBtn = document.querySelector(".close-sidebar");
-                                        const sidebar = document.querySelector("#sidebar");
+        // Sidebar toggler
+        const toggler = document.querySelector(".toggler-btn");
+        const closeBtn = document.querySelector(".close-sidebar");
+        const sidebar = document.querySelector("#sidebar");
 
-                                        if (toggler && sidebar) {
-                                            toggler.addEventListener("click", () => sidebar.classList.toggle("collapsed"));
-                                        }
-                                        if (closeBtn && sidebar) {
-                                            closeBtn.addEventListener("click", () => sidebar.classList.remove("collapsed"));
-                                        }
-                                    </script>
+        if (toggler && sidebar) {
+            toggler.addEventListener("click", () => sidebar.classList.toggle("collapsed"));
+        }
+        if (closeBtn && sidebar) {
+            closeBtn.addEventListener("click", () => sidebar.classList.remove("collapsed"));
+        }
+    </script>
 
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>

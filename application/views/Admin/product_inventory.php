@@ -170,9 +170,10 @@
                                 <div class="col-md-3">
                                     <select class="form-select" id="statusFilter">
                                         <option value="">Filter by Status</option>
+                                        <option value="">All</option>
                                         <option value="Available">Available</option>
                                         <option value="Rented">Rented</option>
-                                        <option value="In Dry Clean">In Dry Clean</option>
+                                        <!-- <option value="In Dry Clean">In Dry Clean</option> -->
                                     </select>
                                 </div>
                             </div>
@@ -288,13 +289,13 @@
                                 </select>
 
                                 <!-- Stock -->
-                                <input type="number" name="stock" class="form-control mb-2" placeholder="Stock Quantity" value="1" required readonly>
+                                <input type="number" name="stock" class="form-control mb-2" placeholder="Stock Quantity" value="1">
 
                                 <!-- Status -->
                                 <select name="status" class="form-select mb-2">
                                     <option value="Available">Available</option>
-                                    <option value="Rented">Rented</option>
-                                    <option value="In Dry Clean">In Dry Clean</option>
+                                    <!-- <option value="Rented">Rented</option>
+                                    <option value="In Dry Clean">In Dry Clean</option> -->
                                 </select>
 
                                 <!-- Image -->
@@ -387,7 +388,7 @@
                                     <!-- Stock -->
                                     <div class="mb-3">
                                         <label>Stock</label>
-                                        <input type="number" class="form-control" name="stock" id="edit_product_stock" readonly>
+                                        <input type="number" class="form-control" name="stock" id="edit_product_stock">
                                     </div>
 
                                     <!-- Status -->
@@ -396,7 +397,7 @@
                                         <select class="form-select" name="status" id="edit_product_status">
                                             <option value="Available">Available</option>
                                             <option value="Rented">Rented</option>
-                                            <option value="In Dry Clean">In Dry Clean</option>
+                                            <!-- <option value="In Dry Clean">In Dry Clean</option> -->
                                         </select>
                                     </div>
 
@@ -640,7 +641,81 @@
                         showPage(1);
                     });
                 </script>
+                <script>
+                    document.addEventListener("DOMContentLoaded", function() {
+                        const rowsPerPage = 10;
+                        const pagination = document.getElementById("pagination");
+                        const searchInput = document.getElementById('searchInput');
+                        const statusFilter = document.getElementById('statusFilter');
 
+                        function getVisibleRows() {
+                            return Array.from(document.querySelectorAll("tbody tr")).filter(row => row.style.display !== 'none');
+                        }
+
+                        function showPage(page) {
+                            const visibleRows = getVisibleRows();
+                            const start = (page - 1) * rowsPerPage;
+                            const end = start + rowsPerPage;
+
+                            visibleRows.forEach((row, index) => {
+                                row.style.display = (index >= start && index < end) ? "" : "none";
+                            });
+
+                            // Highlight active page
+                            const pageLinks = pagination.querySelectorAll("li");
+                            pageLinks.forEach(li => li.classList.remove("active"));
+                            if (pagination.querySelector(`li[data-page="${page}"]`)) {
+                                pagination.querySelector(`li[data-page="${page}"]`).classList.add("active");
+                            }
+                        }
+
+                        function setupPagination() {
+                            pagination.innerHTML = "";
+                            const visibleRows = getVisibleRows();
+                            const pageCount = Math.ceil(visibleRows.length / rowsPerPage);
+
+                            for (let i = 1; i <= pageCount; i++) {
+                                const li = document.createElement("li");
+                                li.classList.add("page-item");
+                                li.dataset.page = i;
+
+                                li.innerHTML = `<a class="page-link" href="#">${i}</a>`;
+                                li.addEventListener("click", function(e) {
+                                    e.preventDefault();
+                                    showPage(i);
+                                });
+                                pagination.appendChild(li);
+                            }
+                        }
+
+                        function filterAndPaginate() {
+                            const searchTerm = searchInput.value.toLowerCase();
+                            const statusValue = statusFilter.value;
+
+                            document.querySelectorAll('tbody tr').forEach(row => {
+                                const name = row.querySelector('td:nth-child(2)').textContent.toLowerCase();
+                                const statusBadge = row.querySelector('td:nth-child(8) span');
+                                const status = statusBadge ? statusBadge.getAttribute('data-status') : '';
+
+                                const nameMatch = name.includes(searchTerm);
+                                const statusMatch = statusValue === '' || status === statusValue;
+
+                                row.style.display = (nameMatch && statusMatch) ? '' : 'none';
+                            });
+
+                            setupPagination();
+                            showPage(1);
+                        }
+
+                        // Event listeners
+                        searchInput.addEventListener('input', filterAndPaginate);
+                        statusFilter.addEventListener('change', filterAndPaginate);
+
+                        // Initial pagination
+                        setupPagination();
+                        showPage(1);
+                    });
+                </script>
 </body>
 
 </html>

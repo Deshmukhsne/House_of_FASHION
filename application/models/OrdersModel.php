@@ -115,4 +115,17 @@ class OrdersModel extends CI_Model
 
         ));
     }
+    public function deleteOrder($invoice_id, $item_name)
+    {
+        // Example deletion logic - adjust according to your database structure
+        $this->db->where('invoice_id', $invoice_id);
+        $this->db->where('item_name', $item_name);
+        return $this->db->delete('invoice_items'); // Replace with your actual table name
+
+        // Or if you want to soft delete:
+        // return $this->db->update('invoice_items', ['is_deleted' => 1], [
+        //     'invoice_id' => $invoice_id, 
+        //     'item_name' => $item_name
+        // ]);
+    }
 }

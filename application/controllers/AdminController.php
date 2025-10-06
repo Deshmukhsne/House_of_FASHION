@@ -450,6 +450,21 @@ class AdminController extends CI_Controller
         $this->load->view('Admin/product_inventory', $data);
     }
 
+    public function deleteOrder()
+    {
+        $invoice_id = $this->input->post('invoice_id');
+        $item_name = $this->input->post('item_name');
+
+        // Your deletion logic here - this is just an example
+        $this->load->model('OrdersModel');
+        $result = $this->Order_model->deleteOrder($invoice_id, $item_name);
+
+        if ($result) {
+            echo json_encode(['success' => true, 'msg' => 'Order deleted successfully']);
+        } else {
+            echo json_encode(['success' => false, 'msg' => 'Failed to delete order']);
+        }
+    }
     public function AddCategory()
     {
         $this->load->view('Admin/add_category');
