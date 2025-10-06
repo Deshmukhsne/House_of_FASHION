@@ -21,202 +21,203 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet" />
     <link rel="icon" type="image/png" href="<?= base_url('assets/images/favicon.png') ?>">
     <style>
-    body {
-        font-family: 'Poppins', sans-serif;
-        background: linear-gradient(135deg, #f8f9fa, #e9ecef);
-        color: #343a40;
-        min-height: 100vh;
-    }
-
-    #sidebar {
-        background: #343a40;
-        min-width: 240px;
-        color: #fff;
-        transition: all 0.3s ease;
-        box-shadow: 2px 0 12px rgb(0 0 0 / 0.1);
-    }
-
-    #sidebar.collapsed {
-        min-width: 80px;
-    }
-
-    .main {
-        flex-grow: 1;
-        background: #fff;
-        min-height: 100vh;
-        box-shadow: inset 0 0 10px rgb(0 0 0 / 0.05);
-    }
-
-    .card {
-        border-radius: 12px;
-        box-shadow: 0 10px 20px rgb(0 0 0 / 0.08);
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-        overflow: auto;
-        
-    }
-
-
-    .card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 15px 30px rgb(0 0 0 / 0.15);
-    }
-
-    .card-header {
-        background: transparent;
-        border-bottom: none;
-        font-weight: 600;
-        font-size: 1.25rem;
-        color: #212529;
-    }
-
-    .stat-label {
-        font-weight: 600;
-        font-size: 0.9rem;
-        color: #6c757d;
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
-    }
-
-    .stat-number {
-        font-weight: 700;
-        font-size: 2.25rem;
-        margin-top: 0.15rem;
-        color: #212529;
-    }
-
-    .card .bi {
-        opacity: 0.85;
-        transition: opacity 0.3s ease;
-    }
-
-    .card:hover .bi {
-        opacity: 1;
-    }
-
-    .badge {
-        font-weight: 600;
-        padding: 0.4em 0.75em;
-        font-size: 0.85rem;
-        border-radius: 20px;
-    }
-
-    .category-badge {
-        padding: 0.25em 0.75em;
-        border-radius: 15px;
-        font-weight: 600;
-        font-size: 0.85rem;
-        color: #fff;
-        display: inline-block;
-        box-shadow: 0 2px 6px rgb(0 0 0 / 0.15);
-    }
-
-    .saree-badge {
-        background: linear-gradient(135deg, #ffda06, #f7b731);
-    }
-
-    .dress-badge {
-        background: linear-gradient(135deg, #ee8011, #d35400);
-    }
-
-    .accessories-badge {
-        background: linear-gradient(135deg, #6bb819, #28a745);
-    }
-
-    .btn-group .btn {
-        border-radius: 30px !important;
-        padding: 0.4rem 1.3rem;
-        font-weight: 600;
-        font-size: 0.9rem;
-        transition: background-color 0.3s ease;
-        color: #495057;
-        border: 2px solid transparent;
-    }
-
-    .btn-group .btn:hover {
-        background-color: #f8f9fa;
-    }
-
-    .btn-group .btn.active {
-        background: #ffda06;
-        color: #212529;
-        border-color: #ffda06;
-        box-shadow: 0 4px 10px rgb(255 218 6 / 0.5);
-    }
-
-    table.table {
-        border-radius: 12px;
-        overflow: hidden;
-        box-shadow: 0 8px 20px rgb(0 0 0 / 0.08);
-    }
-
-    table.table thead {
-        background: #ffda06;
-        color: #212529;
-    }
-
-    table.table thead th {
-        font-weight: 700;
-        border: none;
-    }
-
-    table.table tbody tr:hover {
-        background-color: #fff7cc;
-        color: #212529;
-        cursor: pointer;
-        transition: background-color 0.3s ease;
-    }
-
-    .list-group-item {
-        border-radius: 12px;
-        margin-bottom: 0.5rem;
-        box-shadow: 0 5px 12px rgb(0 0 0 / 0.05);
-        transition: background-color 0.3s ease;
-    }
-
-    .list-group-item:hover {
-        background-color: #fffae6;
-        color: #212529;
-        cursor: pointer;
-    }
-
-    .payment-chart-legend span.badge {
-        width: 16px;
-        height: 16px;
-        border-radius: 4px;
-        display: inline-block;
-        margin-right: 8px;
-        vertical-align: middle;
-    }
-
-    @media (max-width: 767.98px) {
-        .btn-group {
-            justify-content: center;
-            display: flex;
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            color: #343a40;
+            min-height: 100vh;
         }
-    }
 
-    /* Fix card layout for tablets (768px – 991px) */
-    /* 📱 iPad / Apple Tablets (Portrait & Landscape) */
-    @media (min-width: 768px) and (max-width: 1366px) {
+        #sidebar {
+            background: #343a40;
+            min-width: 240px;
+            color: #fff;
+            transition: all 0.3s ease;
+            box-shadow: 2px 0 12px rgb(0 0 0 / 0.1);
+        }
+
+        #sidebar.collapsed {
+            min-width: 80px;
+        }
+
+        .main {
+            flex-grow: 1;
+            background: #fff;
+            min-height: 100vh;
+            box-shadow: inset 0 0 10px rgb(0 0 0 / 0.05);
+        }
+
         .card {
-            min-height: 100%;
-            /* make all cards equal height */
+            border-radius: 12px;
+            min-height: 150px;
+            /* same height for all cards */
+            box-shadow: 0 10px 20px rgb(0 0 0 / 0.08);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            overflow: auto;
+
         }
 
-        .row.g-4>[class*="col-"] {
-            display: flex;
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgb(0 0 0 / 0.15);
         }
 
-        .row.g-4>[class*="col-"]>.card {
-            flex: 1;
+        .card-header {
+            background: transparent;
+            border-bottom: none;
+            font-weight: 600;
+            font-size: 1.25rem;
+            color: #212529;
         }
-        .card {
- 
-}
+
+        .stat-label {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: #6c757d;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .stat-number {
+            font-weight: 700;
+            font-size: 2.25rem;
+            margin-top: 0.15rem;
+            color: #212529;
+        }
+
+        .card .bi {
+            opacity: 0.85;
+            transition: opacity 0.3s ease;
+        }
+
+        .card:hover .bi {
+            opacity: 1;
+        }
+
+        .badge {
+            font-weight: 600;
+            padding: 0.4em 0.75em;
+            font-size: 0.85rem;
+            border-radius: 20px;
+        }
+
+        .category-badge {
+            padding: 0.25em 0.75em;
+            border-radius: 15px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: #fff;
+            display: inline-block;
+            box-shadow: 0 2px 6px rgb(0 0 0 / 0.15);
+        }
+
+        .saree-badge {
+            background: linear-gradient(135deg, #ffda06, #f7b731);
+        }
+
+        .dress-badge {
+            background: linear-gradient(135deg, #ee8011, #d35400);
+        }
+
+        .accessories-badge {
+            background: linear-gradient(135deg, #6bb819, #28a745);
+        }
+
+        .btn-group .btn {
+            border-radius: 30px !important;
+            padding: 0.4rem 1.3rem;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: background-color 0.3s ease;
+            color: #495057;
+            border: 2px solid transparent;
+        }
+
+        .btn-group .btn:hover {
+            background-color: #f8f9fa;
+        }
+
+        .btn-group .btn.active {
+            background: #ffda06;
+            color: #212529;
+            border-color: #ffda06;
+            box-shadow: 0 4px 10px rgb(255 218 6 / 0.5);
+        }
+
+        table.table {
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 8px 20px rgb(0 0 0 / 0.08);
+        }
+
+        table.table thead {
+            background: #ffda06;
+            color: #212529;
+        }
+
+        table.table thead th {
+            font-weight: 700;
+            border: none;
+        }
+
+        table.table tbody tr:hover {
+            background-color: #fff7cc;
+            color: #212529;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .list-group-item {
+            border-radius: 12px;
+            margin-bottom: 0.5rem;
+            box-shadow: 0 5px 12px rgb(0 0 0 / 0.05);
+            transition: background-color 0.3s ease;
+        }
+
+        .list-group-item:hover {
+            background-color: #fffae6;
+            color: #212529;
+            cursor: pointer;
+        }
+
+        .payment-chart-legend span.badge {
+            width: 16px;
+            height: 16px;
+            border-radius: 4px;
+            display: inline-block;
+            margin-right: 8px;
+            vertical-align: middle;
+        }
+
+        @media (max-width: 767.98px) {
+            .btn-group {
+                justify-content: center;
+                display: flex;
+            }
+        }
+
+        /* Fix card layout for tablets (768px – 991px) */
+        /* 📱 iPad / Apple Tablets (Portrait & Landscape) */
+        @media (min-width: 768px) and (max-width: 1366px) {
+            .card {
+                min-height: 100%;
+                /* make all cards equal height */
+            }
+
+            .row.g-4>[class*="col-"] {
+                display: flex;
+            }
+
+            .row.g-4>[class*="col-"]>.card {
+                flex: 1;
+            }
+
+            .card {}
 
 
 
-    }
+        }
     </style>
 </head>
 
@@ -338,15 +339,15 @@
                                                     </thead>
                                                     <tbody>
                                                         <?php foreach ($sales as $s): ?>
-                                                        <tr>
-                                                            <td></td>
-                                                            <td><?= $s->category_name ?></td>
-                                                            <td><?= $s->item_name ?></td>
-                                                            <td><?= $s->mrp ?></td>
-                                                            <td>₹<?= $s->price ?></td>
-                                                            <td><?= $s->items_rented ?></td>
-                                                            <td>₹<?= number_format($s->revenue ?? 0, 2) ?></td>
-                                                        </tr>
+                                                            <tr>
+                                                                <td></td>
+                                                                <td><?= $s->category_name ?></td>
+                                                                <td><?= $s->item_name ?></td>
+                                                                <td><?= $s->mrp ?></td>
+                                                                <td>₹<?= $s->price ?></td>
+                                                                <td><?= $s->items_rented ?></td>
+                                                                <td>₹<?= number_format($s->revenue ?? 0, 2) ?></td>
+                                                            </tr>
                                                         <?php endforeach; ?>
                                                     </tbody>
                                                 </table>
@@ -364,27 +365,27 @@
                                             <div class="card-body p-0">
                                                 <div class="list-group list-group-flush">
                                                     <?php if (!empty($recent_transactions)) : ?>
-                                                    <?php foreach ($recent_transactions as $tx) : ?>
-                                                    <a href="#" class="list-group-item list-group-item-action">
-                                                        <div class="d-flex w-100 justify-content-between">
-                                                            <h6 class="mb-1"><?= $tx->invoice_no ?></h6>
-                                                            <?php if ($tx->due_amount > 0): ?>
-                                                            <small
-                                                                class="text-warning">₹ <?= number_format($tx->due_amount, 2) ?>
-                                                                (Pending)</small>
-                                                            <?php else: ?>
-                                                            <small
-                                                                class="text-success">₹ <?= number_format($tx->paid_amount, 2) ?></small>
-                                                            <?php endif; ?>
-                                                        </div>
-                                                        <small class="text-muted">
-                                                            <?= ucfirst($tx->payment_mode) ?> -
-                                                            <?= date('d M Y', strtotime($tx->invoice_date)) ?>
-                                                        </small>
-                                                    </a>
-                                                    <?php endforeach; ?>
+                                                        <?php foreach ($recent_transactions as $tx) : ?>
+                                                            <a href="#" class="list-group-item list-group-item-action">
+                                                                <div class="d-flex w-100 justify-content-between">
+                                                                    <h6 class="mb-1"><?= $tx->invoice_no ?></h6>
+                                                                    <?php if ($tx->due_amount > 0): ?>
+                                                                        <small
+                                                                            class="text-warning">₹ <?= number_format($tx->due_amount, 2) ?>
+                                                                            (Pending)</small>
+                                                                    <?php else: ?>
+                                                                        <small
+                                                                            class="text-success">₹ <?= number_format($tx->paid_amount, 2) ?></small>
+                                                                    <?php endif; ?>
+                                                                </div>
+                                                                <small class="text-muted">
+                                                                    <?= ucfirst($tx->payment_mode) ?> -
+                                                                    <?= date('d M Y', strtotime($tx->invoice_date)) ?>
+                                                                </small>
+                                                            </a>
+                                                        <?php endforeach; ?>
                                                     <?php else: ?>
-                                                    <p class="p-3 text-muted">No recent transactions found</p>
+                                                        <p class="p-3 text-muted">No recent transactions found</p>
                                                     <?php endif; ?>
                                                 </div>
                                             </div>
@@ -392,162 +393,162 @@
                                     </div>
 
                                     <script>
-                                    document.getElementById("searchBox").addEventListener("keyup", function() {
-                                        let input = this.value.toLowerCase(); // get typed text
-                                        let rows = document.querySelectorAll("#salesTable tbody tr");
+                                        document.getElementById("searchBox").addEventListener("keyup", function() {
+                                            let input = this.value.toLowerCase(); // get typed text
+                                            let rows = document.querySelectorAll("#salesTable tbody tr");
 
-                                        rows.forEach(row => {
-                                            let category = row.cells[0].textContent.toLowerCase();
-                                            let product = row.cells[1].textContent.toLowerCase();
+                                            rows.forEach(row => {
+                                                let category = row.cells[0].textContent.toLowerCase();
+                                                let product = row.cells[1].textContent.toLowerCase();
 
-                                            // show row if input matches category OR product (or empty = show all)
-                                            if (category.includes(input) || product.includes(input)) {
-                                                row.style.display = "";
-                                            } else {
-                                                row.style.display = "none";
-                                            }
+                                                // show row if input matches category OR product (or empty = show all)
+                                                if (category.includes(input) || product.includes(input)) {
+                                                    row.style.display = "";
+                                                } else {
+                                                    row.style.display = "none";
+                                                }
+                                            });
                                         });
-                                    });
                                     </script>
 
 
                                     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
                                     <script>
-                                    document.addEventListener('DOMContentLoaded', function() {
-                                        // Revenue Chart
-                                        const revenueCtx = document.getElementById('revenueChart').getContext(
-                                            '2d');
-                                        const revenueChart = new Chart(revenueCtx, {
-                                            type: 'line',
-                                            data: {
-                                                labels: <?php echo json_encode($revenue_analytics['labels']); ?>,
-                                                datasets: [{
-                                                    label: 'Daily Revenue',
-                                                    data: <?php echo json_encode($revenue_analytics['datasets']['total_revenue']); ?>,
-                                                    borderColor: '#ffda06',
-                                                    backgroundColor: 'rgba(255, 218, 6, 0.15)',
-                                                    tension: 0.3,
-                                                    fill: true,
-                                                    pointRadius: 4,
-                                                    pointHoverRadius: 6,
-                                                    borderWidth: 3
-                                                }]
-                                            },
-                                            options: {
-                                                responsive: true,
-                                                plugins: {
-                                                    legend: {
-                                                        position: 'top',
-                                                        labels: {
-                                                            font: {
-                                                                weight: '600'
-                                                            }
-                                                        }
-                                                    },
-                                                    tooltip: {
-                                                        callbacks: {
-                                                            label: ctx =>
-                                                                `Revenue: ₹${ctx.raw.toLocaleString('en-IN')}`
-                                                        },
-                                                        backgroundColor: 'rgba(0,0,0,0.75)',
-                                                        titleFont: {
-                                                            weight: '700'
-                                                        },
-                                                        bodyFont: {
-                                                            weight: '500'
-                                                        }
-                                                    }
+                                        document.addEventListener('DOMContentLoaded', function() {
+                                            // Revenue Chart
+                                            const revenueCtx = document.getElementById('revenueChart').getContext(
+                                                '2d');
+                                            const revenueChart = new Chart(revenueCtx, {
+                                                type: 'line',
+                                                data: {
+                                                    labels: <?php echo json_encode($revenue_analytics['labels']); ?>,
+                                                    datasets: [{
+                                                        label: 'Daily Revenue',
+                                                        data: <?php echo json_encode($revenue_analytics['datasets']['total_revenue']); ?>,
+                                                        borderColor: '#ffda06',
+                                                        backgroundColor: 'rgba(255, 218, 6, 0.15)',
+                                                        tension: 0.3,
+                                                        fill: true,
+                                                        pointRadius: 4,
+                                                        pointHoverRadius: 6,
+                                                        borderWidth: 3
+                                                    }]
                                                 },
-                                                scales: {
-                                                    y: {
-                                                        beginAtZero: true,
-                                                        title: {
-                                                            display: true,
-                                                            text: 'Revenue (₹)', // ✅ Y-axis name
-                                                            font: {
-                                                                weight: '700',
-                                                                size: 14
+                                                options: {
+                                                    responsive: true,
+                                                    plugins: {
+                                                        legend: {
+                                                            position: 'top',
+                                                            labels: {
+                                                                font: {
+                                                                    weight: '600'
+                                                                }
                                                             }
                                                         },
-                                                        ticks: {
-                                                            callback: val => '₹' + val.toLocaleString(
-                                                                'en-IN'),
-                                                            font: {
-                                                                weight: '600'
-                                                            }
-                                                        },
-                                                        grid: {
-                                                            color: '#e9ecef'
-                                                        }
-                                                    },
-                                                    x: {
-                                                        title: {
-                                                            display: true,
-                                                            text: 'Date', // ✅ X-axis name
-                                                            font: {
-                                                                weight: '700',
-                                                                size: 14
-                                                            }
-                                                        },
-                                                        ticks: {
-                                                            font: {
-                                                                weight: '600'
-                                                            }
-                                                        },
-                                                        grid: {
-                                                            display: false
-                                                        }
-                                                    }
-                                                }
-
-                                            }
-                                        });
-
-                                        // Payment Chart
-                                        const paymentCtx = document.getElementById('paymentChart').getContext(
-                                            '2d');
-                                        const paymentChart = new Chart(paymentCtx, {
-                                            type: 'doughnut',
-                                            data: {
-                                                labels: <?php echo json_encode($payment_stats['labels']); ?>,
-                                                datasets: [{
-                                                    data: <?php echo json_encode($payment_stats['amounts']); ?>,
-                                                    backgroundColor: ['#f3ac29', '#8d6213',
-                                                        '#000000'
-                                                    ],
-                                                    borderWidth: 0
-                                                }]
-                                            },
-                                            options: {
-                                                responsive: true,
-                                                cutout: '70%',
-                                                plugins: {
-                                                    legend: {
-                                                        position: 'bottom',
-                                                        labels: {
-                                                            font: {
-                                                                weight: '600',
-                                                                size: 14
+                                                        tooltip: {
+                                                            callbacks: {
+                                                                label: ctx =>
+                                                                    `Revenue: ₹${ctx.raw.toLocaleString('en-IN')}`
+                                                            },
+                                                            backgroundColor: 'rgba(0,0,0,0.75)',
+                                                            titleFont: {
+                                                                weight: '700'
+                                                            },
+                                                            bodyFont: {
+                                                                weight: '500'
                                                             }
                                                         }
                                                     },
-                                                    tooltip: {
-                                                        callbacks: {
-                                                            label: ctx => {
-                                                                const label = ctx.label || '';
-                                                                const value = ctx.raw || 0;
-                                                                const total = ctx.dataset.data
-                                                                    .reduce((a, b) => a + b, 0);
-                                                                const percent = Math.round((value /
-                                                                    total) * 100);
-                                                                return `${label}: ₹${value.toLocaleString('en-IN')} (${percent}%)`;
+                                                    scales: {
+                                                        y: {
+                                                            beginAtZero: true,
+                                                            title: {
+                                                                display: true,
+                                                                text: 'Revenue (₹)', // ✅ Y-axis name
+                                                                font: {
+                                                                    weight: '700',
+                                                                    size: 14
+                                                                }
+                                                            },
+                                                            ticks: {
+                                                                callback: val => '₹' + val.toLocaleString(
+                                                                    'en-IN'),
+                                                                font: {
+                                                                    weight: '600'
+                                                                }
+                                                            },
+                                                            grid: {
+                                                                color: '#e9ecef'
+                                                            }
+                                                        },
+                                                        x: {
+                                                            title: {
+                                                                display: true,
+                                                                text: 'Date', // ✅ X-axis name
+                                                                font: {
+                                                                    weight: '700',
+                                                                    size: 14
+                                                                }
+                                                            },
+                                                            ticks: {
+                                                                font: {
+                                                                    weight: '600'
+                                                                }
+                                                            },
+                                                            grid: {
+                                                                display: false
+                                                            }
+                                                        }
+                                                    }
+
+                                                }
+                                            });
+
+                                            // Payment Chart
+                                            const paymentCtx = document.getElementById('paymentChart').getContext(
+                                                '2d');
+                                            const paymentChart = new Chart(paymentCtx, {
+                                                type: 'doughnut',
+                                                data: {
+                                                    labels: <?php echo json_encode($payment_stats['labels']); ?>,
+                                                    datasets: [{
+                                                        data: <?php echo json_encode($payment_stats['amounts']); ?>,
+                                                        backgroundColor: ['#f3ac29', '#8d6213',
+                                                            '#000000'
+                                                        ],
+                                                        borderWidth: 0
+                                                    }]
+                                                },
+                                                options: {
+                                                    responsive: true,
+                                                    cutout: '70%',
+                                                    plugins: {
+                                                        legend: {
+                                                            position: 'bottom',
+                                                            labels: {
+                                                                font: {
+                                                                    weight: '600',
+                                                                    size: 14
+                                                                }
+                                                            }
+                                                        },
+                                                        tooltip: {
+                                                            callbacks: {
+                                                                label: ctx => {
+                                                                    const label = ctx.label || '';
+                                                                    const value = ctx.raw || 0;
+                                                                    const total = ctx.dataset.data
+                                                                        .reduce((a, b) => a + b, 0);
+                                                                    const percent = Math.round((value /
+                                                                        total) * 100);
+                                                                    return `${label}: ₹${value.toLocaleString('en-IN')} (${percent}%)`;
+                                                                }
                                                             }
                                                         }
                                                     }
                                                 }
-                                            }
+                                            });
                                         });
-                                    });
                                     </script>
                                     <script>
 
@@ -556,92 +557,92 @@
 
 
                                     <script>
-                                    // Sidebar toggler
-                                    const toggler = document.querySelector(".toggler-btn");
-                                    const closeBtn = document.querySelector(".close-sidebar");
-                                    const sidebar = document.querySelector("#sidebar");
+                                        // Sidebar toggler
+                                        const toggler = document.querySelector(".toggler-btn");
+                                        const closeBtn = document.querySelector(".close-sidebar");
+                                        const sidebar = document.querySelector("#sidebar");
 
-                                    if (toggler && sidebar) {
-                                        toggler.addEventListener("click", () => sidebar.classList.toggle("collapsed"));
-                                    }
-                                    if (closeBtn && sidebar) {
-                                        closeBtn.addEventListener("click", () => sidebar.classList.remove("collapsed"));
-                                    }
+                                        if (toggler && sidebar) {
+                                            toggler.addEventListener("click", () => sidebar.classList.toggle("collapsed"));
+                                        }
+                                        if (closeBtn && sidebar) {
+                                            closeBtn.addEventListener("click", () => sidebar.classList.remove("collapsed"));
+                                        }
                                     </script>
 
                                     <?php if ($this->session->flashdata('login_success')) : ?>
-                                    <script>
-                                    document.addEventListener('DOMContentLoaded', () => {
-                                        Swal.fire({
-                                            title: "Login Successful!",
-                                            text: "<?= $this->session->flashdata('login_success') ?>",
-                                            icon: "success",
-                                            showConfirmButton: false,
-                                            timer: 2000
-                                        });
-                                    });
-                                    </script>
+                                        <script>
+                                            document.addEventListener('DOMContentLoaded', () => {
+                                                Swal.fire({
+                                                    title: "Login Successful!",
+                                                    text: "<?= $this->session->flashdata('login_success') ?>",
+                                                    icon: "success",
+                                                    showConfirmButton: false,
+                                                    timer: 2000
+                                                });
+                                            });
+                                        </script>
                                     <?php endif; ?>
                                     <script>
-                                    document.addEventListener("DOMContentLoaded", function() {
-                                        const rows = document.querySelectorAll("#salesTable tbody tr");
-                                        rows.forEach((row, index) => {
-                                            row.querySelector("td").textContent = index + 1;
+                                        document.addEventListener("DOMContentLoaded", function() {
+                                            const rows = document.querySelectorAll("#salesTable tbody tr");
+                                            rows.forEach((row, index) => {
+                                                row.querySelector("td").textContent = index + 1;
+                                            });
                                         });
-                                    });
                                     </script>
 
                                     <script>
-                                    function formatIndianNumber(num) {
-                                        return num.toLocaleString('en-IN', {
-                                            minimumFractionDigits: 2,
-                                            maximumFractionDigits: 2
-                                        });
-                                    }
+                                        function formatIndianNumber(num) {
+                                            return num.toLocaleString('en-IN', {
+                                                minimumFractionDigits: 2,
+                                                maximumFractionDigits: 2
+                                            });
+                                        }
 
-                                    document.addEventListener("DOMContentLoaded", function() {
-                                        let elements = document.querySelectorAll(".stat-number");
-                                        elements.forEach(el => {
-                                            let value = parseFloat(el.textContent.replace(/[^0-9.-]/g,
-                                                ""));
-                                            if (!isNaN(value)) {
-                                                el.textContent = "₹" + formatIndianNumber(value);
-                                            }
+                                        document.addEventListener("DOMContentLoaded", function() {
+                                            let elements = document.querySelectorAll(".stat-number");
+                                            elements.forEach(el => {
+                                                let value = parseFloat(el.textContent.replace(/[^0-9.-]/g,
+                                                    ""));
+                                                if (!isNaN(value)) {
+                                                    el.textContent = "₹" + formatIndianNumber(value);
+                                                }
+                                            });
                                         });
-                                    });
                                     </script>
                                     <script>
-                                    function formatIndianNumber(num, withRupee = false) {
-                                        if (isNaN(num)) return num;
-                                        let formatted = num.toLocaleString('en-IN', {
-                                            minimumFractionDigits: 2,
-                                            maximumFractionDigits: 2
-                                        });
-                                        return withRupee ? "₹" + formatted : formatted;
-                                    }
+                                        function formatIndianNumber(num, withRupee = false) {
+                                            if (isNaN(num)) return num;
+                                            let formatted = num.toLocaleString('en-IN', {
+                                                minimumFractionDigits: 2,
+                                                maximumFractionDigits: 2
+                                            });
+                                            return withRupee ? "₹" + formatted : formatted;
+                                        }
 
-                                    document.addEventListener("DOMContentLoaded", function() {
-                                        let elements = document.querySelectorAll(".stat-number");
-                                        elements.forEach(el => {
-                                            let text = el.textContent.trim();
+                                        document.addEventListener("DOMContentLoaded", function() {
+                                            let elements = document.querySelectorAll(".stat-number");
+                                            elements.forEach(el => {
+                                                let text = el.textContent.trim();
 
-                                            // Check if it has "Items"
-                                            if (text.includes("Items")) {
-                                                let value = parseFloat(text.replace(/[^0-9]/g, ""));
-                                                if (!isNaN(value)) {
-                                                    el.textContent = formatIndianNumber(value, false) +
-                                                        " Items";
+                                                // Check if it has "Items"
+                                                if (text.includes("Items")) {
+                                                    let value = parseFloat(text.replace(/[^0-9]/g, ""));
+                                                    if (!isNaN(value)) {
+                                                        el.textContent = formatIndianNumber(value, false) +
+                                                            " Items";
+                                                    }
                                                 }
-                                            }
-                                            // Check if it has "₹"
-                                            else if (text.includes("₹")) {
-                                                let value = parseFloat(text.replace(/[^0-9.-]/g, ""));
-                                                if (!isNaN(value)) {
-                                                    el.textContent = formatIndianNumber(value, true);
+                                                // Check if it has "₹"
+                                                else if (text.includes("₹")) {
+                                                    let value = parseFloat(text.replace(/[^0-9.-]/g, ""));
+                                                    if (!isNaN(value)) {
+                                                        el.textContent = formatIndianNumber(value, true);
+                                                    }
                                                 }
-                                            }
+                                            });
                                         });
-                                    });
                                     </script>
 
 
