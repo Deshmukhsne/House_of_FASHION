@@ -135,35 +135,41 @@
                 max-width: 40px;
             }
 
-#addCategoryModal .modal-footer {
-    flex-direction: row;
-    gap: 10px;
-}
+            #addCategoryModal .modal-footer {
+                flex-direction: row;
+                gap: 10px;
+            }
 
-#addCategoryModal .modal-footer .btn {
-    width: 50%;
-}
-#addProductModal .modal-footer{
-    flex-direction: row;
-    gap: 10px;
-    
-}
-#addProductModal .modal-footer .btn {
-    width: 50%;
-}
-/* Apply styles only on mobile screens */
-@media (max-width: 576px) {
-    .btn.btn-sm {
-        display: block;         /* stack buttons vertically */
-        width: 100%;            /* make them full width */
-        margin-bottom: 10px;    /* add vertical gap */
-    }
+            #addCategoryModal .modal-footer .btn {
+                width: 50%;
+            }
 
-    /* optional: align text center */
-    .btn {
-        text-align: center;
-    }
-}
+            #addProductModal .modal-footer {
+                flex-direction: row;
+                gap: 10px;
+
+            }
+
+            #addProductModal .modal-footer .btn {
+                width: 50%;
+            }
+
+            /* Apply styles only on mobile screens */
+            @media (max-width: 576px) {
+                .btn.btn-sm {
+                    display: block;
+                    /* stack buttons vertically */
+                    width: 100%;
+                    /* make them full width */
+                    margin-bottom: 10px;
+                    /* add vertical gap */
+                }
+
+                /* optional: align text center */
+                .btn {
+                    text-align: center;
+                }
+            }
 
 
 
@@ -275,8 +281,12 @@
                                                                                 ]) ?>)'>
                                                         Edit
                                                     </button>
+                                                    <!-- <a href="<?= base_url('ProductController/delete_product/' . $product->id) ?>"
+                                                        class="btn btn-sm btn-danger" onclick="return confirm('Delete?')">Delete</a> -->
                                                     <a href="<?= base_url('ProductController/delete_product/' . $product->id) ?>"
-                                                        class="btn btn-sm btn-danger" onclick="return confirm('Delete?')">Delete</a>
+                                                        class="btn btn-sm btn-danger btn-delete"
+                                                        data-id="<?= $product->id ?>">Delete</a>
+
                                                 </td>
                                             </tr>
                                         <?php endforeach; ?>
@@ -754,6 +764,37 @@
                         showPage(1);
                     });
                 </script>
+                <!-- SweetAlert -->
+                <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+                <script>
+                    document.addEventListener('DOMContentLoaded', function() {
+                        // Attach SweetAlert to all delete buttons
+                        document.querySelectorAll('.btn-delete').forEach(button => {
+                            button.addEventListener('click', function(e) {
+                                e.preventDefault(); // stop the default redirect
+
+                                const url = this.getAttribute('href'); // get delete URL
+
+                                Swal.fire({
+                                    title: 'Are you sure?',
+                                    text: "This product will be permanently deleted.",
+                                    icon: 'warning',
+                                    showCancelButton: true,
+                                    confirmButtonColor: '#d33',
+                                    cancelButtonColor: '#6c757d',
+                                    confirmButtonText: 'Yes, delete it!',
+                                    cancelButtonText: 'Cancel'
+                                }).then((result) => {
+                                    if (result.isConfirmed) {
+                                        window.location.href = url; // redirect if confirmed
+                                    }
+                                });
+                            });
+                        });
+                    });
+                </script>
+
 </body>
 
 </html>

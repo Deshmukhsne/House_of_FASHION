@@ -254,7 +254,7 @@
 
                                     <div class="col-md-3 mt-3">
                                         <label>Deposit Amount (₹):</label>
-                                        <input type="number" name="depositAmount" id="depositAmount" class="form-control" min="0" step="0.01" value="0" oninput="updateBalance()" />
+                                        <input type="number" name="depositAmount" id="depositAmount" class="form-control" min="0" step="1" value="0" oninput="updateBalance()" />
                                     </div>
 
                                     <div class="col-md-3  mt-3">
@@ -269,10 +269,10 @@
                                 </div>
 
                                 <!-- Items Table -->
-                                 <div class="table-responsive-container">
-                              <table class="table table-bordered table-striped table-hover align-middle">
-                                <!-- <div class="table-responsive-container"> -->
-                                    <!-- <table class="table table-bordered align-middle"> -->
+                                <div class="table-responsive-container">
+                                    <table class="table table-bordered table-striped table-hover align-middle">
+                                        <!-- <div class="table-responsive-container"> -->
+                                        <!-- <table class="table table-bordered align-middle"> -->
                                         <thead class="table-light">
                                             <tr>
                                                 <th>Category</th>
